@@ -35,17 +35,17 @@ Exemple de jeu correct:
 
 
 27  32  33  </br>
-61
-42  49
-12  14  16
+61 </br>
+42  49 </br>
+12  14  16 </br>
 
 
 Exemple de jeu faux : 
 
-27  32  33  49
-61  
-42
-12  14  16
+27  32  33  49 </br>
+61   </br>
+42 </br>
+12  14  16 </br>
 (Ici le 49 devrait être placé sur la rangée du nombre 42)
 
 
@@ -59,9 +59,9 @@ Mais lorsqu'une rangée atteint 5 cartes. Celui qui va mettre la 6ème carte sur
 
 Si un joueur joue une carte plus faible que toutes les cartes disponibles exemple :
 
-27
-68
-32
-101
+27 </br>
+68 </br>
+32 </br>
+101 </br>
 
 Si je joue la carte 12, je dois sélectionner une des 4 rangées pour prendre les points de pénalités de celle-ci et je place ma carte 12 à la place.

@@ -51,7 +51,7 @@ Exemple de jeu faux :
 ### III. Encaissement des cartes
 
 Tant que l'on peut déposer une carte dans une rangée tout va bien. 
-Mais lorsque une rangée atteint 5 cartes. Celui qui va mettre la 6ème carte sur une rangée doit ramasser les 5 autres cartes et obtiendra donc les points de pénalités associés à celle-ci et sa 6ème carte forme alors le début d'une nouvelle rangée.
+Mais lorsqu'une rangée atteint 5 cartes. Celui qui va mettre la 6ème carte sur une rangée doit ramasser les 5 autres cartes et obtiendra donc les points de pénalités associés à celle-ci et sa 6ème carte forme alors le début d'une nouvelle rangée.
 
 
 ### IV. Exception

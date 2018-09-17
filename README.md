@@ -34,7 +34,7 @@ Règle 2 : Une carte doit toujours être déposée dans la série ou la différe
 Exemple de jeu correct: 
 
 
-27  32  33 
+27  32  33  </br>
 61
 42  49
 12  14  16

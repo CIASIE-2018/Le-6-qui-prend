@@ -26,7 +26,7 @@ Celui qui a déposé la carte la plus faible commencer et place sa carte dans un
 
 ### II. Comment placer sa carte
 
-Règle 1 : Les cartes d'une série vont toujours dans l'odre croissant (Ex: 12 14 16)
+Règle 1 : Les cartes d'une série vont toujours dans l'ordre croissant (Ex: 12 14 16)
 Règle 2 : Une carte doit toujours être déposée dans la série ou la différence entre la dernière carte et la nouvelle déposée est la plus faible.
 
 

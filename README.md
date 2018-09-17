@@ -10,18 +10,19 @@ Jeu de cartes.
 
 104 cartes numérotées de 1 à 104.
 
-Chaque carte possède donc une valeur numérique (de 1 à 104) qui permettra de placer chaque carte dans le jeu et une valeur de "malus" de 1 à 7. Ces valeurs sont appellées "têtes de boeufs" et elles correspondent à des points de pénalités puisque le but final du jeu est de récolter le moins de têtes de boeufs possibles.
+Chaque carte possède donc une valeur numérique (de 1 à 104) qui permettra de placer chaque carte dans le jeu et une valeur de "malus" de 1 à 7. Ces valeurs sont appellées "têtes de boeufs" et elles correspondent à des points de pénalités. Le but final du jeu est de récolter le moins de têtes de boeufs possibles.
 
 ## Préparation
 
-On distribue 10 cartes à chaque joueur. Une fois la distribution faite on place les 4 prochaines cartes sur la table afin de former 4 rangées.
+On distribue 10 cartes à chaque joueur (de 2 à 10 joueurs). Une fois la distribution faite, on place les 4 prochaines cartes du paquet sur la table afin de former 4 rangées.
 
 ## Déroulement du jeu
 
 ### I. Mise en jeu des cartes.
-Chaque tour, les joueurs choisissent une carte de leur jeu et la pose face cachée sur la table. Une fois tous les joueurs prêt nous retournons les cartes en même temps.
 
-Celui qui a déposé la carte la plus faible commencer et place sa carte dans une des 4 rangées selon des règles bien précises. Chaque joueur place ensuite sa carte et on répète le tour.
+Chaque tour, les joueurs choisissent une carte de leur jeu et la pose face cachée sur la table. Une fois tous les joueurs prêts nous retournons les cartes en même temps.
+
+Celui qui a déposé la carte la plus faible commence et place sa carte dans une des 4 rangées selon des règles bien précises. Chaque joueur place ensuite sa carte et on répète le tour jusqu'à ce que les joueurs n'aient plus de carte.
 
 
 ### II. Comment placer sa carte
@@ -51,12 +52,12 @@ Exemple de jeu faux :
 ### III. Encaissement des cartes
 
 Tant que l'on peut déposer une carte dans une rangée tout va bien. 
-Mais lorsqu'une rangée atteint 5 cartes. Celui qui va mettre la 6ème carte sur une rangée doit ramasser les 5 autres cartes et obtiendra donc les points de pénalités associés à celle-ci et sa 6ème carte forme alors le début d'une nouvelle rangée.
+Mais lorsqu'une rangée atteint 5 cartes. Celui qui va mettre la 6ème carte sur une rangée doit ramasser les 5 autres cartes et obtiendra donc les points de pénalités associés à celles-ci et sa 6ème carte forme alors le début d'une nouvelle rangée.
 
 
 ### IV. Exception
 
-Si un joueur joue une carte plus faibles que toutes les cartes disponible exemple :
+Si un joueur joue une carte plus faible que toutes les cartes disponibles exemple :
 
 27
 68

@@ -48,7 +48,7 @@ function init_board(board,deck){
 
 
 //Créer une main à partir de 10 cartes d'un deck
-function hand(deck){
+function generateHand(deck){
 
     var hand = [];
 
@@ -120,6 +120,8 @@ var io = require('socket.io').listen(server);
 var joueurs_connected = 0;
 var joueurs_ready = 0;
 
+
+
 io.sockets.on('connection', function (socket, pseudo) {
 
     console.log('Nouveau joueur');
@@ -136,13 +138,17 @@ io.sockets.on('connection', function (socket, pseudo) {
     //on attends que les joueurs soient prêts
     socket.on('ready', function () {
 
+        socket.ready = 1;
+
         console.log(socket.pseudo + ' est prêt');
         joueurs_ready = joueurs_ready + 1;
 
         console.log(joueurs_ready + ' ' + joueurs_connected);
 
         // Quand 2 à 10 joueurs sont prêts go.
-        if (joueurs_ready >= 2 && joueurs_ready <= 10 && joueurs_ready == joueurs_connected){
+if (joueurs_ready >= 2 && joueurs_ready <= 10 && joueurs_ready == joueurs_connected){
+
+        nb_joueurs = joueurs_ready;
 
         //on créer un deck
         var deck = generateDeck();
@@ -153,7 +159,24 @@ io.sockets.on('connection', function (socket, pseudo) {
         //on pose les 4 premières cartes
         init_board(board, deck);
 
-        console.log(board[0][0]+' '+board[1][0]+' '+board[2][0]+' '+board[3][0]);
+
+        //on récupère les joueurs connectés
+        Object.keys(io.sockets.sockets).forEach(function(socketId){
+            socket = io.sockets.connected[socketId];
+
+            //on prend seulement les joueurs prêts
+            if (socket.ready == 1){
+
+                //on génère la main
+                socket.hand = generateHand(deck);
+                
+                //on envoie la main et le tableau au joueur
+                socket.emit('init',{ hand:socket.hand, board:board});
+            }
+        });
+
+        
+
         }
 
 

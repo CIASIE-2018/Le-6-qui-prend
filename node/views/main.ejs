@@ -55,9 +55,16 @@
 
                 //on parcours la main pour l'afficher
                 for (indexHand = 0;indexHand<init.hand.length;indexHand++){
-                    $('.hand').append('<div class ="handPlayer">' + init.hand[indexHand] + " " + "</div>");
+                    $('.hand').append("<div class ='handPlayer' id = 'handPlayer_" + indexHand + "'>" + init.hand[indexHand] + "</div>");
                 }
             })
+
+            // Evenement quand on clique sur une des cartes
+            $('body').on("click", ".handPlayer", function(){
+                $(".handPlayer").removeClass("cardChoice");
+                $(this).addClass("cardChoice");
+                alert(this.id);
+            });
 
             //quand click sur ready on indique au serveur qu'on est prêt
             $('#ready').click(function () {

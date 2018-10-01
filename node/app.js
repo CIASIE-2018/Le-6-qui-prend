@@ -1,7 +1,14 @@
+
+
 var http = require('http');
 
-var fs = require('fs');
+var express = require('express');
 
+var app = express();
+
+app.set('view engine', 'ejs');
+
+var fs = require('fs');
 
 //renvoie le deck mélangé
 function generateDeck(){
@@ -100,18 +107,27 @@ console.log('Serveur on');
 
 // Chargement du fichier index.html affiché au client
 
-var server = http.createServer(function(req, res) {
+var server = require('http').Server(app);
 
-    fs.readFile('./index.html', 'utf-8', function(error, content) {
+//var server = http.createServer(function(req, res) {
 
-        res.writeHead(200, {"Content-Type": "text/html"});
+//    fs.readFile('./index.html', 'utf-8', function(error, content) {
 
-        res.end(content);
+//        res.writeHead(200, {"Content-Type": "text/html"});
 
-    });
+//        res.end(content);
 
+//    });
+
+//});
+
+// Chargement du fichier public (style)
+
+app.use("/", (req, res) => {
+    res.render("main");
 });
 
+app.use( express.static(__dirname + '/public'));
 
 // Chargement de socket.io
 

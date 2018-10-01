@@ -178,16 +178,8 @@ if (joueurs_ready >= 2 && joueurs_ready <= 10 && joueurs_ready == joueurs_connec
                 socket.emit('init',{ hand:socket.hand, board:board});
             }
         });
-
-        
-
         }
-
-
     }); 
-
 });
-
-
 
 server.listen(8080);

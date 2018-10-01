@@ -104,30 +104,18 @@ function putCards(cards, board){
 
 console.log('Serveur on');
 
-
-// Chargement du fichier index.html affiché au client
-
 var server = require('http').Server(app);
 
-//var server = http.createServer(function(req, res) {
-
-//    fs.readFile('./index.html', 'utf-8', function(error, content) {
-
-//        res.writeHead(200, {"Content-Type": "text/html"});
-
-//        res.end(content);
-
-//    });
-
-//});
-
 // Chargement du fichier public (style)
+console.log(__dirname)
+app.use(express.static(__dirname + '/public'));
+
+// Chargement du fichier d'index
 
 app.use("/", (req, res) => {
     res.render("main");
 });
 
-app.use( express.static(__dirname + '/public'));
 
 // Chargement de socket.io
 

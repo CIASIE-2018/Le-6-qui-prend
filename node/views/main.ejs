@@ -7,6 +7,7 @@
         <meta charset="utf-8" />
         <title>Le 6 qui prend</title>
         <link rel="stylesheet" type="text/css" href="style.css">
+
     </head>
 
  
@@ -42,12 +43,14 @@
 
                 //on parcours le board pour l'afficher
                 for (indexBoard = 0;indexBoard<init.board.length;indexBoard++){
+                    $('.board').append("<div class = lineBoard id = 'lineBoard_" + indexBoard + "'>");
                     for (indexBoard2 = 0;indexBoard2<init.board[indexBoard].length;indexBoard2++){
+
                         if (init.board[indexBoard][indexBoard2]){
-                            $('.board').append(init.board[indexBoard][indexBoard2]+" ");
+                            $("#lineBoard_" + indexBoard).append(init.board[indexBoard][indexBoard2]);
                         }
                     }
-                    $('.board').append('<br>');
+                    $('.board').append('</div>');
                 }
 
                 //on parcours la main pour l'afficher

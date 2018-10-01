@@ -1,18 +1,69 @@
 <!DOCTYPE html>
 
-
 <html>
 
     <head>
 
-        <title>Node</title>
-
+        <meta charset="utf-8" />
+        <title>Le 6 qui prend</title>
+        <link rel="stylesheet" type="text/css" href="style.css">
     </head>
 
+ 
 
     <body>
-        Ceci est un fichier html (ejs)
-        
+        <h1>Commande</h1>
+        <p><input type="button" value="Ready" id="ready" /></p>
+        <h1>Tableau de jeu</h1>
+        <div class="board"></div>
+        <h1>Main</h1>
+        <div class="hand"></div>
+
+
+        <!-- On ajoute jquery-->
+        <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+
+        <!-- On ajoute socket.io-->
+        <script src="/socket.io/socket.io.js"></script>
+
+        <script>
+
+            var socket = io.connect('http://localhost:8080');
+
+            // On demande le pseudo au visiteur...
+            var pseudo = prompt('Quel est votre pseudo ?');
+            
+            //on envoie le pseudo au serveur
+            socket.emit('nickname', pseudo);
+
+
+            //on attend le signal init du serveur qui envoie la main et le board
+            socket.on('init', function(init) {
+
+                //on parcours le board pour l'afficher
+                for (indexBoard = 0;indexBoard<init.board.length;indexBoard++){
+                    for (indexBoard2 = 0;indexBoard2<init.board[indexBoard].length;indexBoard2++){
+                        if (init.board[indexBoard][indexBoard2]){
+                            $('.board').append(init.board[indexBoard][indexBoard2]+" ");
+                        }
+                    }
+                    $('.board').append('<br>');
+                }
+
+                //on parcours la main pour l'afficher
+                for (indexHand = 0;indexHand<init.hand.length;indexHand++){
+                    $('.hand').append('<div class ="handPlayer">' + init.hand[indexHand] + " " + "</div>");
+                }
+            })
+
+            //quand click sur ready on indique au serveur qu'on est prêt
+            $('#ready').click(function () {
+                socket.emit('ready', '1');
+                $('#ready').remove();
+            })
+
+        </script>
+
     </body>
 
 </html>

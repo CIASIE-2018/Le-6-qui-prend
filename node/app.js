@@ -128,29 +128,32 @@ var joueurs_ready = 0;
 
 io.sockets.on('connection', function (socket, joueur) {
 
-
-   
-
     //on demande le pseudo au joueur et on récupère sa room
         socket.on('nickname', function(joueur) {
                 socket.room = joueur.room;
                 socket.pseudo = joueur.pseudo;
+
+                //on rejoint la salle et on envoie un message dans le salon (et la console)
                 socket.join(socket.room);
-                console.log(socket.pseudo +' rejoins la salle ' + socket.room);
+                socket.emit('room_chat',"Vous venez de rejoindre le salon "+socket.room+".<br>");
+                socket.broadcast.to(socket.room).emit('room_chat',socket.pseudo + " rejoint la salle.<br>");
+                console.log(socket.pseudo +' rejoint la salle ' + socket.room);
         });
 
+    //on attend de recevoir des messages
+    socket.on('general_chat',function(message){
+        io.emit('general_chat',socket.pseudo + ": " +message+"<br>"); //envoi le message à tout le monde
+    });
 
+    socket.on('room_chat',function(message){
+        io.in(socket.room).emit('room_chat',socket.pseudo + ": " +message+"<br>"); //envoi le message à tout le monde dans la salle room_chat
+    });
 
-    //on attends que les joueurs soient prêts
+    //on attend que les joueurs soient prêts
     socket.on('ready', function () {
 
         socket.ready = 1;
-
         console.log(socket.pseudo + ' est prêt');
-
-
-        // vais dans room
-        // si tt les joueurs sont ready et + 2 joueurs, go
 
         var currentRoom = socket.room;
         var joueurRoom = 0;
@@ -158,7 +161,7 @@ io.sockets.on('connection', function (socket, joueur) {
 
         //on attend que les joueurs de la pièce soient tous prêt
         Object.keys(io.sockets.sockets).forEach(function(socketId){
-            socket = io.sockets.connected[socketId];
+            let socket = io.sockets.connected[socketId];
             
             if (socket.room == currentRoom){
                 joueurRoom = joueurRoom + 1;
@@ -171,6 +174,12 @@ io.sockets.on('connection', function (socket, joueur) {
         // Quand 2 à 10 joueurs sont prêts go.
         if (joueurRoom == joueurRoomReady && joueurRoomReady >= 2 && joueurRoomReady <= 2){
 
+        //envoi à tout le monde sauf le client
+        socket.broadcast.to(socket.room).emit('room_chat',socket.pseudo + " est prêt, que la partie commence !<br>");
+        //envoi au client
+        socket.emit('room_chat',"vous êtes prêt, la partie peut commencer !<br>");
+        
+
             //on créer un deck
             var deck = generateDeck();
 
@@ -182,7 +191,7 @@ io.sockets.on('connection', function (socket, joueur) {
 
             //on récupère les joueurs connectés à la pièce
             Object.keys(io.sockets.sockets).forEach(function(socketId){
-                socket = io.sockets.connected[socketId];
+                let socket = io.sockets.connected[socketId];
 
                 //on prend seulement les joueurs de la room
                 if (socket.room == currentRoom){
@@ -194,6 +203,12 @@ io.sockets.on('connection', function (socket, joueur) {
                     socket.emit('init',{ hand:socket.hand, board:board});
                 }
             });
+        }
+        else{
+        //envoi à tout le monde sauf le client
+        socket.broadcast.to(socket.room).emit('room_chat',socket.pseudo + " est prêt ( "+joueurRoomReady+" / "+joueurRoom +" joueurs prêts )<br>");
+        //envoi au client
+        socket.emit('room_chat',"vous êtes prêt, la partie commencera quand tous les joueurs présents seront prêts ( "+joueurRoomReady+" / "+joueurRoom +" joueurs prêts )<br>");
         }
     }); 
 });

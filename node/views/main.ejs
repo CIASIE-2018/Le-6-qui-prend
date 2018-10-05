@@ -19,7 +19,17 @@
         <div class="board"></div>
         <h1>Main</h1>
         <div class="hand"></div>
+        <h1>Chat général</h1>
+        <div class="general_chat"></div>
 
+            <input class="general_input" type="text">
+            <button class="general_send">envoyer</button>
+
+        <h1>Chat salon</h1>
+        <div class="room_chat"></div>
+
+            <input class="room_input"  type="text">
+            <button class="room_send">envoyer</button>
 
         <!-- On ajoute jquery-->
         <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
@@ -47,6 +57,14 @@
                 //on envoie le pseudo au serveur
                 socket.emit('nickname', joueur);
 
+                //on attend les messages dans les 2 chats
+                socket.on('general_chat',function(message){
+                    $('.general_chat').append(message)
+                });
+
+                socket.on('room_chat',function(message){
+                    $('.room_chat').append(message)
+                });
 
             //on attend le signal init du serveur qui envoie la main et le board
             socket.on('init', function(init) {
@@ -81,6 +99,23 @@
                 socket.emit('ready', '1');
                 $('#ready').remove();
             })
+
+            //envoi message
+            $('.general_send').click(function(){
+                let message = $('.general_input').val();
+                socket.emit('general_chat',message);
+                $('.general_input').val("");
+            });
+
+            //envoi message
+            $('.room_send').click(function(){
+                let message = $('.room_input').val()
+                socket.emit('room_chat',message);
+                $('.room_input').val("");
+            });
+
+
+
 		}
         </script>
 

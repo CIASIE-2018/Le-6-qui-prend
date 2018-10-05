@@ -126,18 +126,20 @@ var joueurs_ready = 0;
 
 
 
-io.sockets.on('connection', function (socket, pseudo) {
+io.sockets.on('connection', function (socket, joueur) {
 
-    console.log('Nouveau joueur');
 
-    //on demande le pseudo au joueur
-        socket.on('nickname', function(pseudo) {
+   
 
-        socket.pseudo = pseudo;
-        console.log('Un joueur à choisi le pseudo : '+ socket.pseudo);
-        joueurs_connected= joueurs_connected + 1;
+    //on demande le pseudo au joueur et on récupère sa room
+        socket.on('nickname', function(joueur) {
+                socket.room = joueur.room;
+                socket.pseudo = joueur.pseudo;
+                socket.join(socket.room);
+                console.log(socket.pseudo +' rejoins la salle ' + socket.room);
+        });
 
-    });
+
 
     //on attends que les joueurs soient prêts
     socket.on('ready', function () {
@@ -145,39 +147,53 @@ io.sockets.on('connection', function (socket, pseudo) {
         socket.ready = 1;
 
         console.log(socket.pseudo + ' est prêt');
-        joueurs_ready = joueurs_ready + 1;
-
-        console.log(joueurs_ready + ' ' + joueurs_connected);
-
-        // Quand 2 à 10 joueurs sont prêts go.
-if (joueurs_ready >= 2 && joueurs_ready <= 10 && joueurs_ready == joueurs_connected){
-
-        nb_joueurs = joueurs_ready;
-
-        //on créer un deck
-        var deck = generateDeck();
-        
-        //on créer un tableau de jeu
-        var board = generateBoard();
-
-        //on pose les 4 premières cartes
-        init_board(board, deck);
 
 
-        //on récupère les joueurs connectés
+        // vais dans room
+        // si tt les joueurs sont ready et + 2 joueurs, go
+
+        var currentRoom = socket.room;
+        var joueurRoom = 0;
+        var joueurRoomReady = 0;
+
+        //on attend que les joueurs de la pièce soient tous prêt
         Object.keys(io.sockets.sockets).forEach(function(socketId){
             socket = io.sockets.connected[socketId];
-
-            //on prend seulement les joueurs prêts
-            if (socket.ready == 1){
-
-                //on génère la main
-                socket.hand = generateHand(deck);
-                
-                //on envoie la main et le tableau au joueur
-                socket.emit('init',{ hand:socket.hand, board:board});
+            
+            if (socket.room == currentRoom){
+                joueurRoom = joueurRoom + 1;
+                if (socket.ready == 1) {
+                    joueurRoomReady = joueurRoomReady + 1;
+                }
             }
         });
+
+        // Quand 2 à 10 joueurs sont prêts go.
+        if (joueurRoom == joueurRoomReady && joueurRoomReady >= 2 && joueurRoomReady <= 2){
+
+            //on créer un deck
+            var deck = generateDeck();
+
+            //on créer un tableau de jeu
+            var board = generateBoard();
+
+            //on pose les 4 premières cartes
+            init_board(board, deck);
+
+            //on récupère les joueurs connectés à la pièce
+            Object.keys(io.sockets.sockets).forEach(function(socketId){
+                socket = io.sockets.connected[socketId];
+
+                //on prend seulement les joueurs de la room
+                if (socket.room == currentRoom){
+
+                    //on génère la main
+                    socket.hand = generateHand(deck);
+                    
+                    //on envoie la main et le tableau au joueur
+                    socket.emit('init',{ hand:socket.hand, board:board});
+                }
+            });
         }
     }); 
 });

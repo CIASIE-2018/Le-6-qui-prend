@@ -29,13 +29,23 @@
 
         <script>
 
-            var socket = io.connect('http://localhost:8080');
+            if (window.location.pathname == "/"){
+                var room = prompt('Entrez le nom du salon à créer/rejoindre');
+                window.location.replace(window.location.href + room);
+            }
+            else {
 
-            // On demande le pseudo au visiteur...
-            var pseudo = prompt('Quel est votre pseudo ?');
-            
-            //on envoie le pseudo au serveur
-            socket.emit('nickname', pseudo);
+                var socket = io.connect('http://localhost:8080');
+
+                // On créer un joueur
+                var joueur = new Object(); 
+
+                // On demande le pseudo au visiteur...
+                joueur.pseudo = prompt('Quel est votre pseudo ?');
+                joueur.room = window.location.pathname;
+
+                //on envoie le pseudo au serveur
+                socket.emit('nickname', joueur);
 
 
             //on attend le signal init du serveur qui envoie la main et le board
@@ -71,7 +81,7 @@
                 socket.emit('ready', '1');
                 $('#ready').remove();
             })
-
+		}
         </script>
 
     </body>

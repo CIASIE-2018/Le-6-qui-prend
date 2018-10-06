@@ -83,7 +83,9 @@
 
                 //on parcours la main pour l'afficher
                 for (indexHand = 0;indexHand<init.hand.length;indexHand++){
-                    $('.hand').append("<div class ='handPlayer' id = 'handPlayer_" + indexHand + "'>" + init.hand[indexHand] + "</div>");
+                    $('.hand').append("<div class ='handPlayer' id = 'handPlayer_" + indexHand + "'>" 
+                   + "<img src='src/" + init.hand[indexHand] + ".png' alt='test'></img>"
+                   + "</div>");
                 }
             })
 

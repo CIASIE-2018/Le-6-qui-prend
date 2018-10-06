@@ -13,3 +13,8 @@ div.cardChoice{
     margin-right: 5px;
     background-color: violet;
 }
+
+div img{
+    width:75px;
+    height:100px;
+}

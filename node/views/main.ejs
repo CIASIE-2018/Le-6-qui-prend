@@ -117,14 +117,14 @@
 
                 //on parcours le board pour l'afficher
                 for (indexBoard = 0;indexBoard<init.board.length;indexBoard++){
-                    $('.board').append("<div class = lineBoard id = 'lineBoard_" + indexBoard + "'>");
                     for (indexBoard2 = 0;indexBoard2<init.board[indexBoard].length;indexBoard2++){
 
                         if (init.board[indexBoard][indexBoard2]){
-                            $("#lineBoard_" + indexBoard).append(init.board[indexBoard][indexBoard2]);
+                            let tmp = indexBoard+1;
+                            $('.l'+tmp+'col1').append("<img src='src/" + init.board[indexBoard][indexBoard2] + ".png' alt='test'></img>");
                         }
                     }
-                    $('.board').append('</div>');
+                    
                 }
 
                 //on parcours la main pour l'afficher

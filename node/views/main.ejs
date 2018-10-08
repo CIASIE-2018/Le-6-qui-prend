@@ -83,8 +83,13 @@
         <script src="/socket.io/socket.io.js"></script>
 
         <script>
-            let carteChoisie;
-            
+
+ 
+
+            //Carte choisie par le joueur
+            let carteChoisie = -1;
+            let choixValider = false;
+
 
             if (window.location.pathname == "/"){
                 var room = prompt('Entrez le nom du salon à créer/rejoindre');
@@ -140,14 +145,22 @@
 
             // Evenement quand on clique sur une des cartes
             $('body').on("click", ".handPlayer", function(){
-                $(".handPlayer").removeClass("cardChoice");
-                $(this).addClass("cardChoice");
-                //alert(this.id);
-                if(confirm("Souhaitez-vous sélectionner la carte ?")){
-                    carteChoisie = this.id.match(/\d+/g).map(Number);
+
+                if(choixValider){
+                    //Ne rien faire tant que le tour n'est pas terminé
                 }else{
                     $(".handPlayer").removeClass("cardChoice");
-                }
+                    $(this).addClass("cardChoice");
+                    //alert(this.id);
+                    if(confirm("Souhaitez-vous sélectionner la carte ?")){
+                        carteChoisie = this.id.match(/\d+/g).map(Number);
+                        choixValider = true;
+                    }else{
+                        $(".handPlayer").removeClass("cardChoice");
+                        carteChoisie = -1;
+                        choixValider = false;
+                    }
+                }                
             });
 
 

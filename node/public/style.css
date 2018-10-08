@@ -29,6 +29,7 @@ div.cardChoice{
 div img{
     width:9vw;
     height:auto;
+
 }
 
 div.board{
@@ -92,19 +93,17 @@ div.board .ligne4 .l4col6{
       padding:0;
 }
 
-nav ul img{
-    margin-bottom: 2%;
-}
+
 
 
 .hr-text {
-    line-height: 1em;
+    line-height: 1vh;
     position: relative;
     outline: 0;
     border: 0;
     color: black;
     text-align: center;
-    height: 1.5em;
+    height: 2vh;
     opacity: .5;
    
     

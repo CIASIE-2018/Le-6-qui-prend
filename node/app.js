@@ -58,8 +58,10 @@ function generateDeck(){
 function generateCarte(value, malus){
 
     let carte = new Object();
-    carte.value = this.value;
-    carte.malus = this.malus;
+    carte.value = value;
+    carte.malus = malus;
+
+    return carte;
 
 }
 
@@ -68,7 +70,7 @@ function draw(deck){
 	
 	var card = deck[0];
 	deck.shift();
-	
+	console.log(card)
 	return card;
 	
 }
@@ -189,6 +191,15 @@ io.sockets.on('connection', function (socket, joueur) {
         io.in(socket.room).emit('room_chat',socket.pseudo + ": " +message+"<br>"); //envoi le message à tout le monde dans la salle room_chat
     });
 
+
+
+    socket.on('played', function(){
+
+
+
+    });
+
+
     //on attend que les joueurs soient prêts
     socket.on('ready', function () {
 
@@ -237,8 +248,8 @@ io.sockets.on('connection', function (socket, joueur) {
                 if (socket.room == currentRoom){
 
                     //on génère la main
-                    socket.hand = generateHand(deck);
-                    
+                    socket.hand = generateHand(deck);                    
+
                     //on envoie la main et le tableau au joueur
                     socket.emit('init',{ hand:socket.hand, board:board});
                 }

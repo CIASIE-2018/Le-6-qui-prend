@@ -95,9 +95,13 @@
         <script src="/socket.io/socket.io.js"></script>
 
         <script>
+
+ 
+
             //Carte choisie par le joueur
             let carteChoisie = -1;
             let choixValider = false;
+
 
             if (window.location.pathname == "/"){
                 var room = prompt('Entrez le nom du salon à créer/rejoindre');
@@ -129,13 +133,15 @@
             //on attend le signal init du serveur qui envoie la main et le board
             socket.on('init', function(init) {
 
+                console.log(init);
                 //on parcours le board pour l'afficher
                 for (indexBoard = 0;indexBoard<init.board.length;indexBoard++){
                     for (indexBoard2 = 0;indexBoard2<init.board[indexBoard].length;indexBoard2++){
 
                         if (init.board[indexBoard][indexBoard2]){
                             let tmp = indexBoard+1;
-                            $('.l'+tmp+'col1').append("<img src='src/" + init.board[indexBoard][indexBoard2] + ".png' alt='test'></img>");
+                        console.log(init.board[indexBoard][indexBoard2].value);
+                            $('.l'+tmp+'col1').append("<img src='src/" + init.board[indexBoard][indexBoard2].value + ".png' alt='test'></img>");
                         }
                     }
                     
@@ -144,7 +150,7 @@
                 //on parcours la main pour l'afficher
                 for (indexHand = 0;indexHand<init.hand.length;indexHand++){
                     $('.hand').append("<div class ='handPlayer' id = 'handPlayer_" + indexHand + "'>" 
-                   + "<img src='src/" + init.hand[indexHand] + ".png' alt='test'></img>"
+                   + "<img src='src/" + init.hand[indexHand].value + ".png' alt='test'></img>"
                    + "</div>");
                 }
             })
@@ -168,6 +174,7 @@
                     }
                 }                
             });
+
 
             //quand click sur ready on indique au serveur qu'on est prêt
             $('#ready').click(function () {

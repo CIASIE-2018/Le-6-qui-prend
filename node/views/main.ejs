@@ -83,6 +83,7 @@
         <script src="/socket.io/socket.io.js"></script>
 
         <script>
+            let carteChoisie;
 
             if (window.location.pathname == "/"){
                 var room = prompt('Entrez le nom du salon à créer/rejoindre');
@@ -138,7 +139,12 @@
             $('body').on("click", ".handPlayer", function(){
                 $(".handPlayer").removeClass("cardChoice");
                 $(this).addClass("cardChoice");
-                alert(this.id);
+                //alert(this.id);
+                if(confirm("Souhaitez-vous sélectionner la carte ?")){
+                    carteChoisie = this.id.match(/\d+/g).map(Number);
+                }else{
+                    $(".handPlayer").removeClass("cardChoice");
+                }
             });
 
             //quand click sur ready on indique au serveur qu'on est prêt

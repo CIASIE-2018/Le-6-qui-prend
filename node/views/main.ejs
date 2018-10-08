@@ -7,6 +7,8 @@
         <meta charset="utf-8" />
         <title>Le 6 qui prend</title>
         <link rel="stylesheet" type="text/css" href="style.css">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
 
     </head>
 
@@ -64,17 +66,27 @@
 
         </div>
         
-        <h1>Chat général</h1>
-        <div class="general_chat"></div>
+    <div class="chats">
+        <div class="toggle_general_chat current_chat">Chat général</div>
 
-            <input class="general_input" type="text">
-            <button class="general_send">envoyer</button>
+        <div class="toggle_room_chat">Chat de salon</div>
 
-        <h1>Chat salon</h1>
-        <div class="room_chat"></div>
+        <div id="general_chat">
+            <div class="general_content"></div>
+            <div class="control_chat">
+                <input class="general_input" type="text">
+                <button class="general_send">envoyer</button>
+            </div>
+        </div> 
 
-            <input class="room_input"  type="text">
-            <button class="room_send">envoyer</button>
+        <div id="room_chat">
+            <div class="room_content"></div>
+                <div class="control_chat">
+                  <input class="room_input"  type="text">
+                 <button class="room_send">envoyer</button>
+            </div>
+        </div>
+    </div>
 
         <!-- On ajoute jquery-->
         <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
@@ -107,11 +119,11 @@
 
                 //on attend les messages dans les 2 chats
                 socket.on('general_chat',function(message){
-                    $('.general_chat').append(message)
+                    $('.general_content').append(message)
                 });
 
                 socket.on('room_chat',function(message){
-                    $('.room_chat').append(message)
+                    $('.room_content').append(message)
                 });
 
             //on attend le signal init du serveur qui envoie la main et le board
@@ -177,9 +189,22 @@
                 $('.room_input').val("");
             });
 
+            $('.toggle_general_chat').click(function(){
+                $(this).addClass("current_chat");
+                $(".toggle_room_chat").removeClass("current_chat");
+                $('#room_chat').hide();
+                $('#general_chat').show();
+            });
 
-
-		}
+            $('.toggle_room_chat').click(function(){
+                $(this).addClass("current_chat");
+                $(".toggle_general_chat").removeClass("current_chat");
+                $('#general_chat').hide();
+                $('#room_chat').show();
+            });
+        }
+        
+        
         </script>
 
     </body>

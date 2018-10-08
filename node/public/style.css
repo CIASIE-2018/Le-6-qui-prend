@@ -13,7 +13,7 @@ div.hand{
 div.handPlayer{
     display: inline-block;
     margin-right: 5px;
-    background-color: grey;
+   
 }
 
 div.lineBoard{
@@ -23,12 +23,12 @@ div.lineBoard{
 div.cardChoice{
     display: inline-block;
     margin-right: 5px;
-    background-color: violet;
+    transform:scale(1.2);
 }
 
 div img{
-    width:150px;
-    height:200px;
+    width:9vw;
+    height:auto;
 }
 
 div.board{
@@ -70,8 +70,8 @@ div.board .ligne4 .l4col3,
 div.board .ligne4 .l4col4,
 div.board .ligne4 .l4col5 {
 
-    width: 150px !important;
-    height: 200px;
+    width:9vw;
+    height: 12.85vw;
     border-radius: 5px;
     margin:1%;
     background-color: lightgrey;
@@ -83,8 +83,8 @@ div.board .ligne1 .l1col6,
 div.board .ligne2 .l2col6,
 div.board .ligne3 .l3col6,
 div.board .ligne4 .l4col6{
-    width: 150px !important;
-    height: 200px;
+     width:9vw;
+     height: 12.85vw;
     border-radius: 5px;
     background-color: rgb(255, 65, 65);
     display:inline-block;
@@ -92,6 +92,9 @@ div.board .ligne4 .l4col6{
       padding:0;
 }
 
+nav ul img{
+    margin-bottom: 2%;
+}
 
 
 .hr-text {

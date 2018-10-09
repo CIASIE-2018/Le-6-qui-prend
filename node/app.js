@@ -122,17 +122,17 @@ function putCards(cards, board){
 	var row;
 	
 	//Pour chaques cartes
-	for(cardIndex = 0; cardIndex < cards.length-1; cardIndex ++){
+	for(cardIndex = 0; cardIndex < cards.length; cardIndex ++){
 		console.log("bj");
 		//Pour chaques rangées
-		for (boardIndex = 0; boardIndex < board.length-1; boardIndex++) {
+		for (boardIndex = 0; boardIndex < board.length; boardIndex++) {
             
             console.log(board[boardIndex]);
-            console.log(' bonjour ' + cards[cardIndex+1].value + ' bonjour ' + board[board.length - 1].value + ' bonjour ' + cards[cardIndex+1].value);
+            console.log(" bonjour " + cards[cardIndex].value + " bonjour " + JSON.stringify(board[boardIndex]) + " bonjour " + cards[cardIndex].value);
 
 			//on choisit la meilleur rangée
-			if (cards[cardIndex].value > board[board.length].value && cards[cardIndex].value < max ){
-				var max = board[board.index.length];
+			if (cards[cardIndex].value > board[boardIndex][0].value && cards[cardIndex].value < max ){
+				var max = board[boardIndex][0];
                 var row = boardIndex;
                 console.log('bonjour' + row);
 			}
@@ -246,7 +246,7 @@ io.sockets.on('connection', function (socket, joueur) {
                     socket.hand.splice(carteChoisie,1);
                 }
             });
-
+            console.log(boards[socket.room]);
             boards[socket.room] = putCards(cartes, boards[socket.room]);
 
             //on récupère les joueurs connectés à la pièce

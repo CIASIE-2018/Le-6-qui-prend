@@ -18,6 +18,7 @@
 
         <h1>Main</h1>
         <div class="hand"></div>
+        <button id="validerChoix">Confirmer mon choix</button>
         <h1>Tableau de jeu</h1>
         <div class="board">
             <nav class="ligne1">
@@ -128,15 +129,17 @@
 
                         if (init.board[indexBoard][indexBoard2]){
                             let tmp = indexBoard+1;
+                            let tmp2 = indexBoard2 + 1
                         console.log(init.board[indexBoard][indexBoard2].value);
-                            $('.l'+tmp+'col1').append("<img src='src/" + init.board[indexBoard][indexBoard2].value + ".png' alt='test'></img>");
+                            $('.l'+tmp+'col'+ tmp2).html("<img src='src/" + init.board[indexBoard][indexBoard2].value + ".png' alt='test'></img>");
                         }
                     }
                     
                 }
-
+$('.hand').html("");
                 //on parcours la main pour l'afficher
                 for (indexHand = 0;indexHand<init.hand.length;indexHand++){
+                    
                     $('.hand').append("<div class ='handPlayer' id = 'handPlayer_" + indexHand + "'>" 
                    + "<img src='src/" + init.hand[indexHand].value + ".png' alt='test'></img>"
                    + "</div>");
@@ -146,21 +149,13 @@
             // Evenement quand on clique sur une des cartes
             $('body').on("click", ".handPlayer", function(){
 
-                if(choixValider){
-                    //Ne rien faire tant que le tour n'est pas terminé
-                }else{
                     $(".handPlayer").removeClass("cardChoice");
                     $(this).addClass("cardChoice");
-                    //alert(this.id);
-                    if(confirm("Souhaitez-vous sélectionner la carte ?")){
-                        carteChoisie = this.id.match(/\d+/g).map(Number);
-                        choixValider = true;
-                    }else{
-                        $(".handPlayer").removeClass("cardChoice");
-                        carteChoisie = -1;
-                        choixValider = false;
-                    }
-                }                
+                    carteChoisie = this.id.match(/\d+/g).map(Number);        
+            });
+
+            $("#validerChoix").click(function(){
+                socket.emit('carteChoisie', carteChoisie)
             });
 
 

@@ -10,6 +10,8 @@ app.set('view engine', 'ejs');
 
 var fs = require('fs');
 
+var boards = Array();
+
 //renvoie le deck mélangé
 function generateDeck(){
 	
@@ -70,7 +72,7 @@ function draw(deck){
 	
 	var card = deck[0];
 	deck.shift();
-	console.log(card)
+	
 	return card;
 	
 }
@@ -78,10 +80,10 @@ function draw(deck){
 //Créer un tableau vide
 function generateBoard(){
     var board = [  
-                    Array(6),
-                    Array(6),
-                    Array(6),
-                    Array(6)
+                    Array(),
+                    Array(),
+                    Array(),
+                    Array()
                 ]
     return board;
 }
@@ -111,36 +113,45 @@ function generateHand(deck){
 function putCards(cards, board){
 	
 	//on commence par trier les cartes par ordre croissant
-	cards.sort();
-	
+	cards.sort(function(a,b){
+        return a.value - b.value;
+    });
+
+
 	var max = 105;
 	var row;
 	
 	//Pour chaques cartes
-	for(cardIndex = 0; cardIndex < cardIndex.length; cardIndex ++){
-		
+	for(cardIndex = 0; cardIndex < cards.length-1; cardIndex ++){
+		console.log("bj");
 		//Pour chaques rangées
-		for(boardIndex = 0; boardIndex < boardIndex.length; cardIndex ++){
-			
+		for (boardIndex = 0; boardIndex < board.length-1; boardIndex++) {
+            
+            console.log(board[boardIndex]);
+            console.log(' bonjour ' + cards[cardIndex+1].value + ' bonjour ' + board[board.length - 1].value + ' bonjour ' + cards[cardIndex+1].value);
+
 			//on choisit la meilleur rangée
-			if (cards[cardIndex] > Math.max(board[boardIndex]) && cards[cardIndex] < max ){
-				var max = Math.max(board[boardIndex]);
-				var row = boardIndex;
+			if (cards[cardIndex].value > board[board.length].value && cards[cardIndex].value < max ){
+				var max = board[board.index.length];
+                var row = boardIndex;
+                console.log('bonjour' + row);
 			}
 			
 		}
-		
+        
+        console.log(row);
+        console.log(cards[cardIndex]);
 		//on pose la carte
-		board[row].push(cards[cardIndex])
+		board[row].push(cards[cardIndex]);
 		
 		//si c'est la 6ème, on gère les points
-		if (board[row].length >= 6){ 
+		if (board[row].length >= 5){ 
 			board[row] == Array(6);
 			board[row][0] = cards[cardIndex];
 		}
 		
 	}
-	
+	return board;
 }
 
 
@@ -200,6 +211,63 @@ io.sockets.on('connection', function (socket, joueur) {
     });
 
 
+    socket.on('carteChoisie', function(carteChoisie){
+
+        socket.carteChoisie = carteChoisie;
+
+        var joueurRoom = 0;
+        var joueurRoomHasPlayed= 0 ;
+        var currentRoom = socket.room;
+
+        Object.keys(io.sockets.sockets).forEach(function (socketId) {
+            let socket = io.sockets.connected[socketId];
+
+            if (socket.room == currentRoom) {
+                joueurRoom = joueurRoom + 1;
+                if (socket.carteChoisie > 0) {
+                    joueurRoomHasPlayed = joueurRoomHasPlayed + 1;
+                }
+            }
+        });
+
+
+        if (joueurRoom == joueurRoomHasPlayed) {
+   
+            let cartes = Array();
+
+            //on récupère les joueurs connectés à la pièce
+            Object.keys(io.sockets.sockets).forEach(function (socketId) {
+                let socket = io.sockets.connected[socketId];
+
+                //on prend seulement les joueurs de la room
+                if (socket.room == currentRoom) {
+
+                    cartes.push(socket.hand[carteChoisie]);
+                    socket.hand.splice(carteChoisie,1);
+                }
+            });
+
+            boards[socket.room] = putCards(cartes, boards[socket.room]);
+
+            //on récupère les joueurs connectés à la pièce
+            Object.keys(io.sockets.sockets).forEach(function (socketId) {
+                let socket = io.sockets.connected[socketId];
+
+                socket.carteChoisie = -1;
+                //on prend seulement les joueurs de la room
+                if (socket.room == currentRoom) {
+                    socket.emit('init', {
+                        hand: socket.hand,
+                        board: boards[socket.room]
+                    });
+                }
+            });
+
+        }
+
+    });
+    
+
     //on attend que les joueurs soient prêts
     socket.on('ready', function () {
 
@@ -223,7 +291,7 @@ io.sockets.on('connection', function (socket, joueur) {
         });
 
         // Quand 2 à 10 joueurs sont prêts go.
-        if (joueurRoom == joueurRoomReady && joueurRoomReady >= 2 && joueurRoomReady <= 2){
+        if (joueurRoom == joueurRoomReady && joueurRoomReady >= 2 && joueurRoomReady <= 10){
 
         //envoi à tout le monde sauf le client
         socket.broadcast.to(socket.room).emit('room_chat',socket.pseudo + " est prêt, que la partie commence !<br>");
@@ -235,10 +303,10 @@ io.sockets.on('connection', function (socket, joueur) {
             var deck = generateDeck();
 
             //on créer un tableau de jeu
-            var board = generateBoard();
+            boards[socket.room] = generateBoard();
 
             //on pose les 4 premières cartes
-            init_board(board, deck);
+            init_board(boards[socket.room], deck);
 
             //on récupère les joueurs connectés à la pièce
             Object.keys(io.sockets.sockets).forEach(function(socketId){
@@ -251,7 +319,10 @@ io.sockets.on('connection', function (socket, joueur) {
                     socket.hand = generateHand(deck);                    
 
                     //on envoie la main et le tableau au joueur
-                    socket.emit('init',{ hand:socket.hand, board:board});
+                    socket.emit('init', {
+                        hand: socket.hand,
+                        board: boards[socket.room]
+                    });
                 }
             });
         }

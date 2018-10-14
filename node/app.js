@@ -109,6 +109,64 @@ function generateHand(deck){
     return hand;
 }
 
+
+function putCards(cards, board){
+
+    //on commence par trier les cartes par ordre croissant
+    cards.sort(function (a, b) {
+        return a.value - b.value;
+    });
+ 
+
+    // Cette première boucle parcourt uniquement les cartes
+    for(indexCarte = 0; indexCarte < cards.length; indexCarte++){
+
+        var valeurCarte = cards[indexCarte].value;
+     
+        var superieureACarte = 0;
+        var ligneOuPlacerCarte = -1;
+
+        // Cette boucle parcourt les 4 lignes du board
+        for(ligneBoard = 0; ligneBoard < board.length; ligneBoard++){
+
+            var valeurDerniereCarteLigne = board[ligneBoard][board[ligneBoard].length - 1].value;
+            // Ici on est sensé voir la dernière carte de la ligne en cours
+      
+            
+
+            //Si la carte que souhaite posé le joueur est plus grande que la dernière carte de la ligne
+            if(valeurCarte > valeurDerniereCarteLigne){
+
+             
+                // Ici on sera d'obtenir à la fin du parcours entier du board la carte la plus proche de celle du joueur à la fin du parcours
+                if(valeurDerniereCarteLigne > superieureACarte){
+
+                    ligneOuPlacerCarte = ligneBoard;
+                    superieureACarte = valeurDerniereCarteLigne;
+                    
+                }
+
+            }
+            
+
+
+        }
+        console.log(ligneOuPlacerCarte);
+        board[ligneOuPlacerCarte].push(cards[indexCarte]);
+    
+        //si c'est la 6ème, on gère les points
+        if (board[ligneOuPlacerCarte].length >= 6) {
+            board[ligneOuPlacerCarte] == Array(6);
+            board[ligneOuPlacerCarte][0] = cards[indexCarte];
+        }
+
+
+    }
+
+    return board;
+}
+
+/**
 //pose une array de cartes sur le board
 function putCards(cards, board){
 	
@@ -116,25 +174,33 @@ function putCards(cards, board){
 	cards.sort(function(a,b){
         return a.value - b.value;
     });
+    console.log(cards);
 
 
-	var max = 105;
-	var row;
-	
 	//Pour chaques cartes
 	for(cardIndex = 0; cardIndex < cards.length; cardIndex ++){
-		console.log("bj");
+        //Cette variable permet de savoir si la carte précédente est bien plus faible
+        var min = 0;
+
+        // Cette variable permet de définir la ligne retenue à la fin des tests
+        var row;
+
+        // Cette variable permet de savoir sur quelle ligne la différence est la plus faible
+        var diff = 105;
 		//Pour chaques rangées
 		for (boardIndex = 0; boardIndex < board.length; boardIndex++) {
             
-            console.log(board[boardIndex]);
-            console.log(" bonjour " + cards[cardIndex].value + " bonjour " + JSON.stringify(board[boardIndex]) + " bonjour " + cards[cardIndex].value);
-
+         
 			//on choisit la meilleur rangée
-			if (cards[cardIndex].value > board[boardIndex][0].value && cards[cardIndex].value < max ){
-				var max = board[boardIndex][0];
-                var row = boardIndex;
-                console.log('bonjour' + row);
+            if (cards[cardIndex].value > board[boardIndex][board[boardIndex].length-1].value && cards[cardIndex].value > min){
+                
+                if (board[boardIndex][board[boardIndex].length - 1] > min && (cards[cardIndex].value - board[boardIndex][board[boardIndex].length-1].value) < dif){
+                    var min = board[boardIndex][board[boardIndex].length - 1];
+                    var row = boardIndex;
+                    var diff = cards[cardIndex].value - board[boardIndex][board[boardIndex].length - 1].value;
+                }
+                
+               
 			}
 			
 		}
@@ -145,7 +211,7 @@ function putCards(cards, board){
 		board[row].push(cards[cardIndex]);
 		
 		//si c'est la 6ème, on gère les points
-		if (board[row].length >= 5){ 
+		if (board[row].length >= 6){ 
 			board[row] == Array(6);
 			board[row][0] = cards[cardIndex];
 		}
@@ -153,7 +219,7 @@ function putCards(cards, board){
 	}
 	return board;
 }
-
+*/
 
 console.log('Serveur on');
 
@@ -246,7 +312,7 @@ io.sockets.on('connection', function (socket, joueur) {
                     socket.hand.splice(carteChoisie,1);
                 }
             });
-            console.log(boards[socket.room]);
+         
             boards[socket.room] = putCards(cartes, boards[socket.room]);
 
             //on récupère les joueurs connectés à la pièce

@@ -1,5 +1,3 @@
-
-
 let http = require('http');
 
 let express = require('express');
@@ -18,171 +16,14 @@ let selectedCards = Array();
 
 let server = require("http").Server(app);
 
-//renvoie le deck mélangé
-function generateDeck(){
-	
-	//génère une array de 1 à 104
-    let deck = [];
-    for(i = 1; i <= 104; i++){
-
-        // On test toutes les valeurs de cartes pour savoir le nombre de malus
-        // On test les cartes qui sont divisibles par 11 qui ont un malus de 5
-        if(i%11 === 0){
-            
-            // Sauf le 55 qui a un malus 6
-            if(i === 55){
-                deck.push(generateCard(i, 6));
-                continue;
-            }
-            deck.push(generateCard(i, 5));
-            continue;
-        }
-        // On test si la valeur est divisible par 5 car 5, 15 , 25 ... ont 2 de malus
-        if(i%5 === 0){
-
-            // il faut par contre tester que la valeur n'est pas divisible par 10 car sinon le malus pour 
-            // 10, 20, 30 ... est de 3
-            if(i%10 === 0){
-                deck.push(generateCard(i, 3));
-                continue;
-            }
-            // Sinon c'est que c'est 5,15,25 forcémeent
-            deck.push(generateCard(i, 2))
-            continue;
-
-        }
-
-        deck.push(generateCard(i, 1));
-
-    }
-	
-	//mélange l'array
-	for(let j, x, i = deck.length; i; j = parseInt(Math.random() * i), x = deck[--i], deck[i] = deck[j], deck[j] = x); 
-	
-	return deck;
-	
-}
-
-function generateCard(value, malus){
-
-    let card = new Object();
-    card.value = value;
-    card.malus = malus;
-
-    return card;
-
-}
-
-//pioche une carte et la retire du packet
-function draw(deck){
-	
-	let card = deck[0];
-	deck.shift();
-	
-	return card;
-	
-}
-
-//Créer un tableau vide
-function generateBoard(){
-    let board = [  
-                    Array(),
-                    Array(),
-                    Array(),
-                    Array()
-                ]
-    return board;
-}
-
-//Initialise un tableau à partir de 4 cartes d'un deck
-function init_board(board,deck){
-    board[0][0] = draw(deck);
-    board[1][0] = draw(deck);
-    board[2][0] = draw(deck);
-    board[3][0] = draw(deck);
-    return true;
-}
-
-
-//Créer une main à partir de 10 cartes d'un deck
-function generateHand(deck){
-
-    let hand = [];
-
-    for(let indexHand=0;indexHand<10;indexHand++)
-        hand.push(draw(deck));
-
-    return hand;
-}
-
-
-function putCards(cards, board){
-
-    //on commence par trier les cartes par ordre croissant
-    cards.sort(function (a, b) {
-        return a.value - b.value;
-    });
-   
-    
-    let cardValue;
-    let higherThanCard;
-    let row;
-
-    // Cette première boucle parcourt uniquement les cartes
-    for(cardIndex = 0; cardIndex < cards.length; cardIndex++){
-
-        cardValue = cards[cardIndex].value;
-     
-        higherThanCard = 0;
-        row = -1;
-
-        // Cette boucle parcourt les 4 lignes du board
-        for(boardLine = 0; boardLine < board.length; boardLine++){
-
-            let lastCardValue = board[boardLine][board[boardLine].length - 1].value;
-            // Ici on est sensé voir la dernière carte de la ligne en cours
-      
-            
-
-            //Si la carte que souhaite posé le joueur est plus grande que la dernière carte de la ligne
-            if(cardValue > lastCardValue){
-
-             
-                // Ici on sera d'obtenir à la fin du parcours entier du board la carte la plus proche de celle du joueur à la fin du parcours
-                if(lastCardValue > higherThanCard){
-
-                    row = boardLine;
-                    higherThanCard = lastCardValue;
-                    
-                }
-
-            }
-            
-
-
-        }
-
-        board[row].push(cards[cardIndex]);
-    
-        //si c'est la 6ème, on gère les points
-        if (board[row].length >= 6) {
-            board[row] == Array();
-            board[row][0] = cards[cardIndex];
-        }
-
-
-    }
-
-    return board;
-}
-
+let deckModule = require('./src/deck.js');
+let boardModule = require('./src/board.js');
+let playerModule = require('./src/player.js');
 
 console.log('Serveur on');
 
 
 
-// Chargement du fichier public (style)
-console.log(__dirname)
 app.use(express.static(__dirname + '/public'));
 
 // Chargement du fichier d'index
@@ -197,14 +38,12 @@ app.use("/", (req, res) => {
 let io = require('socket.io').listen(server);
 
 
+io.sockets.on('connection', function (socket, player) {
 
-
-io.sockets.on('connection', function (socket, joueur) {
-
-    //on demande le pseudo au joueur et on récupère sa room
-        socket.on('nickname', function(joueur) {
-                socket.room = joueur.room;
-                socket.pseudo = joueur.pseudo;
+    //on demande le pseudo au player et on récupère sa room
+        socket.on('nickname', function(player) {
+                socket.room = player.room;
+                socket.pseudo = player.pseudo;
 
                 //on rejoint la salle et on envoie un message dans le salon (et la console)
                 socket.join(socket.room);
@@ -222,14 +61,6 @@ io.sockets.on('connection', function (socket, joueur) {
         io.in(socket.room).emit('room_chat',socket.pseudo + ": " +message+"<br>"); //envoi le message à tout le monde dans la salle room_chat
     });
 
-
-
-    socket.on('played', function(){
-
-
-
-    });
-
     socket.on('carteChoisie', function (carteChoisie) {        
         
 
@@ -239,7 +70,7 @@ io.sockets.on('connection', function (socket, joueur) {
         if (selectedCards.length == playerAmount) {
     
 
-          boards[socket.room] = putCards(selectedCards, boards[socket.room]);
+          boards[socket.room] = boardModule.putCards(selectedCards, boards[socket.room]);
           //on récupère les joueurs connectés à la pièce
           Object.keys(io.sockets.sockets).forEach(function(socketId) {
             let socket = io.sockets.connected[socketId];
@@ -296,13 +127,13 @@ io.sockets.on('connection', function (socket, joueur) {
           socket.emit("room_chat", "vous êtes prêt, la partie peut commencer !<br>");
 
           //on créer un deck
-          let deck = generateDeck();
+          let deck = deckModule.generateDeck();
 
           //on créer un tableau de jeu
-          boards[socket.room] = generateBoard();
+          boards[socket.room] = boardModule.generateBoard();
 
           //on pose les 4 premières cartes
-          init_board(boards[socket.room], deck);
+          boardModule.init_board(boards[socket.room], deck);
 
           //on récupère les joueurs connectés à la pièce
           Object.keys(io.sockets.sockets).forEach(function(socketId) {
@@ -311,9 +142,9 @@ io.sockets.on('connection', function (socket, joueur) {
             //on prend seulement les joueurs de la room
             if (socket.room == currentRoom) {
               //on génère la main
-              socket.hand = generateHand(deck);
+              socket.hand = playerModule.generateHand(deck);
 
-              //on envoie la main et le tableau au joueur
+              //on envoie la main et le tableau au player
               socket.emit("init", {
                 hand: socket.hand,
                 board: boards[socket.room]

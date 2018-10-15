@@ -1,20 +1,22 @@
 
 
-var http = require('http');
+let http = require('http');
 
-var express = require('express');
+let express = require('express');
 
-var app = express();
+let app = express();
 
 app.set('view engine', 'ejs');
 
-var fs = require('fs');
+let fs = require('fs');
 
-var boards = Array();
+let boards = Array();
 
-var playerAmount = 0;
+let playerAmount = 0;
 
-var cartesSelectionnees = Array();
+let selectedCards = Array();
+
+let server = require("http").Server(app);
 
 //renvoie le deck mélangé
 function generateDeck(){
@@ -29,10 +31,10 @@ function generateDeck(){
             
             // Sauf le 55 qui a un malus 6
             if(i === 55){
-                deck.push(generateCarte(i, 6));
+                deck.push(generateCard(i, 6));
                 continue;
             }
-            deck.push(generateCarte(i, 5));
+            deck.push(generateCard(i, 5));
             continue;
         }
         // On test si la valeur est divisible par 5 car 5, 15 , 25 ... ont 2 de malus
@@ -41,40 +43,40 @@ function generateDeck(){
             // il faut par contre tester que la valeur n'est pas divisible par 10 car sinon le malus pour 
             // 10, 20, 30 ... est de 3
             if(i%10 === 0){
-                deck.push(generateCarte(i, 3));
+                deck.push(generateCard(i, 3));
                 continue;
             }
             // Sinon c'est que c'est 5,15,25 forcémeent
-            deck.push(generateCarte(i, 2))
+            deck.push(generateCard(i, 2))
             continue;
 
         }
 
-        deck.push(generateCarte(i, 1));
+        deck.push(generateCard(i, 1));
 
     }
 	
 	//mélange l'array
-	for(var j, x, i = deck.length; i; j = parseInt(Math.random() * i), x = deck[--i], deck[i] = deck[j], deck[j] = x); 
+	for(let j, x, i = deck.length; i; j = parseInt(Math.random() * i), x = deck[--i], deck[i] = deck[j], deck[j] = x); 
 	
 	return deck;
 	
 }
 
-function generateCarte(value, malus){
+function generateCard(value, malus){
 
-    let carte = new Object();
-    carte.value = value;
-    carte.malus = malus;
+    let card = new Object();
+    card.value = value;
+    card.malus = malus;
 
-    return carte;
+    return card;
 
 }
 
 //pioche une carte et la retire du packet
 function draw(deck){
 	
-	var card = deck[0];
+	let card = deck[0];
 	deck.shift();
 	
 	return card;
@@ -83,7 +85,7 @@ function draw(deck){
 
 //Créer un tableau vide
 function generateBoard(){
-    var board = [  
+    let board = [  
                     Array(),
                     Array(),
                     Array(),
@@ -105,9 +107,9 @@ function init_board(board,deck){
 //Créer une main à partir de 10 cartes d'un deck
 function generateHand(deck){
 
-    var hand = [];
+    let hand = [];
 
-    for(var indexHand=0;indexHand<10;indexHand++)
+    for(let indexHand=0;indexHand<10;indexHand++)
         hand.push(draw(deck));
 
     return hand;
@@ -122,33 +124,35 @@ function putCards(cards, board){
     });
    
     
- 
+    let cardValue;
+    let higherThanCard;
+    let row;
 
     // Cette première boucle parcourt uniquement les cartes
-    for(indexCarte = 0; indexCarte < cards.length; indexCarte++){
+    for(cardIndex = 0; cardIndex < cards.length; cardIndex++){
 
-        var valeurCarte = cards[indexCarte].value;
+        cardValue = cards[cardIndex].value;
      
-        var superieureACarte = 0;
-        var ligneOuPlacerCarte = -1;
+        higherThanCard = 0;
+        row = -1;
 
         // Cette boucle parcourt les 4 lignes du board
-        for(ligneBoard = 0; ligneBoard < board.length; ligneBoard++){
+        for(boardLine = 0; boardLine < board.length; boardLine++){
 
-            var valeurDerniereCarteLigne = board[ligneBoard][board[ligneBoard].length - 1].value;
+            let lastCardValue = board[boardLine][board[boardLine].length - 1].value;
             // Ici on est sensé voir la dernière carte de la ligne en cours
       
             
 
             //Si la carte que souhaite posé le joueur est plus grande que la dernière carte de la ligne
-            if(valeurCarte > valeurDerniereCarteLigne){
+            if(cardValue > lastCardValue){
 
              
                 // Ici on sera d'obtenir à la fin du parcours entier du board la carte la plus proche de celle du joueur à la fin du parcours
-                if(valeurDerniereCarteLigne > superieureACarte){
+                if(lastCardValue > higherThanCard){
 
-                    ligneOuPlacerCarte = ligneBoard;
-                    superieureACarte = valeurDerniereCarteLigne;
+                    row = boardLine;
+                    higherThanCard = lastCardValue;
                     
                 }
 
@@ -158,12 +162,12 @@ function putCards(cards, board){
 
         }
 
-        board[ligneOuPlacerCarte].push(cards[indexCarte]);
+        board[row].push(cards[cardIndex]);
     
         //si c'est la 6ème, on gère les points
-        if (board[ligneOuPlacerCarte].length >= 6) {
-            board[ligneOuPlacerCarte] == Array();
-            board[ligneOuPlacerCarte][0] = cards[indexCarte];
+        if (board[row].length >= 6) {
+            board[row] == Array();
+            board[row][0] = cards[cardIndex];
         }
 
 
@@ -175,7 +179,7 @@ function putCards(cards, board){
 
 console.log('Serveur on');
 
-var server = require('http').Server(app);
+
 
 // Chargement du fichier public (style)
 console.log(__dirname)
@@ -190,10 +194,8 @@ app.use("/", (req, res) => {
 
 // Chargement de socket.io
 
-var io = require('socket.io').listen(server);
+let io = require('socket.io').listen(server);
 
-var joueurs_connected = 0;
-var joueurs_ready = 0;
 
 
 
@@ -231,13 +233,13 @@ io.sockets.on('connection', function (socket, joueur) {
     socket.on('carteChoisie', function (carteChoisie) {        
         
 
-        cartesSelectionnees.push(socket.hand[carteChoisie]);
+        selectedCards.push(socket.hand[carteChoisie]);
 
         socket.hand.splice(carteChoisie, 1);
-        if (cartesSelectionnees.length == playerAmount) {
+        if (selectedCards.length == playerAmount) {
     
 
-          boards[socket.room] = putCards(cartesSelectionnees, boards[socket.room]);
+          boards[socket.room] = putCards(selectedCards, boards[socket.room]);
           //on récupère les joueurs connectés à la pièce
           Object.keys(io.sockets.sockets).forEach(function(socketId) {
             let socket = io.sockets.connected[socketId];
@@ -251,7 +253,7 @@ io.sockets.on('connection', function (socket, joueur) {
             });
           });
 
-          cartesSelectionnees = Array();
+          selectedCards = Array();
         }
     });
 
@@ -264,9 +266,9 @@ io.sockets.on('connection', function (socket, joueur) {
 
         socket.ready = 1;
 
-        var currentRoom = socket.room;
-        var joueurRoom = 0;
-        var playerRoomReady = 0;
+        let currentRoom = socket.room;
+        let joueurRoom = 0;
+        let playerRoomReady = 0;
 
         //on attend que les joueurs de la pièce soient tous prêt
         Object.keys(io.sockets.sockets).forEach(function(socketId){
@@ -294,7 +296,7 @@ io.sockets.on('connection', function (socket, joueur) {
           socket.emit("room_chat", "vous êtes prêt, la partie peut commencer !<br>");
 
           //on créer un deck
-          var deck = generateDeck();
+          let deck = generateDeck();
 
           //on créer un tableau de jeu
           boards[socket.room] = generateBoard();

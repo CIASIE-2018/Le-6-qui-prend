@@ -99,28 +99,30 @@
 
  
 
-            //Carte choisie par le joueur
+            //Carte choisie par le player
             let carteChoisie = -1;
             let choixValider = false;
-
+            let room;
+            let socket;
+            let player;
 
             if (window.location.pathname == "/"){
-                var room = prompt('Entrez le nom du salon à créer/rejoindre');
+                room = prompt('Entrez le nom du salon à créer/rejoindre');
                 window.location.replace(window.location.href + room);
             }
             else {
 
-                var socket = io.connect('http://localhost:8080');
+                socket = io.connect('http://localhost:8080');
 
-                // On créer un joueur
-                var joueur = new Object(); 
+                // On créer un player
+                player = new Object(); 
 
                 // On demande le pseudo au visiteur...
-                joueur.pseudo = prompt('Quel est votre pseudo ?');
-                joueur.room = window.location.pathname;
+                player.pseudo = prompt('Quel est votre pseudo ?');
+                player.room = window.location.pathname;
 
                 //on envoie le pseudo au serveur
-                socket.emit('nickname', joueur);
+                socket.emit('nickname', player);
 
                 //on attend les messages dans les 2 chats
                 socket.on('general_chat',function(message){

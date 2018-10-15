@@ -2,71 +2,71 @@
 
 <html>
 
-    <head>
+<head>
 
-        <meta charset="utf-8" />
-        <title>Le 6 qui prend</title>
-        <link rel="stylesheet" type="text/css" href="style.css">
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+    <meta charset="utf-8" />
+    <title>Le 6 qui prend</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
 
-    </head>
+</head>
 
- 
 
-    <body>
-        <h1>Commande</h1>
-        <p><input type="button" value="Ready" id="ready" /></p>
 
-        <h1>Main</h1>
-        <div class="hand"></div>
-        <button id="validerChoix">Confirmer mon choix</button>
-        <h1>Tableau de jeu</h1>
-        <div class="board">
-            <nav class="ligne1">
-                <ul class="l1col1"></ul>
-                <ul class="l1col2"></ul>
-                <ul class="l1col3"></ul>
-                <ul class="l1col4"></ul>
-                <ul class="l1col5"></ul>
-                <ul class="l1col6"></ul>
-            </nav>
-            <hr class="hr-text" >
-  
-            <nav class="ligne2">
-                <ul class="l2col1"></ul>
-                <ul class="l2col2"></ul>
-                <ul class="l2col3"></ul>
-                <ul class="l2col4"></ul>
-                <ul class="l2col5"></ul>
-                <ul class="l2col6"></ul>
-            </nav>
-            <hr class="hr-text" >
-    
-            <nav class="ligne3">
-                <ul class="l3col1"></ul>
-                <ul class="l3col2"></ul>
-                <ul class="l3col3"></ul>
-                <ul class="l3col4"></ul>
-                <ul class="l3col5"></ul>
-                <ul class="l3col6"></ul>
-            </nav>
-            
-            <hr class="hr-text">
-       
-            <nav class="ligne4">
-                <ul class="l4col1"></ul>
-                <ul class="l4col2"></ul>
-                <ul class="l4col3"></ul>
-                <ul class="l4col4"></ul>
-                <ul class="l4col5"></ul>
-                <ul class="l4col6"></ul>
-            </nav>
-            <hr class="hr-text">
-      
+<body>
+    <h1>Commande</h1>
+    <p><input type="button" value="Ready" id="ready" /></p>
 
-        </div>
-        
+    <h1>Main</h1>
+    <div class="hand"></div>
+    <button id="validerChoix">Confirmer mon choix</button>
+    <h1>Tableau de jeu</h1>
+    <div class="board">
+        <nav class="ligne1">
+            <ul class="l1col1"></ul>
+            <ul class="l1col2"></ul>
+            <ul class="l1col3"></ul>
+            <ul class="l1col4"></ul>
+            <ul class="l1col5"></ul>
+            <ul class="l1col6"></ul>
+        </nav>
+        <hr class="hr-text">
+
+        <nav class="ligne2">
+            <ul class="l2col1"></ul>
+            <ul class="l2col2"></ul>
+            <ul class="l2col3"></ul>
+            <ul class="l2col4"></ul>
+            <ul class="l2col5"></ul>
+            <ul class="l2col6"></ul>
+        </nav>
+        <hr class="hr-text">
+
+        <nav class="ligne3">
+            <ul class="l3col1"></ul>
+            <ul class="l3col2"></ul>
+            <ul class="l3col3"></ul>
+            <ul class="l3col4"></ul>
+            <ul class="l3col5"></ul>
+            <ul class="l3col6"></ul>
+        </nav>
+
+        <hr class="hr-text">
+
+        <nav class="ligne4">
+            <ul class="l4col1"></ul>
+            <ul class="l4col2"></ul>
+            <ul class="l4col3"></ul>
+            <ul class="l4col4"></ul>
+            <ul class="l4col5"></ul>
+            <ul class="l4col6"></ul>
+        </nav>
+        <hr class="hr-text">
+
+
+    </div>
+
     <div class="chats">
         <div class="toggle_general_chat current_chat">Chat général</div>
 
@@ -78,137 +78,137 @@
                 <input class="general_input" type="text">
                 <button class="general_send">envoyer</button>
             </div>
-        </div> 
+        </div>
 
         <div id="room_chat">
             <div class="room_content"></div>
-                <div class="control_chat">
-                  <input class="room_input"  type="text">
-                 <button class="room_send">envoyer</button>
+            <div class="control_chat">
+                <input class="room_input" type="text">
+                <button class="room_send">envoyer</button>
             </div>
         </div>
     </div>
 
-        <!-- On ajoute jquery-->
-        <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+    <div class="scoreboard">
+        <h1>Tableau des scores</h1>
+        <ul id="room_score_list">
+        </ul>
+    </div>
 
-        <!-- On ajoute socket.io-->
-        <script src="/socket.io/socket.io.js"></script>
+    <!-- On ajoute jquery-->
+    <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
 
-        <script>
+    <!-- On ajoute socket.io-->
+    <script src="/socket.io/socket.io.js"></script>
 
- 
+    <script>
+        //Carte choisie par le joueur
+        let carteChoisie = -1;
+        let choixValider = false;
 
-            //Carte choisie par le joueur
-            let carteChoisie = -1;
-            let choixValider = false;
 
+        if (window.location.pathname == "/") {
+            var room = prompt('Entrez le nom du salon à créer/rejoindre');
+            window.location.replace(window.location.href + room);
+        } else {
 
-            if (window.location.pathname == "/"){
-                var room = prompt('Entrez le nom du salon à créer/rejoindre');
-                window.location.replace(window.location.href + room);
-            }
-            else {
+            var socket = io.connect('http://localhost:8080');
 
-                var socket = io.connect('http://localhost:8080');
+            // On créer un joueur
+            var joueur = new Object();
 
-                // On créer un joueur
-                var joueur = new Object(); 
+            // On demande le pseudo au visiteur...
+            joueur.pseudo = prompt('Quel est votre pseudo ?');
+            joueur.room = window.location.pathname;
 
-                // On demande le pseudo au visiteur...
-                joueur.pseudo = prompt('Quel est votre pseudo ?');
-                joueur.room = window.location.pathname;
+            //on envoie le pseudo au serveur
+            socket.emit('nickname', joueur);
 
-                //on envoie le pseudo au serveur
-                socket.emit('nickname', joueur);
+            //on attend les messages dans les 2 chats
+            socket.on('general_chat', function(message) {
+                $('.general_content').append(message)
+            });
 
-                //on attend les messages dans les 2 chats
-                socket.on('general_chat',function(message){
-                    $('.general_content').append(message)
-                });
-
-                socket.on('room_chat',function(message){
-                    $('.room_content').append(message)
-                });
+            socket.on('room_chat', function(message) {
+                $('.room_content').append(message)
+            });
 
             //on attend le signal init du serveur qui envoie la main et le board
             socket.on('init', function(init) {
 
                 console.log(init);
                 //on parcours le board pour l'afficher
-                for (indexBoard = 0;indexBoard<init.board.length;indexBoard++){
-                    for (indexBoard2 = 0;indexBoard2<init.board[indexBoard].length;indexBoard2++){
+                for (indexBoard = 0; indexBoard < init.board.length; indexBoard++) {
+                    for (indexBoard2 = 0; indexBoard2 < init.board[indexBoard].length; indexBoard2++) {
 
-                        if (init.board[indexBoard][indexBoard2]){
-                            let tmp = indexBoard+1;
+                        if (init.board[indexBoard][indexBoard2]) {
+                            let tmp = indexBoard + 1;
                             let tmp2 = indexBoard2 + 1
-                        console.log(init.board[indexBoard][indexBoard2].value);
-                            $('.l'+tmp+'col'+ tmp2).html("<img src='src/" + init.board[indexBoard][indexBoard2].value + ".png' alt='test'></img>");
+                            console.log(init.board[indexBoard][indexBoard2].value);
+                            $('.l' + tmp + 'col' + tmp2).html("<img src='src/" + init.board[indexBoard][indexBoard2].value + ".png' alt='test'></img>");
                         }
                     }
-                    
+
                 }
-$('.hand').html("");
+                $('.hand').html("");
                 //on parcours la main pour l'afficher
-                for (indexHand = 0;indexHand<init.hand.length;indexHand++){
-                    
-                    $('.hand').append("<div class ='handPlayer' id = 'handPlayer_" + indexHand + "'>" 
-                   + "<img src='src/" + init.hand[indexHand].value + ".png' alt='test'></img>"
-                   + "</div>");
+                for (indexHand = 0; indexHand < init.hand.length; indexHand++) {
+
+                    $('.hand').append("<div class ='handPlayer' id = 'handPlayer_" + indexHand + "'>" +
+                        "<img src='src/" + init.hand[indexHand].value + ".png' alt='test'></img>" +
+                        "</div>");
                 }
             })
 
             // Evenement quand on clique sur une des cartes
-            $('body').on("click", ".handPlayer", function(){
+            $('body').on("click", ".handPlayer", function() {
 
-                    $(".handPlayer").removeClass("cardChoice");
-                    $(this).addClass("cardChoice");
-                    carteChoisie = this.id.match(/\d+/g).map(Number);        
+                $(".handPlayer").removeClass("cardChoice");
+                $(this).addClass("cardChoice");
+                carteChoisie = this.id.match(/\d+/g).map(Number);
             });
 
-            $("#validerChoix").click(function(){
+            $("#validerChoix").click(function() {
                 socket.emit('carteChoisie', carteChoisie)
             });
 
 
             //quand click sur ready on indique au serveur qu'on est prêt
-            $('#ready').click(function () {
+            $('#ready').click(function() {
                 socket.emit('ready', '1');
                 $('#ready').remove();
             })
 
             //envoi message
-            $('.general_send').click(function(){
+            $('.general_send').click(function() {
                 let message = $('.general_input').val();
-                socket.emit('general_chat',message);
+                socket.emit('general_chat', message);
                 $('.general_input').val("");
             });
 
             //envoi message
-            $('.room_send').click(function(){
+            $('.room_send').click(function() {
                 let message = $('.room_input').val()
-                socket.emit('room_chat',message);
+                socket.emit('room_chat', message);
                 $('.room_input').val("");
             });
 
-            $('.toggle_general_chat').click(function(){
+            $('.toggle_general_chat').click(function() {
                 $(this).addClass("current_chat");
                 $(".toggle_room_chat").removeClass("current_chat");
                 $('#room_chat').hide();
                 $('#general_chat').show();
             });
 
-            $('.toggle_room_chat').click(function(){
+            $('.toggle_room_chat').click(function() {
                 $(this).addClass("current_chat");
                 $(".toggle_general_chat").removeClass("current_chat");
                 $('#general_chat').hide();
                 $('#room_chat').show();
             });
         }
-        
-        
-        </script>
+    </script>
 
-    </body>
+</body>
 
 </html>

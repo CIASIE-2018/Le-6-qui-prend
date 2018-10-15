@@ -71,23 +71,23 @@ function generateCarte(value, malus) {
 }
 
 //pioche une carte et la retire du packet
-function draw(deck){
-	
-	var card = deck[0];
-	deck.shift();
-	
-	return card;
-	
+function draw(deck) {
+
+    var card = deck[0];
+    deck.shift();
+
+    return card;
+
 }
 
 //Créer un tableau vide
-function generateBoard(){
-    var board = [  
-                    Array(),
-                    Array(),
-                    Array(),
-                    Array()
-                ]
+function generateBoard() {
+    var board = [
+        Array(),
+        Array(),
+        Array(),
+        Array()
+    ]
     return board;
 }
 
@@ -113,50 +113,50 @@ function generateHand(deck) {
 }
 
 
-function putCards(cards, board){
+function putCards(cards, board) {
 
     //on commence par trier les cartes par ordre croissant
-    cards.sort(function (a, b) {
+    cards.sort(function(a, b) {
         return a.value - b.value;
     });
- 
+
 
     // Cette première boucle parcourt uniquement les cartes
-    for(indexCarte = 0; indexCarte < cards.length; indexCarte++){
+    for (indexCarte = 0; indexCarte < cards.length; indexCarte++) {
 
         var valeurCarte = cards[indexCarte].value;
-     
+
         var superieureACarte = 0;
         var ligneOuPlacerCarte = -1;
 
         // Cette boucle parcourt les 4 lignes du board
-        for(ligneBoard = 0; ligneBoard < board.length; ligneBoard++){
+        for (ligneBoard = 0; ligneBoard < board.length; ligneBoard++) {
 
             var valeurDerniereCarteLigne = board[ligneBoard][board[ligneBoard].length - 1].value;
             // Ici on est sensé voir la dernière carte de la ligne en cours
-      
-            
+
+
 
             //Si la carte que souhaite posé le joueur est plus grande que la dernière carte de la ligne
-            if(valeurCarte > valeurDerniereCarteLigne){
+            if (valeurCarte > valeurDerniereCarteLigne) {
 
-             
+
                 // Ici on sera d'obtenir à la fin du parcours entier du board la carte la plus proche de celle du joueur à la fin du parcours
-                if(valeurDerniereCarteLigne > superieureACarte){
+                if (valeurDerniereCarteLigne > superieureACarte) {
 
                     ligneOuPlacerCarte = ligneBoard;
                     superieureACarte = valeurDerniereCarteLigne;
-                    
+
                 }
 
             }
-            
+
 
 
         }
         console.log(ligneOuPlacerCarte);
         board[ligneOuPlacerCarte].push(cards[indexCarte]);
-    
+
         //si c'est la 6ème, on gère les points
         if (board[ligneOuPlacerCarte].length >= 6) {
             board[ligneOuPlacerCarte] == Array(6);
@@ -223,6 +223,27 @@ function putCards(cards, board){
 	return board;
 }
 */
+//Refresh le scoreboard global de la page d'accueil
+function refreshGlobalScoreboard() {
+    let sb = $('#global_score_list');
+    let sql = 'SELECT * FROM users ORDER BY score DESC LIMIT 10';
+    connection.query(sql, function(err, result) {
+        Object.keys(result).forEach(function(key) {
+            sb.append('<li>' + result[key].pseudo + '-----' + result[key].score + '</li>');
+        });
+    });
+}
+
+//Refresh le scoreboard pour une room donnée
+function refreshRoomScoreboard(room) {
+    let sb = $('#score_list');
+    let sql = 'SELECT * FROM users WHERE room=\'' + room + '\' ORDER BY score DESC;';
+    connection.query(sql, function(err, result) {
+        Object.keys(result).forEach(function(key) {
+            sb.append('<li>' + result[key].pseudo + '-----' + result[key].score + '</li>');
+        });
+    });
+}
 
 console.log('Serveur on');
 
@@ -280,15 +301,15 @@ io.sockets.on('connection', function(socket, joueur) {
     });
 
 
-    socket.on('carteChoisie', function(carteChoisie){
+    socket.on('carteChoisie', function(carteChoisie) {
 
         socket.carteChoisie = carteChoisie;
 
         var joueurRoom = 0;
-        var joueurRoomHasPlayed= 0 ;
+        var joueurRoomHasPlayed = 0;
         var currentRoom = socket.room;
 
-        Object.keys(io.sockets.sockets).forEach(function (socketId) {
+        Object.keys(io.sockets.sockets).forEach(function(socketId) {
             let socket = io.sockets.connected[socketId];
 
             if (socket.room == currentRoom) {
@@ -301,25 +322,25 @@ io.sockets.on('connection', function(socket, joueur) {
 
 
         if (joueurRoom == joueurRoomHasPlayed) {
-   
+
             let cartes = Array();
 
             //on récupère les joueurs connectés à la pièce
-            Object.keys(io.sockets.sockets).forEach(function (socketId) {
+            Object.keys(io.sockets.sockets).forEach(function(socketId) {
                 let socket = io.sockets.connected[socketId];
 
                 //on prend seulement les joueurs de la room
                 if (socket.room == currentRoom) {
 
                     cartes.push(socket.hand[carteChoisie]);
-                    socket.hand.splice(carteChoisie,1);
+                    socket.hand.splice(carteChoisie, 1);
                 }
             });
-         
+
             boards[socket.room] = putCards(cartes, boards[socket.room]);
 
             //on récupère les joueurs connectés à la pièce
-            Object.keys(io.sockets.sockets).forEach(function (socketId) {
+            Object.keys(io.sockets.sockets).forEach(function(socketId) {
                 let socket = io.sockets.connected[socketId];
 
                 socket.carteChoisie = -1;
@@ -335,7 +356,7 @@ io.sockets.on('connection', function(socket, joueur) {
         }
 
     });
-    
+
 
     //on attend que les joueurs soient prêts
     socket.on('ready', function() {
@@ -360,7 +381,7 @@ io.sockets.on('connection', function(socket, joueur) {
         });
 
         // Quand 2 à 10 joueurs sont prêts go.
-        if (joueurRoom == joueurRoomReady && joueurRoomReady >= 2 && joueurRoomReady <= 10){
+        if (joueurRoom == joueurRoomReady && joueurRoomReady >= 2 && joueurRoomReady <= 10) {
 
 
 

@@ -61,12 +61,12 @@ io.sockets.on('connection', function (socket, player) {
         io.in(socket.room).emit('room_chat',socket.pseudo + ": " +message+"<br>"); //envoi le message à tout le monde dans la salle room_chat
     });
 
-    socket.on('carteChoisie', function (carteChoisie) {        
+    socket.on('cardChosen', function (cardChosen) {        
         
 
-        selectedCards.push(socket.hand[carteChoisie]);
+        selectedCards.push(socket.hand[cardChosen]);
 
-        socket.hand.splice(carteChoisie, 1);
+        socket.hand.splice(cardChosen, 1);
         if (selectedCards.length == playerAmount) {
     
 
@@ -82,6 +82,22 @@ io.sockets.on('connection', function (socket, player) {
               hand: socket.hand,
               board: boards[socket.room]
             });
+
+            //Si la partie est finie aka si la main est vide
+            if (socket.hand.length == 0){
+              //on reset le board
+              board[socket.room]= [
+                Array(),
+                Array(),
+                Array(),
+                Array()
+              ]
+              //on reset la main
+              socket.hand= Array();
+              //on préviens le client que la partie est finie
+              socket.emit("end");
+            }
+
           });
 
           selectedCards = Array();

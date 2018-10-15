@@ -68,7 +68,7 @@ let boardModule = {
             board[row].push(cards[cardIndex]);
             //si c'est la 6ème, on gère les points
             if (board[row].length >= 6) {
-                board[row] == Array();
+                board[row] = Array();
                 board[row][0] = cards[cardIndex];
             }
         }

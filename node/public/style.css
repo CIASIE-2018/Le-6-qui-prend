@@ -1,6 +1,8 @@
-body{
+html , body{
     background: #fcfcfa;
-    
+    width:100%;
+    padding:0;
+    margin:0;
 }
 
 div.hand{
@@ -128,3 +130,47 @@ div.board .ligne4 .l4col6{
     color: #818078;
     background-color: #fcfcfa;
 }
+
+#room_chat{
+    display:none;
+}
+
+.toggle_general_chat, .toggle_room_chat {
+    text-align:center;
+    width:49%;
+    box-sizing:border-box;
+    background-color:grey;
+    display:inline-block;
+    cursor:pointer;
+}
+
+.toggle_general_chat:hover, .toggle_room_chat:hover {
+    background-color:#cedaed;
+}
+
+.chats{
+    width:50%;
+    border-style:solid;
+}
+
+.current_chat{
+    font-weight:bold;
+}
+
+.room_content, .general_content{
+    height:15em;
+    overflow-y:auto;
+}
+
+@media screen and (max-width: 768px){
+
+    .chats{
+        width:100%
+    }
+
+.toggle_general_chat, .toggle_room_chat {
+    width:100%;
+}
+
+}
+

@@ -25,13 +25,11 @@ console.log('Serveur on');
 app.use(express.static(__dirname + '/public'));
 
 // Chargement du fichier d'index
-
 app.use("/", (req, res) => {
     res.render("main");
 });
 
 // Chargement de socket.io
-
 let io = require('socket.io').listen(server);
 
 io.sockets.on('connection', function(socket, player) {

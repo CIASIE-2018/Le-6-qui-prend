@@ -34,13 +34,11 @@ if (window.location.pathname == "/") {
     //on attend le signal init du serveur qui envoie la main et le board
     socket.on('init', function (init) {
 
-        console.log(init)
         //on parcours le board pour l'afficher
         for (indexBoard = 0; indexBoard < 4; indexBoard++) {
             for (indexBoard2 = 0; indexBoard2 < 6; indexBoard2++) {
                 let tmp = indexBoard + 1;
                 let tmp2 = indexBoard2 + 1;
-                console.log(init.board[indexBoard][indexBoard2])
                 if (init.board[indexBoard][indexBoard2] != undefined) {
                     $('.l' + tmp + 'col' + tmp2).html("<img src='src/" + init.board[indexBoard][indexBoard2].value + ".png' alt='test'></img>");
                 }
@@ -63,8 +61,10 @@ if (window.location.pathname == "/") {
     //fin de partie
     socket.on('end',function(){
         $('.hand').html("");
-        for (indexBoard = 0; indexBoard < init.board.length; indexBoard++) {
-            for (indexBoard2 = 0; indexBoard2 < init.board[indexBoard].length; indexBoard2++) {
+        for (indexBoard = 0; indexBoard < 4; indexBoard++) {
+            for (indexBoard2 = 0; indexBoard2 < 6; indexBoard2++) {
+                let tmp = indexBoard + 1;
+                let tmp2 = indexBoard2 + 1;
                 $('.l' + tmp + 'col' + tmp2).html("");
             }
         }

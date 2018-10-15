@@ -9,9 +9,7 @@ app.set('view engine', 'ejs');
 let fs = require('fs');
 
 let boards = Array();
-
-let playerAmount = 0;
-
+let playerAmount = Array()
 let selectedCards = Array();
 
 let server = require("http").Server(app);
@@ -63,14 +61,14 @@ io.sockets.on('connection', function (socket, player) {
 
     socket.on('cardChosen', function (cardChosen) {        
         
-
-        selectedCards.push(socket.hand[cardChosen]);
+      selectedCards[socket.room] = Array();
+        selectedCards[socket.room].push(socket.hand[cardChosen]);
 
         socket.hand.splice(cardChosen, 1);
-        if (selectedCards.length == playerAmount) {
+        if (selectedCards[socket.room].length == playerAmount[socket.room]) {
     
 
-          boards[socket.room] = boardModule.putCards(selectedCards, boards[socket.room]);
+          boards[socket.room] = boardModule.putCards(selectedCards[socket.room], boards[socket.room]);
           //on récupère les joueurs connectés à la pièce
           Object.keys(io.sockets.sockets).forEach(function(socketId) {
             let socket = io.sockets.connected[socketId];
@@ -100,7 +98,7 @@ io.sockets.on('connection', function (socket, player) {
 
           });
 
-          selectedCards = Array();
+          selectedCards[socket.room] = Array();
         }
     });
 
@@ -129,9 +127,9 @@ io.sockets.on('connection', function (socket, player) {
             }
           
         });
-        playerAmount = playerRoomReady;
+        playerAmount[socket.room] = playerRoomReady;
         // Quand 2 à 10 joueurs sont prêts go.
-        if (joueurRoom == playerAmount && playerAmount >= 2 && playerAmount <= 10) {
+        if (joueurRoom == playerAmount[socket.room] && playerAmount[socket.room] >= 2 && playerAmount[socket.room] <= 10) {
           //envoi à tout le monde sauf le client
           socket.broadcast
             .to(socket.room)
@@ -175,13 +173,13 @@ io.sockets.on('connection', function (socket, player) {
               "room_chat",
               socket.pseudo +
                 " est prêt ( " +
-                playerAmount +
+                playerAmount[socket.room] +
                 " / " +
                 joueurRoom +
                 " joueurs prêts )<br>"
             );
           //envoi au client
-            socket.emit("room_chat", "vous êtes prêt, la partie commencera quand tous les joueurs présents seront prêts ( " + playerAmount + " / " + joueurRoom + " joueurs prêts )<br>");
+            socket.emit("room_chat", "vous êtes prêt, la partie commencera quand tous les joueurs présents seront prêts ( " + playerAmount[socket.room] + " / " + joueurRoom + " joueurs prêts )<br>");
         }
     }); 
 });

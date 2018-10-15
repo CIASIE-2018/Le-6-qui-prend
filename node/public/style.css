@@ -38,6 +38,8 @@ div.board{
     color: #818078;
     font-family: Futura,
     sans-serif;
+    display:flex;
+    flex-direction: column;
 }
 
 div.board .ligne1,

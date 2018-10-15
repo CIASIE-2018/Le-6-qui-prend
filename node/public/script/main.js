@@ -79,7 +79,7 @@ if (window.location.pathname == "/") {
     });
 
     $("#validerChoix").click(function () {
-        socket.emit('cardChosen', cardChosen)
+        socket.emit('cardChosen', cardChosen);
     });
 
 

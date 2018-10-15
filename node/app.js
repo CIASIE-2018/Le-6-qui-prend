@@ -60,11 +60,15 @@ io.sockets.on('connection', function (socket, player) {
     });
 
     socket.on('cardChosen', function (cardChosen) {        
+
+      console.log("1");
         
-      selectedCards[socket.room] = Array();
+      
         selectedCards[socket.room].push(socket.hand[cardChosen]);
 
         socket.hand.splice(cardChosen, 1);
+
+
         if (selectedCards[socket.room].length == playerAmount[socket.room]) {
     
 
@@ -73,8 +77,10 @@ io.sockets.on('connection', function (socket, player) {
           Object.keys(io.sockets.sockets).forEach(function(socketId) {
             let socket = io.sockets.connected[socketId];
 
-            socket.carteChoisie = -1;
+            socket.cardChosen = -1;
             //on prend seulement les joueurs de la room
+
+            console.log("2");
 
             socket.emit("init", {
               hand: socket.hand,
@@ -114,6 +120,7 @@ io.sockets.on('connection', function (socket, player) {
         let currentRoom = socket.room;
         let joueurRoom = 0;
         let playerRoomReady = 0;
+        selectedCards[socket.room] = Array();
 
         //on attend que les joueurs de la pièce soient tous prêt
         Object.keys(io.sockets.sockets).forEach(function(socketId){

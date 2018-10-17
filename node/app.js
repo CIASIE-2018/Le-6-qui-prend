@@ -75,7 +75,7 @@ io.sockets.on('connection', function (socket, player) {
 
         //une fois que chacun à choisi une carte
         if (nbSelectedCards[socket.room] == playerAmount[socket.room]) {
-
+          
           Object.keys(io.sockets.sockets).forEach(function(socketId) {
             let socket = io.sockets.connected[socketId];
 

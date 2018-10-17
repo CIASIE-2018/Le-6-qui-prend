@@ -39,10 +39,15 @@ if (window.location.pathname == "/") {
         //on parcours le board pour l'afficher
         for (let row = 0; row < 4; row++) {
             for (let col = 0; col < 6; col++) {
-                if (!newTurn.board[row][col]) 
+                if (!newTurn.board[row][col]){
                     $('.l' + (row + 1) + 'col' + (col + 1)).html("");
-                else 
-                    $('.l' + (row + 1) + 'col' + (col + 1)).html("<img src='src/" + newTurn.board[row][col].value + ".png' alt=''></img>");
+                }
+                else {
+                    let img = document.createElement("img");
+                    img.alt = '';
+                    img.src = 'src/' + newTurn.board[row][col].value + '.png';
+                    $('.l' + (row + 1) + 'col' + (col + 1)).html(img);
+                }
             }
         }
 
@@ -50,9 +55,17 @@ if (window.location.pathname == "/") {
         //on parcours la main pour l'afficher
         newTurn.hand.forEach((card, index) => {
 
-            $('.hand').append("<div class ='handPlayer' id = 'handPlayer_" + index + "'>" +
-                "<img src='src/" + card.value + ".png' alt=''></img>" +
-                "</div>");
+            let div = document.createElement("div");
+            let img = document.createElement("img");
+
+            div.id = 'handPlayer_'+ index;
+            div.className = 'handPlayer';
+            
+            img.src = 'src/' + card.value + '.png';
+            img.alt='';
+            div.append(img);
+            $('.hand').append(div);
+
         });
     });
 
@@ -61,9 +74,10 @@ if (window.location.pathname == "/") {
         $('.hand').html("");
         for (let row = 0; row < 4; row++) {
             for (let col = 0; col < 6; col++) {
-                $('.l' + (col + 1) + 'col' + (row + 1)).html("");
+                $('.l' + (row + 1) + 'col' + (col + 1)).html("");
             }
         }
+        $('#ready').show();
     });
 
     // Evenement quand on clique sur une des cartes
@@ -82,7 +96,7 @@ if (window.location.pathname == "/") {
     //quand click sur ready on indique au serveur qu'on est prêt
     $('#ready').click(function () {
         socket.emit('ready', '1');
-        $('#ready').remove();
+        $('#ready').hide();
     })
 
     //envoi message

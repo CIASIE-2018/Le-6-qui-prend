@@ -34,6 +34,9 @@ if (window.location.pathname == "/") {
     //on attend le signal init du serveur qui envoie la main et le board
     socket.on('newTurn', function (newTurn) {
 
+        //On remet le bouton "valider choix" a enabled
+        $("#validerChoix").prop("disabled", false);
+        
         console.log(newTurn);
 
         //on parcours le board pour l'afficher
@@ -82,14 +85,18 @@ if (window.location.pathname == "/") {
 
     // Evenement quand on clique sur une des cartes
     $('body').on("click", ".handPlayer", function () {
-
         $(".handPlayer").removeClass("cardChoice");
         $(this).addClass("cardChoice");
         cardChosen = this.id.match(/\d+/g).map(Number);
     });
 
     $("#validerChoix").click(function () {
-        socket.emit('cardChosen', cardChosen);
+        //test si aucune carte n'est choisie
+        if(cardChosen != -1){
+            socket.emit('cardChosen', cardChosen);
+            //On "bloque" le bouton après validation
+            $("#validerChoix").prop("disabled", true);
+        }
     });
 
 

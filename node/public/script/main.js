@@ -34,31 +34,33 @@ if (window.location.pathname == "/") {
     //on attend le signal init du serveur qui envoie la main et le board
     socket.on('newTurn', function (newTurn) {
 
+        console.log(newTurn);
+
         //on parcours le board pour l'afficher
-        for (row = 0; row < 4; row++) {
-            for (col = 0; col < 6; col2++) {
-                if (!newTurn.board[indexBoard][indexBoard2]) 
+        for (let row = 0; row < 4; row++) {
+            for (let col = 0; col < 6; col++) {
+                if (!newTurn.board[row][col]) 
                     $('.l' + (row + 1) + 'col' + (col + 1)).html("");
                 else 
-                    $('.l' + (row + 1) + 'col' + (col + 1)).html("<img src='src/" + newTurn.board[col][row].value + ".png' alt=''></img>");
+                    $('.l' + (row + 1) + 'col' + (col + 1)).html("<img src='src/" + newTurn.board[row][col].value + ".png' alt=''></img>");
             }
         }
 
         $('.hand').html("");
         //on parcours la main pour l'afficher
-        for (indexHand = 0; indexHand < newTurn.hand.length; indexHand++) {
+        newTurn.hand.forEach((card, index) => {
 
-            $('.hand').append("<div class ='handPlayer' id = 'handPlayer_" + indexHand + "'>" +
-                "<img src='src/" + newTurn.hand[indexHand].value + ".png' alt=''></img>" +
+            $('.hand').append("<div class ='handPlayer' id = 'handPlayer_" + index + "'>" +
+                "<img src='src/" + card.value + ".png' alt=''></img>" +
                 "</div>");
-        }
+        });
     });
 
     //fin de partie
     socket.on('end',function(){
         $('.hand').html("");
-        for (row = 0; row < 4; row++) {
-            for (col = 0; col < 6; col2++) {
+        for (let row = 0; row < 4; row++) {
+            for (let col = 0; col < 6; col++) {
                 $('.l' + (col + 1) + 'col' + (row + 1)).html("");
             }
         }

@@ -178,11 +178,10 @@ io.sockets.on('connection', function (socket, player) {
 
             //on prend seulement les joueurs de la room
             if (socket.room == currentRoom) {
-              //on génère la main
+
               socket.hand = playerModule.generateHand(deck);
               socket.graveyard = {};
 
-              //on envoie la main et le tableau au player
               socket.emit("newTurn", {
                 hand: socket.hand,
                 board: boards[socket.room]

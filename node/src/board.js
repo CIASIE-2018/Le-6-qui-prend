@@ -39,17 +39,18 @@
         let selectedRow;
 
         // Cette première boucle parcourt uniquement les cartes
-        for (let cardIndex = 0; cardIndex < cards.length; cardIndex++) {
+        cards.forEach((card) => {
 
-            cardValue = cards[cardIndex].value;
+            cardValue = card.value;
 
             higherThanCard = 0;
           
 
             // Cette boucle parcourt les 4 lignes du board
-            for (let row = 0; row < board.length; row++) {
+            board.forEach((row, index) => {
+
                 // Ici on est sensé récuperer la dernière carte de la ligne en cours
-                let lastCardValue = board[row][board[row].length - 1].value;
+                let lastCardValue = row[row.length - 1].value;
                 
                 if (cardValue > lastCardValue) {
 
@@ -57,22 +58,22 @@
                     // Ici on sera d'obtenir à la fin du parcours entier du board la carte la plus proche de celle du joueur à la fin du parcours
                     if (lastCardValue > higherThanCard) {
 
-                        row = row;
+                        selectedRow = index;
                         higherThanCard = lastCardValue;
 
                     }
                 }
-            }
+            });
    
             if(!selectedRow){
                 
                 selectedRow = getRowWithLowestMalusAndHighestValue(board);
    
                 board[selectedRow] = [];
-                board[selectedRow].push(cards[cardIndex]);
+                board[selectedRow].push(card);
                 
             }else{
-                board[selectedRow].push(cards[cardIndex]);
+                board[selectedRow].push(card);
             }
 
 
@@ -80,9 +81,9 @@
             //si c'est la 6ème, on gère les points
             if (board[selectedRow].length >= 6) {
                 board[selectedRow] = [];
-                board[selectedRow][0] = cards[cardIndex];
+                board[selectedRow][0] = card;
             }
-        }
+        });
         return board;
     };
 

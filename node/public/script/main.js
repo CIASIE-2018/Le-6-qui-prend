@@ -32,40 +32,36 @@ if (window.location.pathname == "/") {
     });
 
     //on attend le signal init du serveur qui envoie la main et le board
-    socket.on('init', function (init) {
-        console.log(init.board);
+    socket.on('newTurn', function (newTurn) {
+
+        console.log(newTurn);
+
         //on parcours le board pour l'afficher
-        for (indexBoard = 0; indexBoard < 4; indexBoard++) {
-            for (indexBoard2 = 0; indexBoard2 < 6; indexBoard2++) {
-                let tmp = indexBoard + 1;
-                let tmp2 = indexBoard2 + 1;
-                if (init.board[indexBoard][indexBoard2] != undefined) {
-                    $('.l' + tmp + 'col' + tmp2).html("<img src='src/" + init.board[indexBoard][indexBoard2].value + ".png' alt=''></img>");
-                }
-                else {
-                    $('.l' + tmp + 'col' + tmp2).html("");
-                }
+        for (let row = 0; row < 4; row++) {
+            for (let col = 0; col < 6; col++) {
+                if (!newTurn.board[row][col]) 
+                    $('.l' + (row + 1) + 'col' + (col + 1)).html("");
+                else 
+                    $('.l' + (row + 1) + 'col' + (col + 1)).html("<img src='src/" + newTurn.board[row][col].value + ".png' alt=''></img>");
             }
         }
 
         $('.hand').html("");
         //on parcours la main pour l'afficher
-        for (indexHand = 0; indexHand < init.hand.length; indexHand++) {
+        newTurn.hand.forEach((card, index) => {
 
-            $('.hand').append("<div class ='handPlayer' id = 'handPlayer_" + indexHand + "'>" +
-                "<img src='src/" + init.hand[indexHand].value + ".png' alt=''></img>" +
+            $('.hand').append("<div class ='handPlayer' id = 'handPlayer_" + index + "'>" +
+                "<img src='src/" + card.value + ".png' alt=''></img>" +
                 "</div>");
-        }
+        });
     });
 
     //fin de partie
     socket.on('end',function(){
         $('.hand').html("");
-        for (indexBoard = 0; indexBoard < 4; indexBoard++) {
-            for (indexBoard2 = 0; indexBoard2 < 6; indexBoard2++) {
-                let tmp = indexBoard + 1;
-                let tmp2 = indexBoard2 + 1;
-                $('.l' + tmp + 'col' + tmp2).html("");
+        for (let row = 0; row < 4; row++) {
+            for (let col = 0; col < 6; col++) {
+                $('.l' + (col + 1) + 'col' + (row + 1)).html("");
             }
         }
     });

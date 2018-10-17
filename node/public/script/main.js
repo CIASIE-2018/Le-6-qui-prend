@@ -40,7 +40,7 @@ if (window.location.pathname == "/") {
                 let tmp = indexBoard + 1;
                 let tmp2 = indexBoard2 + 1;
                 if (init.board[indexBoard][indexBoard2] != undefined) {
-                    $('.l' + tmp + 'col' + tmp2).html("<img src='src/" + init.board[indexBoard][indexBoard2].value + ".png' alt='testfzefz'></img>");
+                    $('.l' + tmp + 'col' + tmp2).html("<img src='src/" + init.board[indexBoard][indexBoard2].value + ".png' alt=''> < /img>");
                 }
                 else {
                     $('.l' + tmp + 'col' + tmp2).html("");
@@ -53,7 +53,7 @@ if (window.location.pathname == "/") {
         for (indexHand = 0; indexHand < init.hand.length; indexHand++) {
 
             $('.hand').append("<div class ='handPlayer' id = 'handPlayer_" + indexHand + "'>" +
-                "<img src='src/" + init.hand[indexHand].value + ".png' alt='test2'></img>" +
+                "<img src='src/" + init.hand[indexHand].value + ".png' alt=''></img>" +
                 "</div>");
         }
     });

@@ -82,7 +82,8 @@ io.sockets.on('connection', function (socket, player) {
 
             socket.emit("init", {
               hand: socket.hand,
-              board: boards[socket.room]
+              board: boards[socket.room],
+              graveyard: socket.graveyard,
             });
 
             //Si la partie est finie aka si la main est vide
@@ -96,7 +97,7 @@ io.sockets.on('connection', function (socket, player) {
               ]
               //on reset la main
               socket.hand= Array();
-              //on préviens le client que la partie est finie
+              //on prévient le client que la partie est finie
               socket.emit("end");
             }
 
@@ -162,6 +163,7 @@ io.sockets.on('connection', function (socket, player) {
             if (socket.room == currentRoom) {
               //on génère la main
               socket.hand = playerModule.generateHand(deck);
+              socket.graveyard = {};
 
               //on envoie la main et le tableau au player
               socket.emit("init", {

@@ -49,7 +49,6 @@ const putCards = function (cards, board) {
 
             // Ici on est censé récuperer la dernière carte de la ligne en cours
             let lastCardValue = row[row.length - 1].value;
-            console.log(cardValue);
 
             //Test si notre carte a une valeure supérieure ou non à la carte d'avant
             if (cardValue > lastCardValue) {

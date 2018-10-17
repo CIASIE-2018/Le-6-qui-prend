@@ -40,7 +40,7 @@ if (window.location.pathname == "/") {
                 let tmp = indexBoard + 1;
                 let tmp2 = indexBoard2 + 1;
                 if (init.board[indexBoard][indexBoard2] != undefined) {
-                    $('.l' + tmp + 'col' + tmp2).html("<img src='src/" + init.board[indexBoard][indexBoard2].value + ".png' alt=''> < /img>");
+                    $('.l' + tmp + 'col' + tmp2).html("<img src='src/" + init.board[indexBoard][indexBoard2].value + ".png' alt=''></img>");
                 }
                 else {
                     $('.l' + tmp + 'col' + tmp2).html("");

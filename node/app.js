@@ -8,9 +8,11 @@ app.set('view engine', 'ejs');
 
 let fs = require('fs');
 
+//Array taking in parameter the name of the room
 let boards = Array();
 let playerAmount = Array()
 let selectedCards = Array();
+let nbSelectedCards = Array()
 
 let server = require("http").Server(app);
 
@@ -42,6 +44,7 @@ io.sockets.on('connection', function (socket, player) {
         socket.on('nickname', function(player) {
                 socket.room = player.room;
                 socket.pseudo = player.pseudo;
+                socket.cardChosen = -1;
 
                 //on rejoint la salle et on envoie un message dans le salon (et la console)
                 socket.join(socket.room);
@@ -59,28 +62,39 @@ io.sockets.on('connection', function (socket, player) {
         io.in(socket.room).emit('room_chat',socket.pseudo + ": " +message+"<br>"); //envoi le message à tout le monde dans la salle room_chat
     });
 
-    socket.on('cardChosen', function (cardChosen) {        
+    socket.on('cardChosen', function (cardChosen) {    
 
-        
-      
-        selectedCards[socket.room].push(socket.hand[cardChosen]);
+        //si on choisi une carte pour la première fois ce tour ci, on incrémente le nb de cartes jouées
+        if (socket.cardChosen === -1 && cardChosen !== -1){
+          nbSelectedCards[socket.room] += 1;
+        }
 
-        socket.hand.splice(cardChosen, 1);
+        socket.cardChosen = cardChosen; 
 
 
-        if (selectedCards[socket.room].length == playerAmount[socket.room]) {
+
+        //une fois que chacun à choisi une carte
+        if (nbSelectedCards[socket.room] == playerAmount[socket.room]) {
+
+          Object.keys(io.sockets.sockets).forEach(function(socketId) {
+            let socket = io.sockets.connected[socketId];
+
+            //on retire la carte jouée par chaque joueur de leur main
+            selectedCards[socket.room].push(socket.hand[cardChosen]);
+            socket.hand.splice(cardChosen, 1);
+          });
     
-
+          //on pose les cartes
           boards[socket.room] = boardModule.putCards(selectedCards[socket.room], boards[socket.room]);
+
           //on récupère les joueurs connectés à la pièce
           Object.keys(io.sockets.sockets).forEach(function(socketId) {
             let socket = io.sockets.connected[socketId];
 
+            //on reset la carte choisie
             socket.cardChosen = -1;
-            //on prend seulement les joueurs de la room
 
-
-            socket.emit("init", {
+            socket.emit("newTurn", {
               hand: socket.hand,
               board: boards[socket.room],
               graveyard: socket.graveyard,
@@ -89,11 +103,11 @@ io.sockets.on('connection', function (socket, player) {
             //Si la partie est finie aka si la main est vide
             if (socket.hand.length == 0){
               //on reset le board
-              board[socket.room]= [
-                Array(),
-                Array(),
-                Array(),
-                Array()
+              boards[socket.room]= [
+                [],
+                [],
+                [],
+                []
               ]
               //on reset la main
               socket.hand= Array();
@@ -103,6 +117,8 @@ io.sockets.on('connection', function (socket, player) {
 
           });
 
+          //reset des variables à chaque fin de tour
+          nbSelectedCards[socket.room] = 0;
           selectedCards[socket.room] = Array();
         }
     });
@@ -120,6 +136,7 @@ io.sockets.on('connection', function (socket, player) {
         let joueurRoom = 0;
         let playerRoomReady = 0;
         selectedCards[socket.room] = Array();
+        nbSelectedCards[socket.room] = 0;
 
         //on attend que les joueurs de la pièce soient tous prêt
         Object.keys(io.sockets.sockets).forEach(function(socketId){
@@ -166,7 +183,7 @@ io.sockets.on('connection', function (socket, player) {
               socket.graveyard = {};
 
               //on envoie la main et le tableau au player
-              socket.emit("init", {
+              socket.emit("newTurn", {
                 hand: socket.hand,
                 board: boards[socket.room]
               });

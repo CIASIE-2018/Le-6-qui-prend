@@ -11,9 +11,10 @@ let fs = require('fs');
 
 //Array taking in parameter the name of the room
 let boards = Array();
-let playerAmount = Array()
-let selectedCards = Array();
-let nbSelectedCards = Array()
+let playerAmount = Array();
+let selectedCards = [];
+let nbSelectedCards = [];
+
 
 let server = require("http").Server(app);
 
@@ -71,7 +72,7 @@ io.sockets.on('connection', function (socket, player) {
         if (socket.cardChosen === -1 && cardChosen !== -1){
           nbSelectedCards[socket.room] += 1;
         }
-
+        
         socket.cardChosen = cardChosen; 
         
         //une fois que chacun à choisi une carte
@@ -80,16 +81,31 @@ io.sockets.on('connection', function (socket, player) {
           Object.keys(io.sockets.sockets).forEach(function(socketId) {
             if (socket.room == currentRoom){
               let socket = io.sockets.connected[socketId];
-
+          
+              
               //on retire la carte jouée par chaque joueur de leur main
               selectedCards[socket.room].push(socket.hand[socket.cardChosen]);
-              socket.hand.splice(cardChosen, 1);
+              socket.hand.splice(socket.cardChosen, 1);
             }
           });
-    
-          //on pose les cartes
-          boards[socket.room] = boardModule.putCards(selectedCards[socket.room], boards[socket.room]);
+          boards[socket.room] = boardModule.putCards(selectedCards[socket.room], boards[socket.room])
+         
+         
+         /**
+          * 
+          * TESTS MALUS
+          *  //on pose les cartes
+          let result = boardModule.putCards(selectedCards[socket.room], boards[socket.room]);
+          boards[socket.room] = result.board;
+          let malusPlayers = result.malusPlayers;
+      
+          
+          malusPlayers.forEach((malus, index) => {
+              let socket = io.sockets.connected[index];
+              socket.graveyard += malus;
+          });
 
+          */
           //on récupère les joueurs connectés à la pièce
           Object.keys(io.sockets.sockets).forEach(function(socketId) {
             let socket = io.sockets.connected[socketId];
@@ -185,12 +201,13 @@ io.sockets.on('connection', function (socket, player) {
             //on prend seulement les joueurs de la room
             if (socket.room == currentRoom) {
 
-              socket.hand = playerModule.generateHand(deck);
-              socket.graveyard = {};
+              socket.hand = playerModule.generateHand(deck, socket.id);
+              socket.graveyard = 0;
 
               socket.emit("newTurn", {
                 hand: socket.hand,
-                board: boards[socket.room]
+                board: boards[socket.room],
+                graveyard: socket.graveyard
               });
             }
           });

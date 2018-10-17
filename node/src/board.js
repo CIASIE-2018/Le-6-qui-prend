@@ -69,7 +69,7 @@ let boardModule = {
             if(row === -1){
                 
                 row = boardModule.ligneASupprimer(board);
-                console.log(row);
+   
                 board[row] = Array();
                 board[row].push(cards[cardIndex]);
                 
@@ -102,13 +102,12 @@ let boardModule = {
                 malusLine += board[indexBoardi][indexBoardj].malus;
                
             }
-            console.log("MalusMin" + malusMin);
+     
             if(malusLine <= malusMin){
                 
                 if (board[indexBoardi][board[indexBoardi].length - 1].value > HigherValue){
                     HigherValue = board[indexBoardi][board[indexBoardi].length - 1].value;
-                    console.log("MalusLine"+malusLine);
-                    console.log("indexBoardi"+indexBoardi);
+          
                     malusMin = malusLine;
                     row = indexBoardi;
 

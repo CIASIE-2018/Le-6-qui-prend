@@ -12,7 +12,7 @@
     const generateDeck= function(){
         //génère une array de 1 à 104
         let deck = [];
-        for (i = 1; i <= 104; i++) {
+        for (let i = 1; i <= 104; i++) {
 
             // On test toutes les valeurs de cartes pour savoir le nombre de malus
             // On test les cartes qui sont divisibles par 11 qui ont un malus de 5

@@ -1,3 +1,4 @@
+
 let http = require('http');
 
 let express = require('express');
@@ -62,7 +63,9 @@ io.sockets.on('connection', function (socket, player) {
         io.in(socket.room).emit('room_chat',socket.pseudo + ": " +message+"<br>"); //envoi le message à tout le monde dans la salle room_chat
     });
 
-    socket.on('cardChosen', function (cardChosen) {    
+    socket.on('cardChosen', function (cardChosen) {  
+      
+        let currentRoom = socket.room;
 
         //si on choisi une carte pour la première fois ce tour ci, on incrémente le nb de cartes jouées
         if (socket.cardChosen === -1 && cardChosen !== -1){
@@ -77,11 +80,13 @@ io.sockets.on('connection', function (socket, player) {
         if (nbSelectedCards[socket.room] == playerAmount[socket.room]) {
           
           Object.keys(io.sockets.sockets).forEach(function(socketId) {
-            let socket = io.sockets.connected[socketId];
+            if (socket.room == currentRoom){
+              let socket = io.sockets.connected[socketId];
 
-            //on retire la carte jouée par chaque joueur de leur main
-            selectedCards[socket.room].push(socket.hand[cardChosen]);
-            socket.hand.splice(cardChosen, 1);
+              //on retire la carte jouée par chaque joueur de leur main
+              selectedCards[socket.room].push(socket.hand[socket.cardChosen]);
+              socket.hand.splice(cardChosen, 1);
+            }
           });
     
           //on pose les cartes
@@ -90,33 +95,34 @@ io.sockets.on('connection', function (socket, player) {
           //on récupère les joueurs connectés à la pièce
           Object.keys(io.sockets.sockets).forEach(function(socketId) {
             let socket = io.sockets.connected[socketId];
+            if (socket.room == currentRoom){
 
-            //on reset la carte choisie
-            socket.cardChosen = -1;
+              //on reset la carte choisie
+              socket.cardChosen = -1;
 
-            socket.emit("newTurn", {
-              hand: socket.hand,
-              board: boards[socket.room],
-              graveyard: socket.graveyard,
-            });
+              socket.emit("newTurn", {
+                hand: socket.hand,
+                board: boards[socket.room],
+                graveyard: socket.graveyard
+              });
 
-            //Si la partie est finie aka si la main est vide
-            if (socket.hand.length == 0){
-              //on reset le board
-              boards[socket.room]= [
-                [],
-                [],
-                [],
-                []
-              ]
+              //Si la partie est finie aka si la main est vide
+              if (socket.hand.length == 0){
+                //on reset le board
+                boards[socket.room]= [
+                  [],
+                  [],
+                  [],
+                  []
+                ]
 
-              socket.ready = 0;
-              //on reset la main
-              socket.hand= Array();
-              //on prévient le client que la partie est finie
-              socket.emit("end");
+                socket.ready = 0;
+                //on reset la main
+                socket.hand= Array();
+                //on prévient le client que la partie est finie
+                socket.emit("end");
+              }
             }
-
           });
 
           //reset des variables à chaque fin de tour

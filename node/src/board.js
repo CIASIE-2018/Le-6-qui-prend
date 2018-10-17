@@ -1,34 +1,34 @@
 //Créer un tableau vide
-let boardModule = {
 
-    generateBoard: function(){
+
+    const generateBoard = function(){
         let board = [
-            Array(),
-            Array(),
-            Array(),
-            Array()
+            [],
+            [],
+            [],
+            []
         ]
         return board;
-    },
+    };
 
     //Initialise un tableau à partir de 4 cartes d'un deck
-    init_board: function(board, deck){
-        board[0][0] = boardModule.draw(deck);
-        board[1][0] = boardModule.draw(deck);
-        board[2][0] = boardModule.draw(deck);
-        board[3][0] = boardModule.draw(deck);
+    const init_board = function(board, deck){
+        board[0][0] = draw(deck);
+        board[1][0] = draw(deck);
+        board[2][0] = draw(deck);
+        board[3][0] = draw(deck);
         return true;
-    },
+    };
 
     //pioche une carte et la retire du packet
-    draw: function (deck) {
+    const draw= function (deck) {
         let card = deck[0];
         deck.shift();
 
         return card;
-    },
+    };
 
-    putCards: function(cards,board){
+    const putCards= function(cards,board){
         //on commence par trier les cartes par ordre croissant
         cards.sort(function (a, b) {
             return a.value - b.value;
@@ -64,15 +64,67 @@ let boardModule = {
                     }
                 }
             }
+            // Si la carte ne peut pas être placée (Exemple sa carte est 1 donc aucune place pour elle), on supprime 
+            // la ligne avec le moins de malus et on lui met pour lui et on place finalement sa carte.
+            if(row === -1){
+                
+                row = getRowToDelete(board);
+   
+                board[row] = [];
+                board[row].push(cards[cardIndex]);
+                
+            }else{
+                board[row].push(cards[cardIndex]);
+            }
 
-            board[row].push(cards[cardIndex]);
+
+            
             //si c'est la 6ème, on gère les points
             if (board[row].length >= 6) {
-                board[row] = Array();
+                board[row] = [];
                 board[row][0] = cards[cardIndex];
             }
         }
         return board;
-    },
+    };
+
+
+    const getRowToDelete= function(board){
+        let row = -1;
+        let malusMin = 999;
+        let malusLine;
+        let highestValue = 0;
+        for(let indexBoardi = 0; indexBoardi< 4; indexBoardi++){
+            
+            malusLine = 0;
+            for (let indexBoardj = 0; indexBoardj < board[indexBoardi].length ; indexBoardj++){
+          
+                malusLine += board[indexBoardi][indexBoardj].malus;
+               
+            }
+     
+            if(malusLine <= malusMin){
+                
+                if (board[indexBoardi][board[indexBoardi].length - 1].value > highestValue){
+                    highestValue = board[indexBoardi][board[indexBoardi].length - 1].value;
+          
+                    malusMin = malusLine;
+                    row = indexBoardi;
+
+                    
+                }
+
+            }
+            
+        }
+
+        return row;
+    };
+
+
+module.exports = {
+    generateBoard,
+    init_board,
+    draw,
+    putCards
 };
-module.exports = boardModule;

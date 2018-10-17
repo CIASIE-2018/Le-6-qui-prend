@@ -33,14 +33,14 @@ if (window.location.pathname == "/") {
 
     //on attend le signal init du serveur qui envoie la main et le board
     socket.on('init', function (init) {
-
+        console.log(init.board);
         //on parcours le board pour l'afficher
         for (indexBoard = 0; indexBoard < 4; indexBoard++) {
             for (indexBoard2 = 0; indexBoard2 < 6; indexBoard2++) {
                 let tmp = indexBoard + 1;
                 let tmp2 = indexBoard2 + 1;
                 if (init.board[indexBoard][indexBoard2] != undefined) {
-                    $('.l' + tmp + 'col' + tmp2).html("<img src='src/" + init.board[indexBoard][indexBoard2].value + ".png' alt='test'></img>");
+                    $('.l' + tmp + 'col' + tmp2).html("<img src='src/" + init.board[indexBoard][indexBoard2].value + ".png' alt=''></img>");
                 }
                 else {
                     $('.l' + tmp + 'col' + tmp2).html("");
@@ -53,7 +53,7 @@ if (window.location.pathname == "/") {
         for (indexHand = 0; indexHand < init.hand.length; indexHand++) {
 
             $('.hand').append("<div class ='handPlayer' id = 'handPlayer_" + indexHand + "'>" +
-                "<img src='src/" + init.hand[indexHand].value + ".png' alt='test'></img>" +
+                "<img src='src/" + init.hand[indexHand].value + ".png' alt=''></img>" +
                 "</div>");
         }
     });

@@ -36,80 +36,79 @@
 
         let cardValue;
         let higherThanCard;
-        let row;
+        let selectedRow;
 
         // Cette première boucle parcourt uniquement les cartes
-        for (cardIndex = 0; cardIndex < cards.length; cardIndex++) {
+        for (let cardIndex = 0; cardIndex < cards.length; cardIndex++) {
 
             cardValue = cards[cardIndex].value;
 
             higherThanCard = 0;
-            row = -1;
+          
 
             // Cette boucle parcourt les 4 lignes du board
-            for (boardLine = 0; boardLine < board.length; boardLine++) {
-
-                let lastCardValue = board[boardLine][board[boardLine].length - 1].value;
-                // Ici on est sensé voir la dernière carte de la ligne en cours
-                //Si la carte que souhaite posé le joueur est plus grande que la dernière carte de la ligne
+            for (let row = 0; row < board.length; row++) {
+                // Ici on est sensé récuperer la dernière carte de la ligne en cours
+                let lastCardValue = board[row][board[row].length - 1].value;
+                
                 if (cardValue > lastCardValue) {
 
 
                     // Ici on sera d'obtenir à la fin du parcours entier du board la carte la plus proche de celle du joueur à la fin du parcours
                     if (lastCardValue > higherThanCard) {
 
-                        row = boardLine;
+                        row = row;
                         higherThanCard = lastCardValue;
 
                     }
                 }
             }
-            // Si la carte ne peut pas être placée (Exemple sa carte est 1 donc aucune place pour elle), on supprime 
-            // la ligne avec le moins de malus et on lui met pour lui et on place finalement sa carte.
-            if(row === -1){
-                
-                row = getRowToDelete(board);
    
-                board[row] = [];
-                board[row].push(cards[cardIndex]);
+            if(!selectedRow){
+                
+                selectedRow = getRowWithLowestMalusAndHighestValue(board);
+   
+                board[selectedRow] = [];
+                board[selectedRow].push(cards[cardIndex]);
                 
             }else{
-                board[row].push(cards[cardIndex]);
+                board[selectedRow].push(cards[cardIndex]);
             }
 
 
             
             //si c'est la 6ème, on gère les points
-            if (board[row].length >= 6) {
-                board[row] = [];
-                board[row][0] = cards[cardIndex];
+            if (board[selectedRow].length >= 6) {
+                board[selectedRow] = [];
+                board[selectedRow][0] = cards[cardIndex];
             }
         }
         return board;
     };
 
 
-    const getRowToDelete= function(board){
-        let row = -1;
+
+    const getRowWithLowestMalusAndHighestValue = function (board) {
+        let selectedRow = -1;
         let malusMin = 999;
         let malusLine;
         let highestValue = 0;
-        for(let indexBoardi = 0; indexBoardi< 4; indexBoardi++){
+        for(let row = 0; row< 4; row++){
             
             malusLine = 0;
-            for (let indexBoardj = 0; indexBoardj < board[indexBoardi].length ; indexBoardj++){
+            for (let column = 0; column < board[row].length ; column++){
           
-                malusLine += board[indexBoardi][indexBoardj].malus;
+                malusLine += board[row][column].malus;
                
             }
      
             if(malusLine <= malusMin){
                 
-                if (board[indexBoardi][board[indexBoardi].length - 1].value > highestValue){
-                    highestValue = board[indexBoardi][board[indexBoardi].length - 1].value;
+                if (board[row][board[row].length - 1].value > highestValue){
+                    highestValue = board[row][board[row].length - 1].value;
           
                     malusMin = malusLine;
-                    row = indexBoardi;
+                    selectedRow = row;
 
                     
                 }
@@ -118,9 +117,10 @@
             
         }
 
-        return row;
+        return selectedRow;
     };
 
+    
 
 module.exports = {
     generateBoard,

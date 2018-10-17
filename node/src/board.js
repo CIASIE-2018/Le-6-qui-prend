@@ -37,7 +37,7 @@ const putCards = function (cards, board) {
     let cardValue;
     let selectedRow;
     let higherThanCard;
-    let malus = [];
+  
 
     // Cette première boucle parcourt uniquement les cartes
     cards.forEach((card) => {
@@ -71,7 +71,7 @@ const putCards = function (cards, board) {
        
             
             selectedRow = getRowWithLowestMalusAndHighestValue(board);
-            //malus[card.playedBy] = playerModule.calculateMalus(result.malusCards);
+        
         
             board[selectedRow] = [];
             board[selectedRow].push(card);
@@ -100,14 +100,14 @@ const getRowWithLowestMalusAndHighestValue = function (board) {
     let malusMin = 999;
     let malusLine;
     let highestValue = 0;
-    //let malusCards =[];
+
     for (let row = 0; row < 4; row++) {
-        let malusCardsTMP = [];
+     
         malusLine = 0;
         for (let column = 0; column < board[row].length; column++) {
 
             malusLine += board[row][column].malus;
-            // malusCardsTMP.push(board[row][column]);
+       
         }
 
         if (malusLine <= malusMin) {
@@ -117,7 +117,7 @@ const getRowWithLowestMalusAndHighestValue = function (board) {
 
                 malusMin = malusLine;
                 selectedRow = row;
-                //malusCards = malusCardsTMP;
+             
 
             }
 

@@ -55,7 +55,7 @@
                 if (cardValue > lastCardValue) {
 
 
-                    // Ici on sera d'obtenir à la fin du parcours entier du board la carte la plus proche de celle du joueur à la fin du parcours
+                    //On cherche le meilleur endroit pour placer notre carte
                     if (lastCardValue > higherThanCard) {
 
                         selectedRow = index;

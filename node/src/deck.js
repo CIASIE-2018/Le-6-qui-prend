@@ -48,8 +48,17 @@
         return deck;
     };
 
+
+    //pioche une carte et la retire du packet
+    const draw = function (deck) {
+        let card = deck[0];
+        deck.shift();
+
+        return card;
+    };
     
 
 module.exports = {
-    generateDeck
+    generateDeck,
+    draw
 };

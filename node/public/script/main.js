@@ -53,6 +53,7 @@ if (window.location.pathname == "/") {
                 }
             }
         }
+        $('.graveyard').html("Score : " + newTurn.graveyard);
 
         $('.hand').html("");
         //on parcours la main pour l'afficher

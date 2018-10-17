@@ -1,5 +1,5 @@
-//Créer un tableau vide
-
+let deckModule = require("./deck.js");
+let playerModule = require("./player.js");
 
 const generateBoard = function () {
     let board = [
@@ -36,49 +36,49 @@ const putCards = function (cards, board) {
 
     let cardValue;
     let selectedRow;
+    let higherThanCard;
+  
 
     // Cette première boucle parcourt uniquement les cartes
     cards.forEach((card) => {
 
         cardValue = card.value;
-
-        let maxValue = 200;
+        lastCardValue = 0;
+        selectedRow = -1;
+        higherThanCard = 0;
 
         // Cette boucle parcourt les 4 lignes du board
         board.forEach((row, index) => {
 
             // Ici on est censé récuperer la dernière carte de la ligne en cours
-            let lastCardValue = row[row.length - 1].value;
+            lastCardValue = row[row.length - 1].value;
 
             //Test si notre carte a une valeure supérieure ou non à la carte d'avant
             if (cardValue > lastCardValue) {
                 //Si la valeur est plus petite que celle précédente, alors cette place est la "mieux"
-                if ((cardValue - lastCardValue) < maxValue) {
-                    selectedRow = index;
-                    maxValue = cardValue - lastCardValue;
-                }
-                //Sinon on passe la ligne
-
-
-                /*
-                //On cherche le meilleur endroit pour placer notre carte
+                
                 if (lastCardValue > higherThanCard) {
 
                     selectedRow = index;
                     higherThanCard = lastCardValue;
 
-                }*/
+                }
             }
         });
 
-        if (!selectedRow) {
+        if (selectedRow < 0 || selectedRow > 3 || selectedRow === -1) {
 
+       
+            
             selectedRow = getRowWithLowestMalusAndHighestValue(board);
-
+        
+        
             board[selectedRow] = [];
             board[selectedRow].push(card);
 
         } else {
+           
+            
             board[selectedRow].push(card);
         }
 
@@ -100,13 +100,14 @@ const getRowWithLowestMalusAndHighestValue = function (board) {
     let malusMin = 999;
     let malusLine;
     let highestValue = 0;
-    for (let row = 0; row < 4; row++) {
 
+    for (let row = 0; row < 4; row++) {
+     
         malusLine = 0;
         for (let column = 0; column < board[row].length; column++) {
 
             malusLine += board[row][column].malus;
-
+       
         }
 
         if (malusLine <= malusMin) {
@@ -116,7 +117,7 @@ const getRowWithLowestMalusAndHighestValue = function (board) {
 
                 malusMin = malusLine;
                 selectedRow = row;
-
+             
 
             }
 
@@ -132,6 +133,5 @@ const getRowWithLowestMalusAndHighestValue = function (board) {
 module.exports = {
     generateBoard,
     init_board,
-    draw,
     putCards
 };

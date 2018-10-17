@@ -61,7 +61,6 @@ io.sockets.on('connection', function (socket, player) {
 
     socket.on('cardChosen', function (cardChosen) {        
 
-      console.log("1");
         
       
         selectedCards[socket.room].push(socket.hand[cardChosen]);
@@ -80,7 +79,6 @@ io.sockets.on('connection', function (socket, player) {
             socket.cardChosen = -1;
             //on prend seulement les joueurs de la room
 
-            console.log("2");
 
             socket.emit("init", {
               hand: socket.hand,

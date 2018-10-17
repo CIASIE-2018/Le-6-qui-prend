@@ -64,8 +64,21 @@ let boardModule = {
                     }
                 }
             }
+            // Si la carte ne peut pas être placée (Exemple sa carte est 1 donc aucune place pour elle), on supprime 
+            // la ligne avec le moins de malus et on lui met pour lui et on place finalement sa carte.
+            if(row === -1){
+                
+                row = boardModule.ligneASupprimer(board);
+                console.log(row);
+                board[row] = Array();
+                board[row].push(cards[cardIndex]);
+                
+            }else{
+                board[row].push(cards[cardIndex]);
+            }
 
-            board[row].push(cards[cardIndex]);
+
+            
             //si c'est la 6ème, on gère les points
             if (board[row].length >= 6) {
                 board[row] = Array();
@@ -74,5 +87,40 @@ let boardModule = {
         }
         return board;
     },
+
+
+    ligneASupprimer: function(board){
+        let row = -1;
+        let malusMin = 999;
+        let malusLine;
+        let HigherValue = 0;
+        for(indexBoardi = 0; indexBoardi< 4; indexBoardi++){
+            
+            malusLine = 0;
+            for (indexBoardj = 0; indexBoardj < board[indexBoardi].length ; indexBoardj++){
+          
+                malusLine += board[indexBoardi][indexBoardj].malus;
+               
+            }
+            console.log("MalusMin" + malusMin);
+            if(malusLine <= malusMin){
+                
+                if (board[indexBoardi][board[indexBoardi].length - 1].value > HigherValue){
+                    HigherValue = board[indexBoardi][board[indexBoardi].length - 1].value;
+                    console.log("MalusLine"+malusLine);
+                    console.log("indexBoardi"+indexBoardi);
+                    malusMin = malusLine;
+                    row = indexBoardi;
+
+                    
+                }
+
+            }
+            
+        }
+
+        return row;
+    },
+
 };
 module.exports = boardModule;

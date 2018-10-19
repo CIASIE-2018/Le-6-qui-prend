@@ -90,6 +90,7 @@ if (window.location.pathname == "/") {
             }
         }
         $('#ready').show();
+        $('#titleReady').show();
     });
 
     // Evenement quand on clique sur une des cartes
@@ -113,6 +114,8 @@ if (window.location.pathname == "/") {
     $('#ready').click(function () {
         socket.emit('ready', '1');
         $('#ready').hide();
+        $('#titleReady').hide();
+        $('#validerChoix').show();
     });
 
     //TCHAT

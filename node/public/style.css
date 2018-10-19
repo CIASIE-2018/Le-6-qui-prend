@@ -6,14 +6,40 @@ html , body{
 }
 
 div.hand{
-     text-align: center;
+    text-align: center;
+    position: fixed;
+    bottom: -50px;
+    left:50%;
+    transform: translate(-50%, -50%);
+}
+
+#validerChoix{
+    display: none; /* on cache ce bouton tant que l'utilisateur n'est pas prêt */
+    transition: background-color 0.5s ease;
+    position: fixed;
+    right: 1%;
+    bottom: 50px;
+    background-color: #5EB6DD;
+    color: white;
+    padding: 16px;
+    font-size: 16px;
+    border: none;
+    outline: none;
+    border-radius: 5px 5px 5px 5px;
+}
+
+#validerChoix:hover{
+    background-color: rgb(171, 225, 249);
 }
 
 
 div.handPlayer{
     display: inline-block;
     margin-right: 5px;
-   
+}
+
+div.handPlayer:hover{
+    transform:scale(1.2);
 }
 
 div.lineBoard{
@@ -27,9 +53,9 @@ div.cardChoice{
 }
 
 div img{
-    width:4.5vw;
-    height:auto;
-
+    width: 4.5vw;
+    height: auto;
+    margin-bottom: 21%; /* correction de l'emplacement des cartes posées */
 }
 
 div.board{
@@ -47,10 +73,7 @@ div.board .ligne2,
 div.board .ligne3,
 div.board .ligne4
     {
-        
         height: auto;
-        
-        
 }
 div.board .ligne1 .l1col1,
 div.board .ligne1 .l1col2,
@@ -86,13 +109,13 @@ div.board .ligne1 .l1col6,
 div.board .ligne2 .l2col6,
 div.board .ligne3 .l3col6,
 div.board .ligne4 .l4col6{
-     width:4.5vw;
-     height: 6.425vw;
+    width:4.5vw;
+    height: 6.425vw;
     border-radius: 5px;
     background-color: rgb(255, 65, 65);
     display:inline-block;
-     margin:1%;
-      padding:0;
+    margin:1%;
+    padding:0;
 }
 
 #room_chat{

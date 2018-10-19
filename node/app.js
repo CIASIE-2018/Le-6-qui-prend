@@ -130,10 +130,6 @@ io.sockets.on('connection', function (socket, player) {
         }
     });
 
-
-
-
-
     //on attend que les joueurs soient prêts
     socket.on('ready', function () {
 
@@ -160,16 +156,6 @@ io.sockets.on('connection', function (socket, player) {
         playerAmount[socket.room] = playerRoomReady;
         // Quand 2 à 10 joueurs sont prêts go.
         if (joueurRoom == playerAmount[socket.room] && playerAmount[socket.room] >= 2 && playerAmount[socket.room] <= 10) {
-          //envoi à tout le monde sauf le client
-          socket.broadcast
-            .to(socket.room)
-            .emit(
-              "room_chat",
-              socket.pseudo + " est prêt, que la partie commence !<br>"
-            );
-          //envoi au client
-          socket.emit("room_chat", "vous êtes prêt, la partie peut commencer !<br>");
-
           //on créer un deck
           let deck = deckModule.generateDeck();
 
@@ -196,21 +182,6 @@ io.sockets.on('connection', function (socket, player) {
               });
             }
           });
-        } else {
-          //envoi à tout le monde sauf le client
-          socket.broadcast
-            .to(socket.room)
-            .emit(
-              "room_chat",
-              socket.pseudo +
-                " est prêt ( " +
-                playerAmount[socket.room] +
-                " / " +
-                joueurRoom +
-                " joueurs prêts )<br>"
-            );
-          //envoi au client
-            socket.emit("room_chat", "vous êtes prêt, la partie commencera quand tous les joueurs présents seront prêts ( " + playerAmount[socket.room] + " / " + joueurRoom + " joueurs prêts )<br>");
         }
     }); 
 });

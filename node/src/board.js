@@ -56,33 +56,20 @@ const putCards = function (cards, board) {
             //Test si notre carte a une valeure supérieure ou non à la carte d'avant
             if (cardValue > lastCardValue) {
                 //Si la valeur est plus petite que celle précédente, alors cette place est la "mieux"
-                
                 if (lastCardValue > higherThanCard) {
-
                     selectedRow = index;
                     higherThanCard = lastCardValue;
-
                 }
             }
         });
 
-        if (selectedRow < 0 || selectedRow > 3 || selectedRow === -1) {
-
-       
-            
+        if (selectedRow < 0 || selectedRow > 3 || selectedRow === -1) {``
             selectedRow = getRowWithLowestMalusAndHighestValue(board);
-        
-        
             board[selectedRow] = [];
             board[selectedRow].push(card);
-
         } else {
-           
-            
             board[selectedRow].push(card);
         }
-
-
 
         //si c'est la 6ème, on gère les points
         if (board[selectedRow].length >= 6) {
@@ -93,8 +80,6 @@ const putCards = function (cards, board) {
     return board;
 };
 
-
-
 const getRowWithLowestMalusAndHighestValue = function (board) {
     let selectedRow = -1;
     let malusMin = 999;
@@ -102,29 +87,19 @@ const getRowWithLowestMalusAndHighestValue = function (board) {
     let highestValue = 0;
 
     for (let row = 0; row < 4; row++) {
-     
         malusLine = 0;
         for (let column = 0; column < board[row].length; column++) {
-
             malusLine += board[row][column].malus;
-       
         }
 
         if (malusLine <= malusMin) {
-
             if (board[row][board[row].length - 1].value > highestValue) {
                 highestValue = board[row][board[row].length - 1].value;
-
                 malusMin = malusLine;
                 selectedRow = row;
-             
-
             }
-
         }
-
     }
-
     return selectedRow;
 };
 

@@ -2,88 +2,91 @@
 
 <html>
 
-    <head>
+<head>
 
-        <meta charset="utf-8" />
-        <title>Le 6 qui prend</title>
-        <link rel="stylesheet" type="text/css" href="style.css">
-     
-    </head>
+    <meta charset="utf-8" />
+    <title>Le 6 qui prend</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
 
- 
+</head>
 
-    <body>
-        <h1>Commande</h1>
-        <button id="ready">Ready</button> 
 
-        <h1>Main</h1>
-        <div class="hand"></div>
-        <button id="validerChoix">Confirmer mon choix</button>
-        <h1>Tableau de jeu</h1>
-        <div class="board">
-            <ul class="ligne1">
-                <li class="l1col1"></li>
-                <li class="l1col2"></li>
-                <li class="l1col3"></li>
-                <li class="l1col4"></li>
-                <li class="l1col5"></li>
-                <li class="l1col6"></li>
-            </ul>
-            <ul class="ligne2">
-                <li class="l2col1"></li>
-                <li class="l2col2"></li>
-                <li class="l2col3"></li>
-                <li class="l2col4"></li>
-                <li class="l2col5"></li>
-                <li class="l2col6"></li>
-            </ul>
-            <ul class="ligne3">
-                <li class="l3col1"></li>
-                <li class="l3col2"></li>
-                <li class="l3col3"></li>
-                <li class="l3col4"></li>
-                <li class="l3col5"></li>
-                <li class="l3col6"></li>
-            </ul>
-            <ul class="ligne4">
-                <li class="l4col1"></li>
-                <li class="l4col2"></li>
-                <li class="l4col3"></li>
-                <li class="l4col4"></li>
-                <li class="l4col5"></li>
-                <li class="l4col6"></li>
-            </ul>
-        </div> 
-        <div class="graveyard">
-            <h1>Malus</h1>
-        </div>
-        <div class="chats">
-            <div class="toggle_general_chat current_chat">Chat général</div>
-            <div class="toggle_room_chat">Chat de salon</div>
-            <div id="general_chat">
-                <div class="general_content"></div>
-                <div class="control_chat">
-                    <input class="general_input" type="text"/>
-                    <button class="general_send">envoyer</button>
-                </div>
-            </div> 
-            <div id="room_chat">
-                <div class="room_content"></div>
-                    <div class="control_chat">
-                        <input class="room_input"  type="text"/>
-                        <button class="room_send">envoyer</button>
-                    </div>
-                </div>
+
+<body>
+    <button id="showHideBtn">Chat</button>
+    <img src="src/newMessage.svg" id="alertMessage">
+    <div class="chats">
+        <div class="toggle_general_chat current_chat">Chat général</div>
+        <div class="toggle_room_chat">Chat du salon</div>
+        <div id="general_chat">
+            <div class="general_content"></div>
+            <div class="control_chat">
+                <input class="general_input" type="text" placeholder="Votre message..." />
+                <button class="general_send">Envoyer</button>
             </div>
         </div>
-        <!-- On ajoute jquery-->
-        <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+        <div id="room_chat">
+            <div class="room_content"></div>
+            <div class="control_chat">
+                <input class="room_input" type="text" placeholder="Votre message..." />
+                <button class="room_send">Envoyer</button>
+            </div>
+        </div>
+    </div>
 
-        <!-- On ajoute socket.io-->
-        <script src="/socket.io/socket.io.js"></script>
+    <h1>Commande</h1>
+    <button id="ready">Ready</button>
 
-        <script src="/script/main.js"></script>
+    <h1>Main</h1>
+    <div class="hand"></div>
+    <button id="validerChoix">Confirmer mon choix</button>
+    <h1>Tableau de jeu</h1>
+    <div class="board">
+        <ul class="ligne1">
+            <li class="l1col1"></li>
+            <li class="l1col2"></li>
+            <li class="l1col3"></li>
+            <li class="l1col4"></li>
+            <li class="l1col5"></li>
+            <li class="l1col6"></li>
+        </ul>
+        <ul class="ligne2">
+            <li class="l2col1"></li>
+            <li class="l2col2"></li>
+            <li class="l2col3"></li>
+            <li class="l2col4"></li>
+            <li class="l2col5"></li>
+            <li class="l2col6"></li>
+        </ul>
+        <ul class="ligne3">
+            <li class="l3col1"></li>
+            <li class="l3col2"></li>
+            <li class="l3col3"></li>
+            <li class="l3col4"></li>
+            <li class="l3col5"></li>
+            <li class="l3col6"></li>
+        </ul>
+        <ul class="ligne4">
+            <li class="l4col1"></li>
+            <li class="l4col2"></li>
+            <li class="l4col3"></li>
+            <li class="l4col4"></li>
+            <li class="l4col5"></li>
+            <li class="l4col6"></li>
+        </ul>
+    </div>
+    <div class="graveyard">
+        <h1>Malus</h1>
+    </div>
 
-    </body>
+    <!-- On ajoute jquery-->
+    <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+
+    <!-- On ajoute socket.io-->
+    <script src="/socket.io/socket.io.js"></script>
+
+    <script src="/script/main.js"></script>
+
+</body>
 
 </html>

@@ -50,18 +50,17 @@ io.sockets.on('connection', function (socket, player) {
 
                 //on rejoint la salle et on envoie un message dans le salon (et la console)
                 socket.join(socket.room);
-                socket.emit('room_chat',"Vous venez de rejoindre le salon "+socket.room+".<br>");
                 socket.broadcast.to(socket.room).emit('room_chat',socket.pseudo + " rejoint la salle.<br>");
                 console.log(socket.pseudo +' rejoint la salle ' + socket.room);
         });
 
     //on attend de recevoir des messages
     socket.on('general_chat',function(message){
-        io.emit('general_chat',socket.pseudo + ": " +message+"<br>"); //envoi le message à tout le monde
+        io.emit('general_chat',"<b>" + socket.pseudo + "</b> : " +message+"<br>"); //envoi le message à tout le monde
     });
 
     socket.on('room_chat',function(message){
-        io.in(socket.room).emit('room_chat',socket.pseudo + ": " +message+"<br>"); //envoi le message à tout le monde dans la salle room_chat
+        io.in(socket.room).emit('room_chat',"<b>" + socket.pseudo + "</b> : " +message+"<br>"); //envoi le message à tout le monde dans la salle room_chat
     });
 
     socket.on('cardChosen', function (cardChosen) {  

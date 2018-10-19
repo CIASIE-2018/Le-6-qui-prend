@@ -9,7 +9,7 @@
     };
 
     //renvoie le deck mélangé
-    const generateDeck= function(){
+    const generateDeck = function(){
         //génère une array de 1 à 104
         let deck = [];
         for (let i = 1; i <= 104; i++) {

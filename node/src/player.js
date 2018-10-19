@@ -1,12 +1,8 @@
 let deckModule = require("./deck.js");
 
-
-    
-
-    const calculateMalus = function (cards) {
+    const calculateMalus = function(cards) {
         let malus = 0;
         cards.forEach((card) => {
-
             malus += card.malus;
         });
 
@@ -14,7 +10,7 @@ let deckModule = require("./deck.js");
     };
 
     //Créer une main à partir de 10 cartes d'un deck
-    const generateHand= function(deck, player){
+    const generateHand = function(deck, player){
         let hand = [];
 
         for (let indexHand = 0; indexHand < 10; indexHand++){
@@ -25,10 +21,6 @@ let deckModule = require("./deck.js");
         return hand;
     };
     
-
-    
-
-
 module.exports = {
     generateHand,
     calculateMalus

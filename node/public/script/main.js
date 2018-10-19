@@ -24,10 +24,18 @@ if (window.location.pathname == "/") {
 
     //on attend les messages dans les 2 chats
     socket.on('general_chat', function (message) {
+        let tchat = $('.chats');
+        if(tchat.is(":hidden")){
+            $('#alertMessage').show(200);
+        }
         $('.general_content').append(message)
     });
 
     socket.on('room_chat', function (message) {
+        let tchat = $('.chats');
+        if(tchat.is(":hidden")){
+            $('#alertMessage').show(200);
+        }
         $('.room_content').append(message)
     });
 
@@ -36,13 +44,13 @@ if (window.location.pathname == "/") {
 
         //On remet le bouton "valider choix" a enabled
         $("#validerChoix").prop("disabled", false);
-        
+
         console.log(newTurn);
 
         //on parcours le board pour l'afficher
         for (let row = 0; row < 4; row++) {
             for (let col = 0; col < 6; col++) {
-                if (!newTurn.board[row][col]){
+                if (!newTurn.board[row][col]) {
                     $('.l' + (row + 1) + 'col' + (col + 1)).html("");
                 }
                 else {
@@ -62,11 +70,11 @@ if (window.location.pathname == "/") {
             let div = document.createElement("div");
             let img = document.createElement("img");
 
-            div.id = 'handPlayer_'+ index;
+            div.id = 'handPlayer_' + index;
             div.className = 'handPlayer';
-            
+
             img.src = 'src/' + card.value + '.png';
-            img.alt='';
+            img.alt = '';
             div.append(img);
             $('.hand').append(div);
 
@@ -74,7 +82,7 @@ if (window.location.pathname == "/") {
     });
 
     //fin de partie
-    socket.on('end',function(){
+    socket.on('end', function () {
         $('.hand').html("");
         for (let row = 0; row < 4; row++) {
             for (let col = 0; col < 6; col++) {
@@ -93,7 +101,7 @@ if (window.location.pathname == "/") {
 
     $("#validerChoix").click(function () {
         //test si aucune carte n'est choisie
-        if(cardChosen != -1){
+        if (cardChosen != -1) {
             socket.emit('cardChosen', cardChosen);
             //On "bloque" le bouton après validation
             $("#validerChoix").prop("disabled", true);
@@ -105,7 +113,19 @@ if (window.location.pathname == "/") {
     $('#ready').click(function () {
         socket.emit('ready', '1');
         $('#ready').hide();
-    })
+    });
+
+    //TCHAT
+    //Affichage ou non du tchat
+    $('#showHideBtn').click(function() {
+        let tchat = $('.chats');
+        if(tchat.is(":visible")){
+            $('.chats').hide(200);
+        }else{
+            $('.chats').show(200);
+            $('#alertMessage').hide(200);
+        }
+    });
 
     //envoi message
     $('.general_send').click(function () {

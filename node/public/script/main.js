@@ -134,11 +134,29 @@ if (window.location.pathname == "/") {
         $('.general_input').val("");
     });
 
+    //Envoi message via Entrer
+    $('.general_input').keypress(function(e){
+        if(e.which == 13){
+            let message = $('.general_input').val();
+            socket.emit('general_chat', message);
+            $('.general_input').val("");
+        }
+    });
+
     //envoi message
     $('.room_send').click(function () {
         let message = $('.room_input').val()
         socket.emit('room_chat', message);
         $('.room_input').val("");
+    });
+
+    //Envoi message via Entrer
+    $('.room_input').keypress(function(e){
+        if(e.which == 13){
+            let message = $('.room_input').val()
+            socket.emit('room_chat', message);
+            $('.room_input').val("");
+        }
     });
 
     $('.toggle_general_chat').click(function () {

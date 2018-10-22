@@ -1,4 +1,5 @@
 let playerModule = require("./player.js");
+let deckModule = require("./deck.js");
 
 const generateBoard = function () {
     let board = [
@@ -12,20 +13,14 @@ const generateBoard = function () {
 
 //Initialise un tableau à partir de 4 cartes d'un deck
 const init_board = function (board, deck) {
-    board[0][0] = draw(deck);
-    board[1][0] = draw(deck);
-    board[2][0] = draw(deck);
-    board[3][0] = draw(deck);
+    board[0][0] = deckModule.draw(deck);
+    board[1][0] = deckModule.draw(deck);
+    board[2][0] = deckModule.draw(deck);
+    board[3][0] = deckModule.draw(deck);
     return true;
 };
 
-//pioche une carte et la retire du packet
-const draw = function (deck) {
-    let card = deck[0];
-    deck.shift();
 
-    return card;
-};
 
 const putCards = function (cards, board) {
     //on commence par trier les cartes par ordre croissant

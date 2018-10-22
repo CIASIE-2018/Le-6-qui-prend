@@ -87,9 +87,18 @@ io.sockets.on('connection', function (socket, player) {
               socket.hand.splice(socket.cardChosen, 1);
             }
           });
-          boards[socket.room] = boardModule.putCards(selectedCards[socket.room], boards[socket.room])
-         
-         
+      
+          let result = boardModule.putCards(selectedCards[socket.room], boards[socket.room]);
+          boards[socket.room] = result.board;
+          let malusPlayers = result.malus;
+          console.log(malusPlayers);
+          
+          Object.keys(malusPlayers).forEach((key) => {
+       
+            
+            let socket = io.sockets.connected[key];
+            socket.graveyard += malusPlayers[key];
+          });
          
           //on récupère les joueurs connectés à la pièce
           Object.keys(io.sockets.sockets).forEach(function(socketId) {

@@ -37,7 +37,7 @@ const putCards = function (cards, board) {
     let cardValue;
     let selectedRow;
     let higherThanCard;
-
+    let malusPointForPlayer = [];
 
     // Cette première boucle parcourt uniquement les cartes
     cards.forEach((card) => {
@@ -46,7 +46,7 @@ const putCards = function (cards, board) {
         lastCardValue = 0;
         selectedRow = -1;
         higherThanCard = 0;
-
+        
         // Cette boucle parcourt les 4 lignes du board
         board.forEach((row, index) => {
 
@@ -63,9 +63,14 @@ const putCards = function (cards, board) {
             }
         });
 
-        if (selectedRow < 0 || selectedRow > 3 || selectedRow === -1) {``
-            selectedRow = getRowWithLowestMalusAndHighestValue(board)
-        
+        if (selectedRow < 0 || selectedRow > 3 || selectedRow === -1) {
+            
+            let resultTMP = getRowWithLowestMalusAndHighestValue(board)
+            selectedRow = resultTMP.malusRow;
+            
+            malusPointForPlayer[card.playedBy] = playerModule.calculateMalus(resultTMP.malusCards);
+            
+            
             board[selectedRow] = [];
             board[selectedRow].push(card);
         } else {
@@ -78,7 +83,7 @@ const putCards = function (cards, board) {
             board[selectedRow][0] = card;
         }
     });
-    return board;
+    return {board: board, malus: malusPointForPlayer};
 };
 
 const getRowWithLowestMalusAndHighestValue = function (board) {
@@ -86,26 +91,26 @@ const getRowWithLowestMalusAndHighestValue = function (board) {
     let malusMin = 999;
     let malusLine;
     let highestValue = 0;
-    //let malusCards =[];
+    let malusCards =[];
+    let malusCarsTMP;
     for (let row = 0; row < 4; row++) {
-        let malusCardsTMP = [];
+        malusCardsTMP = [];
         malusLine = 0;
         for (let column = 0; column < board[row].length; column++) {
             malusLine += board[row][column].malus;
-
+            malusCardsTMP.push(board[row][column]);
         }
 
         if (malusLine <= malusMin) {
             if (board[row][board[row].length - 1].value > highestValue) {
                 highestValue = board[row][board[row].length - 1].value;
-                malusMin = malusLine;
                 selectedRow = row;
-               
+                malusCards = malusCardsTMP;
 
             }
         }
     }
-    return selectedRow;
+    return {malusRow: selectedRow, malusCards: malusCards};
 };
 
 

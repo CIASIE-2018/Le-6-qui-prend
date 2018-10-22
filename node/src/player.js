@@ -1,11 +1,6 @@
 let boardModule = require("./board.js");
 
 let playerModule = {
-    id: -1,
-    pseudo: '',
-    password: '',
-    score: 0,
-    room: undefined,
     //Créer une main à partir de 10 cartes d'un deck
     generateHand: function(deck) {
         let hand = [];

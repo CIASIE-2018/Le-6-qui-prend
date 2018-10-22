@@ -1,7 +1,6 @@
 let http = require('http');
 
 let express = require('express');
-
 let app = express();
 
 app.set('view engine', 'ejs');
@@ -20,17 +19,17 @@ let deckModule = require('./src/deck.js');
 let boardModule = require('./src/board.js');
 let playerModule = require('./src/player.js');
 
-console.log('Serveur on');
-
-app.use(express.static(__dirname + '/public'));
-
-// Chargement du fichier d'index
-app.use("/", (req, res) => {
-    res.render("main");
-});
+const parser = require('body-parser');
+const router = require('./src/routes/router.js');
 
 // Chargement de socket.io
 let io = require('socket.io').listen(server);
+console.log('Serveur on');
+
+
+app.use(express.static(__dirname + '/public'));
+app.use(parser.urlencoded({ extended: true }));
+router.setRoutes(app);
 
 io.sockets.on('connection', function(socket, player) {
     //on demande le pseudo au player et on récupère sa room
@@ -41,7 +40,6 @@ io.sockets.on('connection', function(socket, player) {
         socket.join(socket.room);
         socket.emit('room_chat', "Vous venez de rejoindre le salon " + socket.room + ".<br>");
         socket.broadcast.to(socket.room).emit('room_chat', socket.pseudo + " rejoint la salle.<br>");
-        console.log(socket.pseudo + ' rejoint la salle ' + socket.room);
     });
     //on attend de recevoir des messages
     socket.on('general_chat', function(message) {

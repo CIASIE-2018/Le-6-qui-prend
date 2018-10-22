@@ -10,16 +10,34 @@
 <body>
     <h1>Le 6 qui prend !</h1>
 
-    <a href="#">Inscription</a>
-    <a href="#">Connexion</a>
+    <nav class="navbar">
+        <button id="display_rooms">Salons de jeu</button>
+        <button id="display_connection">Connexion</button>
+        <button id="display_register">Inscription</button>
+    </nav>
 
-    <div class="rooms">
-
+    <div class="register" id="reg_area">
+        <form action="/register" method="POST">
+            <input type="text" name="pseudo" />
+            <input type="password" name="password" />
+            <button type="submit">Inscription</button>
+        </form>
     </div>
+
+    <div class="connexion" id="con_area">
+        <form action="/connect" method="POST">
+            <input type="text" name="pseudo" />
+            <input type="password" name="password" />
+            <button type="submit">Connexion</button>
+        </form>
+    </div>
+
+    <div class="rooms" id="rooms_area"></div>
 
     <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
     <script src="/script/main.js"></script>
+    <script src="/script/home_page.js"></script>
 </body>
 
 </html>

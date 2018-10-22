@@ -6,6 +6,5 @@ CREATE TABLE `users`(
     `pseudo` text not null,
     `password` char(128) not null,
     `score` int(11) not null,
-    `room` text,
     primary key(`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

@@ -113,8 +113,15 @@ if (window.location.pathname == "/") {
     });
 
     //fin de partie
-    socket.on('end', function () {
-        alert("gg WP");
+    socket.on('end', function (end) {
+        if (end.winner.length == 1){
+            alert(end.winner[0] + " a gagné avec un score de " + end.score + ". Bien joué à lui.");
+        }
+        else{
+            alert(end.winner.join(', ') + " sont nos gagnants d'aujourd'hui avec un score de " + end.score + ".  Bien joué à eux.")
+        }
+
+        
         $('.hand').html("");
         for (let row = 0; row < 4; row++) {
             for (let col = 0; col < 6; col++) {

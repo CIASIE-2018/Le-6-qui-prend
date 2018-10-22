@@ -135,9 +135,31 @@ io.sockets.on('connection', function (socket, player) {
                 socket.ready = 0;
                 //on reset la main
                 socket.hand= Array();
+
+                let winner = [];
+                let max = 1000;
+                Object.keys(io.sockets.sockets).forEach(function(socketId) {
+                  if (socket.room == currentRoom){
+                    let socket = io.sockets.connected[socketId];
+                    if (socket.graveyard < max){
+                      winner = [socket.pseudo];
+                      max = socket.graveyard;
+                    }
+                    else if (socket.graveyard = max){
+                      winner.push(socket.pseudo);
+                    }
+                  }
+                });
+
+                
+
+
                 //on prévient le client que la partie est finie (avec un petit décalage)
                 setTimeout(function(){
-                  socket.emit("end");
+                  socket.emit("end", {
+                    winner: winner,
+                    score: max
+                  });
                 },10000);
               }
             }

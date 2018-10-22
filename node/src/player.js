@@ -18,6 +18,10 @@ let deckModule = require("./deck.js");
             card.playedBy = player;
             hand.push(card);
         }
+        hand.sort(function (a, b) {
+            return a.value - b.value;
+        });
+
         return hand;
     };
     

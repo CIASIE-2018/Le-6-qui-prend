@@ -114,6 +114,7 @@ if (window.location.pathname == "/") {
 
     //fin de partie
     socket.on('end', function () {
+        alert("gg WP");
         $('.hand').html("");
         for (let row = 0; row < 4; row++) {
             for (let col = 0; col < 6; col++) {
@@ -122,6 +123,7 @@ if (window.location.pathname == "/") {
         }
         $('#ready').show();
         $('#titleReady').show();
+        $('historique').html('');
     });
 
     // Evenement quand on clique sur une des cartes

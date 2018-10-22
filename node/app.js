@@ -135,8 +135,10 @@ io.sockets.on('connection', function (socket, player) {
                 socket.ready = 0;
                 //on reset la main
                 socket.hand= Array();
-                //on prévient le client que la partie est finie
-                socket.emit("end");
+                //on prévient le client que la partie est finie (avec un petit décalage)
+                setTimeout(function(){
+                  socket.emit("end");
+                },10000);
               }
             }
           });

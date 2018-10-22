@@ -1,12 +1,13 @@
 html , body{
     background: #fcfcfa;
     width:100%;
+    height: 100%;
     padding:0;
     margin:0;
 }
 
 body{
-    height: 100vh;
+    min-height: 100vh;
     background-image: url("src/plateau_fond.png");
     background-repeat: no-repeat;
     background-size: cover;

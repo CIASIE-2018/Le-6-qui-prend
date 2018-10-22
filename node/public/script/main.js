@@ -45,11 +45,17 @@ if (window.location.pathname == "/") {
         //On remet le bouton "valider choix" a enabled
         $("#validerChoix").prop("disabled", false);
 
-        //on parcours le board pour l'afficher
+        if (10 - newTurn.hand.length != 0){
+            $('#historique').append("--- Tour " + (10 - newTurn.hand.length) + " --- <br>")
+        }
 
         //si il y a un historique (si pas le premier tour)
         if (newTurn.history){
-            console.log(newTurn.history);
+            
+            newTurn.cardPlayed.sort(function (a, b) {
+                return a.value - b.value;
+            });
+
             newTurn.history.forEach((history,index) => {
                 setTimeout(function(){
                     for (let row = 0; row < 4; row++) {
@@ -65,6 +71,7 @@ if (window.location.pathname == "/") {
                             }
                         }
                     }
+                    $('#historique').append(newTurn.cardPlayed[index].playedByNickname + " a joué la carte " + newTurn.cardPlayed[index].value + "<br>")
                 },
                 index * 1500)
             });

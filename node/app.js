@@ -118,7 +118,8 @@ io.sockets.on('connection', function (socket, player) {
                 hand: socket.hand,
                 board: boards[socket.room],
                 graveyard: socket.graveyard,
-                history : boardHistory[socket.room] 
+                history : boardHistory[socket.room],
+                cardPlayed: selectedCards[socket.room]
               });
 
               //Si la partie est finie aka si la main est vide
@@ -188,7 +189,7 @@ io.sockets.on('connection', function (socket, player) {
             //on prend seulement les joueurs de la room
             if (socket.room == currentRoom) {
 
-              socket.hand = playerModule.generateHand(deck, socket.id);
+              socket.hand = playerModule.generateHand(deck, socket.id, socket.pseudo);
               socket.graveyard = 0;
 
               socket.emit("newTurn", {

@@ -90,21 +90,7 @@ io.sockets.on('connection', function (socket, player) {
           boards[socket.room] = boardModule.putCards(selectedCards[socket.room], boards[socket.room])
          
          
-         /**
-          * 
-          * TESTS MALUS
-          *  //on pose les cartes
-          let result = boardModule.putCards(selectedCards[socket.room], boards[socket.room]);
-          boards[socket.room] = result.board;
-          let malusPlayers = result.malusPlayers;
-      
-          
-          malusPlayers.forEach((malus, index) => {
-              let socket = io.sockets.connected[index];
-              socket.graveyard += malus;
-          });
-
-          */
+         
           //on récupère les joueurs connectés à la pièce
           Object.keys(io.sockets.sockets).forEach(function(socketId) {
             let socket = io.sockets.connected[socketId];

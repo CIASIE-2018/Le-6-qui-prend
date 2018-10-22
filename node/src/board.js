@@ -87,12 +87,13 @@ const putCards = function (cards, board) {
         history.push(JSON.parse(JSON.stringify(board)));
     });
 
-    let boardAndHistory = {
+    let board_History_Malus = {
         board: board,
-        history: history
+        history: history,
+        malus: malusPointForPlayer
     }
 
-    return boardAndHistory;
+    return board_History_Malus;
 };
 
 const getRowWithLowestMalusAndHighestValue = function (board) {

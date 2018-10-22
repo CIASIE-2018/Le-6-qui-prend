@@ -41,7 +41,7 @@ if (window.location.pathname == "/") {
 
     //on attend le signal init du serveur qui envoie la main et le board
     socket.on('newTurn', function (newTurn) {
-
+        
         //On remet le bouton "valider choix" a enabled
         $("#validerChoix").prop("disabled", false);
 
@@ -49,6 +49,7 @@ if (window.location.pathname == "/") {
 
         //si il y a un historique (si pas le premier tour)
         if (newTurn.history){
+            console.log(newTurn.history);
             newTurn.history.forEach((history,index) => {
                 setTimeout(function(){
                     for (let row = 0; row < 4; row++) {

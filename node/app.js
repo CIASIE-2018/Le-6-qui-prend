@@ -90,14 +90,12 @@ io.sockets.on('connection', function (socket, player) {
           });
           
           
-          let boardAndHistory = boardModule.putCards(selectedCards[socket.room], boards[socket.room])
-
-          boards[socket.room] = boardAndHistory.board;
-          boardHistory[socket.room] = boardAndHistory.history;
+    
       
           let result = boardModule.putCards(selectedCards[socket.room], boards[socket.room]);
           boards[socket.room] = result.board;
           let malusPlayers = result.malus;
+          boardHistory[socket.room] = result.history;
           
           if (!!malusPlayers){
             Object.keys(malusPlayers).forEach((key) => {

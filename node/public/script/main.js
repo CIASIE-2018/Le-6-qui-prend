@@ -45,8 +45,6 @@ if (window.location.pathname == "/") {
         //On remet le bouton "valider choix" a enabled
         $("#validerChoix").prop("disabled", false);
 
-        console.log(newTurn);
-
         //on parcours le board pour l'afficher
 
         //si il y a un historique (si pas le premier tour)

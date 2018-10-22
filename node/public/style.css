@@ -5,6 +5,13 @@ html , body{
     margin:0;
 }
 
+body{
+    background-image: url("src/plateau.png");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 100%;
+}
+
 div.hand{
     text-align: center;
     position: fixed;
@@ -13,12 +20,25 @@ div.hand{
     transform: translate(-50%, -50%);
 }
 
+#ready{
+    
+    background-color: #5EB6DD;
+    font-size: 16px;
+    padding: 16px;
+    border: none;
+    outline: none;
+    margin-left: 50px;
+    margin-top: 50px;
+    border-radius: 5px 5px 5px 5px;
+}
+
 #validerChoix{
     display: none; /* on cache ce bouton tant que l'utilisateur n'est pas prêt */
     transition: background-color 0.5s ease;
-    position: fixed;
+    position: absolute;
     right: 1%;
-    bottom: 50px;
+    bottom: 50%;
+    right: 10%;
     background-color: #5EB6DD;
     color: white;
     padding: 16px;
@@ -30,6 +50,10 @@ div.hand{
 
 #validerChoix:hover{
     background-color: rgb(171, 225, 249);
+}
+
+#validerChoix:disabled{
+    background-color: #818078;
 }
 
 
@@ -60,12 +84,12 @@ div img{
 
 div.board{
     text-align: center;
-    background: #fcfcfa;
     color: #818078;
-    font-family: Futura,
-    sans-serif;
-    display:flex;
+    font-family: Futura, sans-serif;
+    display: flex;
     flex-direction: column;
+    width: 100%;
+    margin-bottom: 5%;
 }
 
 div.board .ligne1,
@@ -231,6 +255,7 @@ div.board .ligne4 .l4col6{
     right: 1%;
     float: right;
     margin-right: 1%;
+    margin-top: 1%;
 }
 
 #showHideBtn:hover {

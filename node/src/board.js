@@ -1,4 +1,5 @@
 let playerModule = require("./player.js");
+let deckModule = require("./deck.js");
 
 const generateBoard = function () {
     let board = [
@@ -12,20 +13,14 @@ const generateBoard = function () {
 
 //Initialise un tableau à partir de 4 cartes d'un deck
 const init_board = function (board, deck) {
-    board[0][0] = draw(deck);
-    board[1][0] = draw(deck);
-    board[2][0] = draw(deck);
-    board[3][0] = draw(deck);
+    board[0][0] = deckModule.draw(deck);
+    board[1][0] = deckModule.draw(deck);
+    board[2][0] = deckModule.draw(deck);
+    board[3][0] = deckModule.draw(deck);
     return true;
 };
 
-//pioche une carte et la retire du packet
-const draw = function (deck) {
-    let card = deck[0];
-    deck.shift();
 
-    return card;
-};
 
 const putCards = function (cards, board) {
     //on commence par trier les cartes par ordre croissant
@@ -100,7 +95,7 @@ const getRowWithLowestMalusAndHighestValue = function (board) {
     let selectedRow = -1;
     let malusMin = 999;
     let malusLine;
-    let highestValue = 0;
+    let highestValue = [];
     let malusCards =[];
     let malusCarsTMP;
     for (let row = 0; row < 4; row++) {
@@ -110,16 +105,25 @@ const getRowWithLowestMalusAndHighestValue = function (board) {
             malusLine += board[row][column].malus;
             malusCardsTMP.push(board[row][column]);
         }
-
+        
+        if(highestValue[malusLine]){
+            if (highestValue[malusLine] < board[row][board[row].length - 1].value){
+                highestValue[malusLine] = board[row][board[row].length - 1].value;
+            }
+        }else{
+            highestValue[malusLine] = board[row][board[row].length - 1].value;
+        }
+      
         if (malusLine <= malusMin) {
-            if (board[row][board[row].length - 1].value > highestValue) {
-                highestValue = board[row][board[row].length - 1].value;
+            malusMin = malusLine;
+            if (board[row][board[row].length - 1].value >= highestValue[malusMin]) {
                 selectedRow = row;
                 malusCards = malusCardsTMP;
 
             }
         }
     }
+  
     return {malusRow: selectedRow, malusCards: malusCards};
 };
 

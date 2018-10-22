@@ -48,19 +48,44 @@ if (window.location.pathname == "/") {
         console.log(newTurn);
 
         //on parcours le board pour l'afficher
-        for (let row = 0; row < 4; row++) {
-            for (let col = 0; col < 6; col++) {
-                if (!newTurn.board[row][col]) {
-                    $('.l' + (row + 1) + 'col' + (col + 1)).html("");
-                }
-                else {
-                    let img = document.createElement("img");
-                    img.alt = '';
-                    img.src = 'src/' + newTurn.board[row][col].value + '.png';
-                    $('.l' + (row + 1) + 'col' + (col + 1)).html(img);
+
+        //si il y a un historique (si pas le premier tour)
+        if (newTurn.history){
+            newTurn.history.forEach((history,index) => {
+                setTimeout(function(){
+                    for (let row = 0; row < 4; row++) {
+                        for (let col = 0; col < 6; col++) {
+                            if (!newTurn.history[index][row][col]) {
+                                $('.l' + (row + 1) + 'col' + (col + 1)).html("");
+                            }
+                            else {
+                                let img = document.createElement("img");
+                                img.alt = '';
+                                img.src = 'src/' + newTurn.history[index][row][col].value + '.png';
+                                $('.l' + (row + 1) + 'col' + (col + 1)).html(img);
+                            }
+                        }
+                    }
+                },
+                index * 1500)
+            });
+        }
+        else{
+            for (let row = 0; row < 4; row++) {
+                for (let col = 0; col < 6; col++) {
+                    if (!newTurn.board[row][col]) {
+                        $('.l' + (row + 1) + 'col' + (col + 1)).html("");
+                    }
+                    else {
+                        let img = document.createElement("img");
+                        img.alt = '';
+                        img.src = 'src/' + newTurn.board[row][col].value + '.png';
+                        $('.l' + (row + 1) + 'col' + (col + 1)).html(img);
+                    }
                 }
             }
         }
+
         $('.graveyard').html("Score : " + newTurn.graveyard);
 
         $('.hand').html("");

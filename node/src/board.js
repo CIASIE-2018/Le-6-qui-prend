@@ -1,6 +1,3 @@
-let deckModule = require("./deck.js");
-let playerModule = require("./player.js");
-
 const generateBoard = function () {
     let board = [
         [],
@@ -37,7 +34,7 @@ const putCards = function (cards, board) {
     let cardValue;
     let selectedRow;
     let higherThanCard;
-  
+    let history = [];
 
     // Cette première boucle parcourt uniquement les cartes
     cards.forEach((card) => {
@@ -63,7 +60,7 @@ const putCards = function (cards, board) {
             }
         });
 
-        if (selectedRow < 0 || selectedRow > 3 || selectedRow === -1) {``
+        if (selectedRow < 0 || selectedRow > 3 || selectedRow === -1) {
             selectedRow = getRowWithLowestMalusAndHighestValue(board);
             board[selectedRow] = [];
             board[selectedRow].push(card);
@@ -76,8 +73,17 @@ const putCards = function (cards, board) {
             board[selectedRow] = [];
             board[selectedRow][0] = card;
         }
+        
+        //parsing and stringify object to clone it (otherwise it's always the same)
+        history.push(JSON.parse(JSON.stringify(board)));
     });
-    return board;
+
+    let boardAndHistory = {
+        board: board,
+        history: history
+    }
+
+    return boardAndHistory;
 };
 
 const getRowWithLowestMalusAndHighestValue = function (board) {

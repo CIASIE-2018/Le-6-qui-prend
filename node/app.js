@@ -10,10 +10,11 @@ app.set('view engine', 'ejs');
 let fs = require('fs');
 
 //Array taking in parameter the name of the room
-let boards = Array();
-let playerAmount = Array();
+let boards = [];
+let playerAmount = [];
 let selectedCards = [];
 let nbSelectedCards = [];
+let boardHistory = [];
 
 
 let server = require("http").Server(app);
@@ -87,8 +88,12 @@ io.sockets.on('connection', function (socket, player) {
               socket.hand.splice(socket.cardChosen, 1);
             }
           });
-          boards[socket.room] = boardModule.putCards(selectedCards[socket.room], boards[socket.room])
-         
+          
+          
+          let boardAndHistory = boardModule.putCards(selectedCards[socket.room], boards[socket.room])
+
+          boards[socket.room] = boardAndHistory.board;
+          boardHistory[socket.room] = boardAndHistory.history;
          
         
           //on récupère les joueurs connectés à la pièce
@@ -102,7 +107,8 @@ io.sockets.on('connection', function (socket, player) {
               socket.emit("newTurn", {
                 hand: socket.hand,
                 board: boards[socket.room],
-                graveyard: socket.graveyard
+                graveyard: socket.graveyard,
+                history : boardHistory[socket.room] 
               });
 
               //Si la partie est finie aka si la main est vide

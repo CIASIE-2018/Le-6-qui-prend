@@ -6,16 +6,16 @@ html , body{
 }
 
 body{
-    background-image: url("src/plateau.png");
+    height: 100vh;
+    background-image: url("src/plateau_fond.png");
     background-repeat: no-repeat;
-    background-position: center;
-    background-size: 100%;
+    background-size: cover;
 }
 
 div.hand{
     text-align: center;
     position: fixed;
-    bottom: -50px;
+    bottom: -8%;
     left:50%;
     transform: translate(-50%, -50%);
 }
@@ -37,7 +37,7 @@ div.hand{
     transition: background-color 0.5s ease;
     position: absolute;
     right: 1%;
-    bottom: 50%;
+    bottom: 38%;
     right: 10%;
     background-color: #5EB6DD;
     color: white;
@@ -90,6 +90,12 @@ div.board{
     flex-direction: column;
     width: 100%;
     margin-bottom: 5%;
+
+
+    background-image: url("src/plateau.png");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 100%;
 }
 
 div.board .ligne1,
@@ -177,7 +183,7 @@ div.board .ligne4 .l4col6{
     border-color: #5EB6DD;
     background-color: #88b7d5;
     display:none;
-    top: 75px;
+    top: 70px;
     right: 1%;
     border-radius: 5px 0px 5px 5px;
 }
@@ -268,4 +274,5 @@ div.board .ligne4 .l4col6{
     width: 50px;
     display: none;
     margin-right: 2px;
+    margin-top: 1%;
 }

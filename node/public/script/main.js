@@ -213,7 +213,7 @@ if (window.location.pathname == "/") {
         }
         $('#ready').show();
         $('#titleReady').show();
-        $('historique').html('');
+        $('#historique').html('');
     });
 
     // Evenement quand on clique sur une des cartes

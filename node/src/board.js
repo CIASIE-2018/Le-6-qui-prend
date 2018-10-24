@@ -82,6 +82,7 @@ const putCards = function (cards, board) {
         history.push(JSON.parse(JSON.stringify(board)));
     });
 
+
     let board_History_Malus = {
         board: board,
         history: history,

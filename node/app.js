@@ -95,26 +95,11 @@ io.sockets.on('connection', function (socket, player) {
           let malusPlayers = result.malus;
           boardHistory[socket.room] = result.history;
           
-<<<<<<< HEAD
-          if (!!malusPlayers){
-            Object.keys(malusPlayers).forEach((key) => {
-        
-              
-              let socket = io.sockets.connected[key];
-              socket.graveyard += malusPlayers[key];
-            });
-          }
-          let playerInRoom =0;
-=======
->>>>>>> 31a51f5befb157bada627f56d1cb2baae1bd6d9b
           //on récupère les joueurs connectés à la pièce
           Object.keys(io.sockets.sockets).forEach(function(socketId) {
             let socket = io.sockets.connected[socketId];
             
             if (socket.room == currentRoom){
-<<<<<<< HEAD
-              playerInRoom += 1;
-=======
 
               //si malus on affecte
               if (malusPlayers){
@@ -124,7 +109,6 @@ io.sockets.on('connection', function (socket, player) {
                 })
               }
                 
->>>>>>> 31a51f5befb157bada627f56d1cb2baae1bd6d9b
               //on reset la carte choisie
               socket.cardChosen = -1;
 
@@ -133,11 +117,8 @@ io.sockets.on('connection', function (socket, player) {
                 board: boards[socket.room],
                 graveyard: socket.graveyard,
                 history : boardHistory[socket.room],
-<<<<<<< HEAD
-                playerInRoom : playerInRoom
-=======
+                playerInRoom : playerInRoom,
                 cardPlayed: selectedCards[socket.room]
->>>>>>> 31a51f5befb157bada627f56d1cb2baae1bd6d9b
               });
 
               //Si la partie est finie aka si la main est vide

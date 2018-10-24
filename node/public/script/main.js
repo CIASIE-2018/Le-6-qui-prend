@@ -200,11 +200,15 @@ if (window.location.pathname == "/") {
                 .filter(function (possibility) {
                     return possibility.difference > 0 && possibility.nbCardsLine < 5;
                 });
+
+            console.log(possibilities)
             
             if(possibilities.length == 0){
                 possibilities = {indexCard: BestCardToReplaceARow()};
-              
-                $("handPlayer_" + possibilities.indexCard).click();
+                
+                $(".handPlayer").removeClass("cardChoice");
+                $("handPlayer_ " + possibilities.indexCard).addClass("cardChoice ");
+                // cardChosen = this.id.match(/\d+/g).map(Number);
             }
             else{
                 const scores = possibilities
@@ -222,8 +226,9 @@ if (window.location.pathname == "/") {
                     return b.score - a.score;
                 });
            
-
-                $("handPlayer_" + scores[0].indexCard).click();
+                $(".handPlayer").removeClass("cardChoice");
+                $("handPlayer_" + scores[0].indexCard).addClass("cardChoice ");
+                // cardChosen = this.id.match(/\d+/g).map(Number);
             }
             
             
@@ -357,6 +362,7 @@ if (window.location.pathname == "/") {
         $('#training').hide();
         $('#titleReady').hide();
         $('#validerChoix').show();
+        $('#chooseForMe').show();
     });
 
     $('#training').click(function () {

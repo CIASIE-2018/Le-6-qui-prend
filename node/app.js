@@ -15,6 +15,7 @@ let playerAmount = [];
 let selectedCards = [];
 let nbSelectedCards = [];
 let boardHistory = [];
+let ais = [];
 
 
 let server = require("http").Server(app);
@@ -89,14 +90,12 @@ io.sockets.on('connection', function (socket, player) {
             }
           });
           
-          
-    
-      
           let result = boardModule.putCards(selectedCards[socket.room], boards[socket.room]);
           boards[socket.room] = result.board;
           let malusPlayers = result.malus;
           boardHistory[socket.room] = result.history;
           
+<<<<<<< HEAD
           if (!!malusPlayers){
             Object.keys(malusPlayers).forEach((key) => {
         
@@ -106,12 +105,26 @@ io.sockets.on('connection', function (socket, player) {
             });
           }
           let playerInRoom =0;
+=======
+>>>>>>> 31a51f5befb157bada627f56d1cb2baae1bd6d9b
           //on récupère les joueurs connectés à la pièce
           Object.keys(io.sockets.sockets).forEach(function(socketId) {
             let socket = io.sockets.connected[socketId];
             
             if (socket.room == currentRoom){
+<<<<<<< HEAD
               playerInRoom += 1;
+=======
+
+              //si malus on affecte
+              if (malusPlayers){
+                Object.keys(malusPlayers).forEach(function(key, index){
+                  if (socket.id == key)
+                    socket.graveyard += malusPlayers[key]
+                })
+              }
+                
+>>>>>>> 31a51f5befb157bada627f56d1cb2baae1bd6d9b
               //on reset la carte choisie
               socket.cardChosen = -1;
 
@@ -120,7 +133,11 @@ io.sockets.on('connection', function (socket, player) {
                 board: boards[socket.room],
                 graveyard: socket.graveyard,
                 history : boardHistory[socket.room],
+<<<<<<< HEAD
                 playerInRoom : playerInRoom
+=======
+                cardPlayed: selectedCards[socket.room]
+>>>>>>> 31a51f5befb157bada627f56d1cb2baae1bd6d9b
               });
 
               //Si la partie est finie aka si la main est vide
@@ -136,8 +153,29 @@ io.sockets.on('connection', function (socket, player) {
                 socket.ready = 0;
                 //on reset la main
                 socket.hand= Array();
-                //on prévient le client que la partie est finie
-                socket.emit("end");
+
+                let winner = [];
+                let max = 1000;
+                Object.keys(io.sockets.sockets).forEach(function(socketId) {
+                  if (socket.room == currentRoom){
+                    let socket = io.sockets.connected[socketId];
+                    if (socket.graveyard < max){
+                      winner = [socket.pseudo];
+                      max = socket.graveyard;
+                    }
+                    else if (socket.graveyard = max){
+                      winner.push(socket.pseudo);
+                    }
+                  }
+                });
+
+                //on prévient le client que la partie est finie (avec un petit décalage)
+                setTimeout(function(){
+                  socket.emit("end", {
+                    winner: winner,
+                    score: max
+                  });
+                },10000);
               }
             }
           });
@@ -148,10 +186,100 @@ io.sockets.on('connection', function (socket, player) {
         }
     });
 
+    // Même principe que cardChosen mais on n'a pas besoin de parcourir les sockets, seulement les ia et la socket actuel.
+    socket.on('cardChosenTraining', function (cardChosen) {  
+
+
+      if (socket.cardChosen === -1 && cardChosen !== -1){
+        nbSelectedCards[socket.room] += 1;
+      }
+      
+      socket.cardChosen = cardChosen; 
+
+      //ici on gère les cartes jouées par chaques IA
+      ais[socket.room].forEach(function(ai){
+        ai.cardChosen = 0;
+        selectedCards[socket.room].push(ai.hand[ai.cardChosen]);
+        ai.hand.splice(ai.cardChosen);
+      })
+
+      //on retire la carte jouée par le joueur
+      selectedCards[socket.room].push(socket.hand[socket.cardChosen]);
+      socket.hand.splice(socket.cardChosen, 1);
+
+      let result = boardModule.putCards(selectedCards[socket.room], boards[socket.room]);
+      boards[socket.room] = result.board;
+      let malusPlayers = result.malus;
+      boardHistory[socket.room] = result.history;
+
+      //on affecte le malus au joueur
+      if (malusPlayers[socket.id]){
+        socket.graveyard += malusPlayers[socket.id]
+      }
+      socket.cardChosen = -1;
+        
+      //on affecte les malus aux AI
+      ais[socket.room].forEach(function(ai) {
+
+        if (malusPlayers[ai.id]){
+          ai.graveyard += malusPlayers[ai.id];
+          ai.cardChosen = -1;
+        }
+      });
+
+      socket.emit("newTurn", {
+        hand: socket.hand,
+        board: boards[socket.room],
+        graveyard: socket.graveyard,
+        history : boardHistory[socket.room],
+        cardPlayed: selectedCards[socket.room]
+      });
+
+      //Si la partie est finie aka si la main est vide
+      if (socket.hand.length == 0){
+              //on reset le board
+        boards[socket.room]= [[],[],[],[]]
+        socket.ready = 0;
+        socket.hand= Array();
+
+        let winner = [];
+        let max = 1000;
+        ais[socket.room].forEach(function(ai) {
+          if (ai.graveyard < max){
+            winner = [ai.pseudo];
+            max = ai.graveyard;
+          }
+          else if (ai.graveyard = max){
+            winner.push(ai.pseudo);
+          }   
+        });
+
+        if (socket.graveyard < max){
+          winner = [socket.pseudo];
+          max = socket.graveyard;
+        }
+        else if (socket.graveyard = max){
+          winner.push(socket.pseudo);
+        }   
+
+        setTimeout(function(){
+          socket.emit("end", {
+            winner: winner,
+            score: max
+          });
+        },10000);
+      }
+      nbSelectedCards[socket.room] = 0;
+      selectedCards[socket.room] = Array();  
+    });
+
+  
+
     //on attend que les joueurs soient prêts
     socket.on('ready', function () {
 
         socket.ready = 1;
+        socket.training = 0;
 
         let currentRoom = socket.room;
         let joueurRoom = 0;
@@ -190,7 +318,7 @@ io.sockets.on('connection', function (socket, player) {
             //on prend seulement les joueurs de la room
             if (socket.room == currentRoom) {
 
-              socket.hand = playerModule.generateHand(deck, socket.id);
+              socket.hand = playerModule.generateHand(deck, socket.id, socket.pseudo);
               socket.graveyard = 0;
 
               socket.emit("newTurn", {
@@ -202,6 +330,48 @@ io.sockets.on('connection', function (socket, player) {
           });
         }
     }); 
+
+  socket.on('training', function () {
+
+    socket.training = 1;
+
+    let currentRoom = socket.room;
+    selectedCards[socket.room] = Array();
+    nbSelectedCards[socket.room] = 0;
+
+    //on créer un deck
+    let deck = deckModule.generateDeck();
+
+    //on créer un tableau de jeu
+    boards[socket.room] = boardModule.generateBoard();
+
+    //on pose les 4 premières cartes
+    boardModule.init_board(boards[socket.room], deck);
+
+    ais[socket.room] = []
+
+    //on simule des joueurs
+    let nbAi = 3;
+    for (let indexAi = 0; indexAi < nbAi; indexAi ++){
+      let ai = {
+        id: 'ia'+ indexAi,
+        pseudo: 'ia ' + (indexAi + 1),
+        graveyard: 0
+      }
+      ai.hand = playerModule.generateHand(deck, ai.id, ai.pseudo);
+      ais[socket.room].push(ai)
+    }
+
+    socket.hand = playerModule.generateHand(deck, socket.id, socket.pseudo);
+    socket.graveyard = 0;
+
+    socket.emit("newTurn", {
+      hand: socket.hand,
+      board: boards[socket.room],
+      graveyard: socket.graveyard,
+    });
+  
+});
 });
 
 server.listen(8080);

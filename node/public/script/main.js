@@ -4,7 +4,9 @@ let choixValider = false;
 let room;
 let socket;
 let player;
-let chooseForMeFunction;
+let onMouseEnter;
+let onMouseLeave; 
+let training = 0;
 
 if (window.location.pathname == "/") {
     room = prompt('Entrez le nom du salon à créer/rejoindre');
@@ -42,6 +44,85 @@ if (window.location.pathname == "/") {
 
     //on attend le signal init du serveur qui envoie la main et le board
     socket.on('newTurn', function (newTurn) {
+
+        //Quand on passe la souris sur une carte de la main
+        $('body').off('mouseenter');
+        $('body').on('mouseenter','.handPlayer',function(){
+
+            //voir putcards
+            let cardHovered = this.id.match(/\d+/g).map(Number);
+            let cardValue = newTurn.hand[cardHovered].value
+            let lastCardValue = 0;
+            let selectedRow = -1;
+            let higherThanCard = 0;
+
+
+            newTurn.board.forEach((row, index) => {
+
+                // Ici on est censé récuperer la dernière carte de la ligne en cours
+                lastCardValue = row[row.length - 1].value;
+                
+    
+                //Test si notre carte a une valeur supérieure ou non à la carte d'avant
+                if (cardValue > lastCardValue) {
+                    //Si la valeur est plus petite que celle précédente, alors cette place est la "mieux"
+                    if (lastCardValue > higherThanCard) {
+                        selectedRow = index;
+                        higherThanCard = lastCardValue;
+                    }
+                }
+            });
+
+            
+
+            if (selectedRow < 0 || selectedRow > 3 || selectedRow === -1) {
+            
+                let selectedRow = -1;
+                let malusMin = 999;
+                let malusLine;
+                let highestValue = [];
+                let malusCards =[];
+                let malusCarsTMP;
+                for (let row = 0; row < 4; row++) {
+                    malusCardsTMP = [];
+                    malusLine = 0;
+                    for (let column = 0; column < newTurn.board[row].length; column++) {
+                        malusLine += newTurn.board[row][column].malus;
+                        malusCardsTMP.push(newTurn.board[row][column]);
+                    }
+                    
+                    if(highestValue[malusLine]){
+                        if (highestValue[malusLine] < newTurn.board[row][newTurn.board[row].length - 1].value){
+                            highestValue[malusLine] = newTurn.board[row][newTurn.board[row].length - 1].value;
+                        }
+                    }else{
+                        highestValue[malusLine] = newTurn.board[row][newTurn.board[row].length - 1].value;
+                    }
+                
+                    if (malusLine <= malusMin) {
+                        malusMin = malusLine;
+                        if (newTurn.board[row][newTurn.board[row].length - 1].value >= highestValue[malusMin]) {
+                            selectedRow = row;
+                            malusCards = malusCardsTMP;
+
+                        }
+                    }
+                }
+                $('.ligne'+(selectedRow + 1)).addClass('willRemoveRow');
+            }
+            else{
+                $('.ligne'+(selectedRow + 1)).addClass('willPlaceOn');
+            }
+
+
+        })
+
+        //Quand on enlève la souris d'une carte de la main
+        $('body').off('mouseleave');
+        $('body').on('mouseleave','.handPlayer',function(){
+            $('.board').children().removeClass('willPlaceOn');
+            $('.board').children().removeClass('willRemoveRow');
+        } );
         
     $('body').off('click', "#chooseForMe");
         $('body').on('click',"#chooseForMe",function () {
@@ -153,11 +234,17 @@ if (window.location.pathname == "/") {
         //On remet le bouton "valider choix" a enabled
         $("#validerChoix").prop("disabled", false);
 
-        //on parcours le board pour l'afficher
+        if (10 - newTurn.hand.length != 0){
+            $('#historique').append("--- Tour " + (10 - newTurn.hand.length) + " --- <br>")
+        }
 
         //si il y a un historique (si pas le premier tour)
         if (newTurn.history){
             
+            newTurn.cardPlayed.sort(function (a, b) {
+                return a.value - b.value;
+            });
+
             newTurn.history.forEach((history,index) => {
                 setTimeout(function(){
                     for (let row = 0; row < 4; row++) {
@@ -173,6 +260,7 @@ if (window.location.pathname == "/") {
                             }
                         }
                     }
+                    $('#historique').append(newTurn.cardPlayed[index].playedByNickname + " a joué la carte " + newTurn.cardPlayed[index].value + "<br>")
                 },
                 index * 1500)
             });
@@ -195,6 +283,8 @@ if (window.location.pathname == "/") {
 
         $('.graveyard').html("Score : " + newTurn.graveyard);
 
+        
+
         $('.hand').html("");
         //on parcours la main pour l'afficher
         newTurn.hand.forEach((card, index) => {
@@ -214,7 +304,15 @@ if (window.location.pathname == "/") {
     });
 
     //fin de partie
-    socket.on('end', function () {
+    socket.on('end', function (end) {
+        if (end.winner.length == 1){
+            alert(end.winner[0] + " a gagné avec un score de " + end.score + ". Bien joué à lui.");
+        }
+        else{
+            alert(end.winner.join(', ') + " sont nos gagnants d'aujourd'hui avec un score de " + end.score + ".  Bien joué à eux.")
+        }
+
+        
         $('.hand').html("");
         for (let row = 0; row < 4; row++) {
             for (let col = 0; col < 6; col++) {
@@ -222,7 +320,9 @@ if (window.location.pathname == "/") {
             }
         }
         $('#ready').show();
+        $('#training').show();
         $('#titleReady').show();
+        $('#historique').html('');
     });
 
     // Evenement quand on clique sur une des cartes
@@ -235,9 +335,15 @@ if (window.location.pathname == "/") {
     $("#validerChoix").click(function () {
         //test si aucune carte n'est choisie
         if (cardChosen != -1) {
-            socket.emit('cardChosen', cardChosen);
-            //On "bloque" le bouton après validation
-            $("#validerChoix").prop("disabled", true);
+            //si training on procède différement
+            if (training){
+                socket.emit('cardChosenTraining', cardChosen);
+            }
+            else{
+                socket.emit('cardChosen', cardChosen);
+                //On "bloque" le bouton après validation
+                $("#validerChoix").prop("disabled", true);
+            }
         }
     });
 
@@ -248,6 +354,16 @@ if (window.location.pathname == "/") {
     $('#ready').click(function () {
         socket.emit('ready', '1');
         $('#ready').hide();
+        $('#training').hide();
+        $('#titleReady').hide();
+        $('#validerChoix').show();
+    });
+
+    $('#training').click(function () {
+        training = 1;
+        socket.emit('training');
+        $('#ready').hide();
+        $('#training').hide();
         $('#titleReady').hide();
         $('#validerChoix').show();
         $('#chooseForMe').show();
@@ -310,4 +426,6 @@ if (window.location.pathname == "/") {
         $('#general_chat').hide();
         $('#room_chat').show();
     });
+
+
 }

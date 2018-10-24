@@ -6,6 +6,7 @@ let socket;
 let player;
 let onMouseEnter;
 let onMouseLeave; 
+let training = 0;
 
 if (window.location.pathname == "/") {
     room = prompt('Entrez le nom du salon à créer/rejoindre');
@@ -212,6 +213,7 @@ if (window.location.pathname == "/") {
             }
         }
         $('#ready').show();
+        $('#training').show();
         $('#titleReady').show();
         $('#historique').html('');
     });
@@ -226,9 +228,15 @@ if (window.location.pathname == "/") {
     $("#validerChoix").click(function () {
         //test si aucune carte n'est choisie
         if (cardChosen != -1) {
-            socket.emit('cardChosen', cardChosen);
-            //On "bloque" le bouton après validation
-            $("#validerChoix").prop("disabled", true);
+            //si training on procède différement
+            if (training){
+                socket.emit('cardChosenTraining', cardChosen);
+            }
+            else{
+                socket.emit('cardChosen', cardChosen);
+                //On "bloque" le bouton après validation
+                $("#validerChoix").prop("disabled", true);
+            }
         }
     });
 
@@ -237,6 +245,16 @@ if (window.location.pathname == "/") {
     $('#ready').click(function () {
         socket.emit('ready', '1');
         $('#ready').hide();
+        $('#training').hide();
+        $('#titleReady').hide();
+        $('#validerChoix').show();
+    });
+
+    $('#training').click(function () {
+        training = 1;
+        socket.emit('training');
+        $('#ready').hide();
+        $('#training').hide();
         $('#titleReady').hide();
         $('#validerChoix').show();
     });

@@ -4,6 +4,8 @@ let choixValider = false;
 let room;
 let socket;
 let player;
+let onMouseEnter;
+let onMouseLeave; 
 
 if (window.location.pathname == "/") {
     room = prompt('Entrez le nom du salon à créer/rejoindre');
@@ -41,6 +43,85 @@ if (window.location.pathname == "/") {
 
     //on attend le signal init du serveur qui envoie la main et le board
     socket.on('newTurn', function (newTurn) {
+
+        //Quand on passe la souris sur une carte de la main
+        $('body').off('mouseenter');
+        $('body').on('mouseenter','.handPlayer',function(){
+
+            //voir putcards
+            let cardHovered = this.id.match(/\d+/g).map(Number);
+            let cardValue = newTurn.hand[cardHovered].value
+            let lastCardValue = 0;
+            let selectedRow = -1;
+            let higherThanCard = 0;
+
+
+            newTurn.board.forEach((row, index) => {
+
+                // Ici on est censé récuperer la dernière carte de la ligne en cours
+                lastCardValue = row[row.length - 1].value;
+                
+    
+                //Test si notre carte a une valeur supérieure ou non à la carte d'avant
+                if (cardValue > lastCardValue) {
+                    //Si la valeur est plus petite que celle précédente, alors cette place est la "mieux"
+                    if (lastCardValue > higherThanCard) {
+                        selectedRow = index;
+                        higherThanCard = lastCardValue;
+                    }
+                }
+            });
+
+            
+
+            if (selectedRow < 0 || selectedRow > 3 || selectedRow === -1) {
+            
+                let selectedRow = -1;
+                let malusMin = 999;
+                let malusLine;
+                let highestValue = [];
+                let malusCards =[];
+                let malusCarsTMP;
+                for (let row = 0; row < 4; row++) {
+                    malusCardsTMP = [];
+                    malusLine = 0;
+                    for (let column = 0; column < newTurn.board[row].length; column++) {
+                        malusLine += newTurn.board[row][column].malus;
+                        malusCardsTMP.push(newTurn.board[row][column]);
+                    }
+                    
+                    if(highestValue[malusLine]){
+                        if (highestValue[malusLine] < newTurn.board[row][newTurn.board[row].length - 1].value){
+                            highestValue[malusLine] = newTurn.board[row][newTurn.board[row].length - 1].value;
+                        }
+                    }else{
+                        highestValue[malusLine] = newTurn.board[row][newTurn.board[row].length - 1].value;
+                    }
+                
+                    if (malusLine <= malusMin) {
+                        malusMin = malusLine;
+                        if (newTurn.board[row][newTurn.board[row].length - 1].value >= highestValue[malusMin]) {
+                            selectedRow = row;
+                            malusCards = malusCardsTMP;
+
+                        }
+                    }
+                }
+                $('.ligne'+(selectedRow + 1)).addClass('willRemoveRow');
+            }
+            else{
+                $('.ligne'+(selectedRow + 1)).addClass('willPlaceOn');
+            }
+
+
+        })
+
+        //Quand on enlève la souris d'une carte de la main
+        $('body').off('mouseleave');
+        $('body').on('mouseleave','.handPlayer',function(){
+            $('.board').children().removeClass('willPlaceOn');
+            $('.board').children().removeClass('willRemoveRow');
+        } );
         
         //On remet le bouton "valider choix" a enabled
         $("#validerChoix").prop("disabled", false);
@@ -93,6 +174,8 @@ if (window.location.pathname == "/") {
         }
 
         $('.graveyard').html("Score : " + newTurn.graveyard);
+
+        
 
         $('.hand').html("");
         //on parcours la main pour l'afficher
@@ -215,4 +298,6 @@ if (window.location.pathname == "/") {
         $('#general_chat').hide();
         $('#room_chat').show();
     });
+
+
 }

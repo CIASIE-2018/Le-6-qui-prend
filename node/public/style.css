@@ -1,13 +1,13 @@
 html , body{
     background: #fcfcfa;
     width:100%;
-    height: 100%;
+    height: 110%;
     padding:0;
     margin:0;
 }
 
 body{
-    height: 100vh;
+    height: 110%;
     background-image: url("src/plateau_fond.png");
     background-repeat: no-repeat;
     background-size: cover;
@@ -291,4 +291,10 @@ div.board .ligne4 .l4col6{
 .willRemoveRow > li > img {
     transition: 1s;
     transform: scale(0.8);
+}
+
+#historique{
+    height:200;
+    overflow:auto;
+    position:fixed;
 }

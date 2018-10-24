@@ -89,28 +89,24 @@ io.sockets.on('connection', function (socket, player) {
             }
           });
           
-          
-    
-      
           let result = boardModule.putCards(selectedCards[socket.room], boards[socket.room]);
           boards[socket.room] = result.board;
           let malusPlayers = result.malus;
           boardHistory[socket.room] = result.history;
           
-          if (!!malusPlayers){
-            Object.keys(malusPlayers).forEach((key) => {
-        
-              
-              let socket = io.sockets.connected[key];
-              socket.graveyard += malusPlayers[key];
-            });
-          }
-         
           //on récupère les joueurs connectés à la pièce
           Object.keys(io.sockets.sockets).forEach(function(socketId) {
             let socket = io.sockets.connected[socketId];
             if (socket.room == currentRoom){
 
+              //si malus on affecte
+              if (malusPlayers){
+                Object.keys(malusPlayers).forEach(function(key, index){
+                  if (socket.id == key)
+                    socket.graveyard += malusPlayers[key]
+                })
+              }
+                
               //on reset la carte choisie
               socket.cardChosen = -1;
 
@@ -150,9 +146,6 @@ io.sockets.on('connection', function (socket, player) {
                     }
                   }
                 });
-
-                
-
 
                 //on prévient le client que la partie est finie (avec un petit décalage)
                 setTimeout(function(){

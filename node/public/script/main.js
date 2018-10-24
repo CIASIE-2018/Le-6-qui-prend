@@ -206,9 +206,10 @@ if (window.location.pathname == "/") {
             if(possibilities.length == 0){
                 possibilities = {indexCard: BestCardToReplaceARow()};
                 
-                $(".handPlayer").removeClass("cardChoice");
-                $("handPlayer_ " + possibilities.indexCard).addClass("cardChoice ");
-                // cardChosen = this.id.match(/\d+/g).map(Number);
+                $(".hand > div").removeClass("cardChoice");
+                $("#handPlayer_ " + possibilities.indexCard).addClass("cardChoice ");
+                cardChosen = scores[0].indexCard;
+
             }
             else{
                 const scores = possibilities
@@ -226,9 +227,10 @@ if (window.location.pathname == "/") {
                     return b.score - a.score;
                 });
            
-                $(".handPlayer").removeClass("cardChoice");
-                $("handPlayer_" + scores[0].indexCard).addClass("cardChoice ");
-                // cardChosen = this.id.match(/\d+/g).map(Number);
+                $(".hand > div").removeClass("cardChoice");
+                $("#handPlayer_" + scores[0].indexCard).addClass("cardChoice ");
+                cardChosen = scores[0].indexCard;
+
             }
             
             

@@ -95,11 +95,13 @@ io.sockets.on('connection', function (socket, player) {
           let malusPlayers = result.malus;
           boardHistory[socket.room] = result.history;
           
+	  let playerInRoom = 0
           //on récupère les joueurs connectés à la pièce
           Object.keys(io.sockets.sockets).forEach(function(socketId) {
             let socket = io.sockets.connected[socketId];
             
             if (socket.room == currentRoom){
+		playerInRoom += 1;
 
               //si malus on affecte
               if (malusPlayers){

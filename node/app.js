@@ -14,6 +14,8 @@ let playerAmount = 0;
 let selectedCards = Array();
 
 let server = require("http").Server(app);
+let session = require('express-session');
+let cookieParser = require('cookie-parser');
 
 let deckModule = require('./src/deck.js');
 let boardModule = require('./src/board.js');
@@ -26,9 +28,10 @@ const router = require('./src/routes/router.js');
 let io = require('socket.io').listen(server);
 console.log('Serveur on');
 
-
 app.use(express.static(__dirname + '/public'));
 app.use(parser.urlencoded({ extended: true }));
+app.use(cookieParser('secret'));
+app.use(session({ secret: 'secret', resave: true, saveUninitialized: true }));
 router.setRoutes(app);
 
 io.sockets.on('connection', function(socket, player) {

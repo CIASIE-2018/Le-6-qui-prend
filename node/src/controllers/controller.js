@@ -3,44 +3,51 @@ const dbconf = require('../../conf/config.js');
 const bcrypt = require('bcrypt-nodejs');
 const db = mysql.createConnection(dbconf.databaseOptions);
 
-const tryRegister = function(req) {
+const tryRegister = function(req, res) {
     console.log(req.body.pseudo + ' ---- ' + req.body.password);
     let sql = mysql.format('SELECT `pseudo` FROM `users` WHERE pseudo=?', req.body.pseudo);
-    db.connect(function(err) {});
     db.query(sql, function(err, result) {
         if (result.length === 0) {
             sql = 'INSERT INTO `users` (`pseudo`, `password`, `score`) VALUES (?, ?, ?);';
-            bcrypt.genSalt(10, function(err, res) {
-                bcrypt.hash(req.body.password, res, null, function(err, hash) {
+            bcrypt.genSalt(10, function(err, res_salt) {
+                bcrypt.hash(req.body.password, res_salt, null, function(err, hash) {
                     sql = mysql.format(sql, [req.body.pseudo, hash, 0]);
-                    db.query(sql, function(err, result) {});
-                    db.end(function(err) {});
-                    console.log('INSERTING DONE');
+                    db.query(sql, function(err, result) {
+                        if (err) {
+                            res.redirect("/");
+                        } else {
+                            req.session.pseudo = req.body.pseudo;
+                            res.redirect("/home");
+                            console.log('INSERTING DONE');
+                        }
+                    });
                 });
             });
         } else {
-            db.end(function(err) {});
+            res.redirect("/")
             console.log('user already exists');
         }
     });
 }
 
-const tryLogin = function(req) {
+const tryLogin = function(req, res) {
     let sql = mysql.format('SELECT * FROM `users` WHERE pseudo=?', req.body.pseudo);
-    db.connect(function(err) {});
     db.query(sql, function(err, result) {
+        console.log(result);
         if (result.length !== 0) {
-            bcrypt.compare(req.body.password, result[0].password, function(err, res) {
-                if (res) {
-                    console.log('match');
+            bcrypt.compare(req.body.password, result[0].password, function(err, res_hash) {
+                if (res_hash) {
+                    req.session.pseudo = result[0].pseudo;
+                    res.redirect("/home");
+                    console.log("match");
                 } else {
                     console.log('doesnt match');
+                    res.redirect("/");
                 }
-                db.end(function(err) {});
             });
         } else {
+            res.redirect("/");
             console.log('user not in db');
-            db.end(function(err) {});
         }
     });
 }

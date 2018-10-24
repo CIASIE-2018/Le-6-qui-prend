@@ -1,78 +1,137 @@
-//Créer un tableau vide
-let boardModule = {
+let playerModule = require("./player.js");
+let deckModule = require("./deck.js");
 
-    generateBoard: function(){
-        let board = [
-            Array(),
-            Array(),
-            Array(),
-            Array()
-        ]
-        return board;
-    },
+const generateBoard = function () {
+    let board = [
+        [],
+        [],
+        [],
+        []
+    ]
+    return board;
+};
 
-    //Initialise un tableau à partir de 4 cartes d'un deck
-    init_board: function(board, deck){
-        board[0][0] = boardModule.draw(deck);
-        board[1][0] = boardModule.draw(deck);
-        board[2][0] = boardModule.draw(deck);
-        board[3][0] = boardModule.draw(deck);
-        return true;
-    },
-
-    //pioche une carte et la retire du packet
-    draw: function (deck) {
-        let card = deck[0];
-        deck.shift();
-
-        return card;
-    },
-
-    putCards: function(cards,board){
-        //on commence par trier les cartes par ordre croissant
-        cards.sort(function (a, b) {
-            return a.value - b.value;
-        });
-
-        let cardValue;
-        let higherThanCard;
-        let row;
-
-        // Cette première boucle parcourt uniquement les cartes
-        for (cardIndex = 0; cardIndex < cards.length; cardIndex++) {
-
-            cardValue = cards[cardIndex].value;
-
-            higherThanCard = 0;
-            row = -1;
-
-            // Cette boucle parcourt les 4 lignes du board
-            for (boardLine = 0; boardLine < board.length; boardLine++) {
-
-                let lastCardValue = board[boardLine][board[boardLine].length - 1].value;
-                // Ici on est sensé voir la dernière carte de la ligne en cours
-                //Si la carte que souhaite posé le joueur est plus grande que la dernière carte de la ligne
-                if (cardValue > lastCardValue) {
+//Initialise un tableau à partir de 4 cartes d'un deck
+const init_board = function (board, deck) {
+    board[0][0] = deckModule.draw(deck);
+    board[1][0] = deckModule.draw(deck);
+    board[2][0] = deckModule.draw(deck);
+    board[3][0] = deckModule.draw(deck);
+    return true;
+};
 
 
-                    // Ici on sera d'obtenir à la fin du parcours entier du board la carte la plus proche de celle du joueur à la fin du parcours
-                    if (lastCardValue > higherThanCard) {
 
-                        row = boardLine;
-                        higherThanCard = lastCardValue;
+const putCards = function (cards, board) {
+    //on commence par trier les cartes par ordre croissant
+    cards.sort(function (a, b) {
+        return a.value - b.value;
+    });
 
-                    }
+    let cardValue;
+    let selectedRow;
+    let higherThanCard;
+    let history = [];
+    let malusPointForPlayer = [];
+
+    // Cette première boucle parcourt uniquement les cartes
+    cards.forEach((card) => {
+
+        cardValue = card.value;
+        lastCardValue = 0;
+        selectedRow = -1;
+        higherThanCard = 0;
+        
+        // Cette boucle parcourt les 4 lignes du board
+        board.forEach((row, index) => {
+
+            // Ici on est censé récuperer la dernière carte de la ligne en cours
+            lastCardValue = row[row.length - 1].value;
+
+            //Test si notre carte a une valeure supérieure ou non à la carte d'avant
+            if (cardValue > lastCardValue) {
+                //Si la valeur est plus petite que celle précédente, alors cette place est la "mieux"
+                if (lastCardValue > higherThanCard) {
+                    selectedRow = index;
+                    higherThanCard = lastCardValue;
                 }
             }
+        });
 
-            board[row].push(cards[cardIndex]);
-            //si c'est la 6ème, on gère les points
-            if (board[row].length >= 6) {
-                board[row] == Array();
-                board[row][0] = cards[cardIndex];
+        if (selectedRow < 0 || selectedRow > 3 || selectedRow === -1) {
+            
+            let resultTMP = getRowWithLowestMalusAndHighestValue(board)
+            selectedRow = resultTMP.malusRow;
+            
+            malusPointForPlayer[card.playedBy] = playerModule.calculateMalus(resultTMP.malusCards);
+            
+            
+            board[selectedRow] = [];
+            board[selectedRow].push(card);
+        } else {
+            board[selectedRow].push(card);
+        }
+
+        //si c'est la 6ème, on gère les points
+        if (board[selectedRow].length >= 6) {
+            board[selectedRow] = [];
+            board[selectedRow][0] = card;
+        }
+        
+        //parsing and stringify object to clone it (otherwise it's always the same)
+        history.push(JSON.parse(JSON.stringify(board)));
+    });
+
+
+    let board_History_Malus = {
+        board: board,
+        history: history,
+        malus: malusPointForPlayer
+    }
+
+    return board_History_Malus;
+};
+
+const getRowWithLowestMalusAndHighestValue = function (board) {
+    let selectedRow = -1;
+    let malusMin = 999;
+    let malusLine;
+    let highestValue = [];
+    let malusCards =[];
+    let malusCarsTMP;
+    for (let row = 0; row < 4; row++) {
+        malusCardsTMP = [];
+        malusLine = 0;
+        for (let column = 0; column < board[row].length; column++) {
+            malusLine += board[row][column].malus;
+            malusCardsTMP.push(board[row][column]);
+        }
+        
+        if(highestValue[malusLine]){
+            if (highestValue[malusLine] < board[row][board[row].length - 1].value){
+                highestValue[malusLine] = board[row][board[row].length - 1].value;
+            }
+        }else{
+            highestValue[malusLine] = board[row][board[row].length - 1].value;
+        }
+      
+        if (malusLine <= malusMin) {
+            malusMin = malusLine;
+            if (board[row][board[row].length - 1].value >= highestValue[malusMin]) {
+                selectedRow = row;
+                malusCards = malusCardsTMP;
+
             }
         }
-        return board;
-    },
+    }
+  
+    return {malusRow: selectedRow, malusCards: malusCards};
 };
-module.exports = boardModule;
+
+
+
+module.exports = {
+    generateBoard,
+    init_board,
+    putCards
+};

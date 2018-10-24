@@ -1,19 +1,90 @@
 html , body{
     background: #fcfcfa;
     width:100%;
+    height: 110%;
     padding:0;
     margin:0;
 }
 
+body{
+    height: 110%;
+    background-image: url("src/plateau_fond.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
 div.hand{
-     text-align: center;
+    text-align: center;
+    position: fixed;
+    bottom: -8%;
+    left:50%;
+    transform: translate(-50%, -50%);
+}
+
+#ready{
+    
+    background-color: #5EB6DD;
+    font-size: 16px;
+    padding: 16px;
+    border: none;
+    outline: none;
+    margin-left: 50px;
+    margin-top: 50px;
+    border-radius: 5px 5px 5px 5px;
+}
+
+
+
+#chooseForMe{
+    display: none;
+    /* on cache ce bouton tant que l'utilisateur n'est pas prêt */
+    transition: background-color 0.5s ease;
+    position: absolute;
+    bottom: 50%;
+    right: 10%;
+    background-color: #5EB6DD;
+    color: white;
+    padding: 16px;
+    font-size: 16px;
+    border: none;
+    outline: none;
+    border-radius: 5px 5px 5px 5px;
+}
+
+#validerChoix{
+    display: none; /* on cache ce bouton tant que l'utilisateur n'est pas prêt */
+    transition: background-color 0.5s ease;
+    position: absolute;
+    right: 1%;
+    bottom: 38%;
+    right: 10%;
+    background-color: #5EB6DD;
+    color: white;
+    padding: 16px;
+    font-size: 16px;
+    border: none;
+    outline: none;
+    border-radius: 5px 5px 5px 5px;
+}
+
+#validerChoix:hover,
+#chooseForMe:hover{
+    background-color: rgb(171, 225, 249);
+}
+
+#validerChoix:disabled,
+#chooseForMe:disabled {
+    background-color: #818078;
 }
 
 
 div.handPlayer{
     display: inline-block;
     margin-right: 5px;
-   
+}
+
+div.handPlayer:hover{
+    transform:scale(1.2);
 }
 
 div.lineBoard{
@@ -27,19 +98,25 @@ div.cardChoice{
 }
 
 div img{
-    width:9vw;
-    height:auto;
-
+    width: 4.5vw;
+    height: auto;
+    margin-bottom: 21%; /* correction de l'emplacement des cartes posées */
 }
 
 div.board{
     text-align: center;
-    background: #fcfcfa;
     color: #818078;
-    font-family: Futura,
-    sans-serif;
-    display:flex;
+    font-family: Futura, sans-serif;
+    display: flex;
     flex-direction: column;
+    width: 100%;
+    margin-bottom: 5%;
+
+
+    background-image: url("src/plateau.png");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 100%;
 }
 
 div.board .ligne1,
@@ -47,10 +124,7 @@ div.board .ligne2,
 div.board .ligne3,
 div.board .ligne4
     {
-        
         height: auto;
-        
-        
 }
 div.board .ligne1 .l1col1,
 div.board .ligne1 .l1col2,
@@ -73,8 +147,8 @@ div.board .ligne4 .l4col3,
 div.board .ligne4 .l4col4,
 div.board .ligne4 .l4col5 {
 
-    width:9vw;
-    height: 12.85vw;
+    width:4.5vw;
+    height: 6.425vw;
     border-radius: 5px;
     margin:1%;
     background-color: lightgrey;
@@ -86,35 +160,53 @@ div.board .ligne1 .l1col6,
 div.board .ligne2 .l2col6,
 div.board .ligne3 .l3col6,
 div.board .ligne4 .l4col6{
-     width:9vw;
-     height: 12.85vw;
+    width:4.5vw;
+    height: 6.425vw;
     border-radius: 5px;
     background-color: rgb(255, 65, 65);
     display:inline-block;
-     margin:1%;
-      padding:0;
+    margin:1%;
+    padding:0;
 }
 
 #room_chat{
     display:none;
+    background-color: #88b7d5;
 }
 
 .toggle_general_chat, .toggle_room_chat {
     text-align:center;
     width:49%;
     box-sizing:border-box;
-    background-color:grey;
+    background-color:rgb(46, 181, 238);
     display:inline-block;
     cursor:pointer;
+    margin-right: 2px;
+    border: 1px solid black;
+}
+
+.toggle_general_chat{
+    border-radius: 5px 5px 0px 0px;
+}
+
+.toggle_room_chat{
+    border-radius: 0px 0px 5px 5px;
 }
 
 .toggle_general_chat:hover, .toggle_room_chat:hover {
-    background-color:#cedaed;
+    background-color:#5EB6DD;
 }
 
 .chats{
-    width:50%;
+    position: absolute;
+    width:24%;
     border-style:solid;
+    border-color: #5EB6DD;
+    background-color: #88b7d5;
+    display:none;
+    top: 70px;
+    right: 1%;
+    border-radius: 5px 0px 5px 5px;
 }
 
 .current_chat{
@@ -124,17 +216,105 @@ div.board .ligne4 .l4col6{
 .room_content, .general_content{
     height:15em;
     overflow-y:auto;
+    background-color: #88b7d5;
 }
 
-@media screen and (max-width: 768px){
+.control_chat{
+    background-color: #88b7d5;
+    margin-left: 1.2%;
+    margin-bottom: 1%;
+}
 
-    .chats{
-        width:100%
-    }
+.general_input, .room_input{
+    color: black;
+	height: 30px;
+    text-align:left;
+    border: 1px solid black;
+    background-color:white;
+    outline: none;
+    width: 100%;
+    box-sizing: border-box;
+    margin-top: 0px; 
+    margin-bottom: 0px;
+    margin-left: -2px;
+    border-radius: 5px 5px 5px 5px;
+}
+
+.general_input:focus, .room_input:focus, .general_input:hover, .room_input:hover{
+    background-color: #f2f2ef;
+}
+
+.general_input::placeholder, .room_input::placeholder{
+    color: grey;
+    text-align:center;
+}
+
+.general_send, .room_send{
+    width: 70px;
+    height: 30px;
+    border: 1px solid black;
+    outline: none;
+    vertical-align: middle;
+    float: right;
+    margin-top: 2px; 
+    margin-bottom: 0px;
+    margin-right: 2px;
+    border-radius: 5px 5px 5px 5px;
+}
+
+.general_send:hover, .room_send:hover {
+    background-color: #f2f2ef;
+}
 
 .toggle_general_chat, .toggle_room_chat {
     width:100%;
 }
 
+#showHideBtn {
+    transition: background-color 0.5s ease;
+    background-color: #5EB6DD;
+    color: white;
+    padding: 16px;
+    font-size: 16px;
+    border: none;
+    outline: none;
+    border-radius: 5px 5px 0px 5px;
+    right: 1%;
+    float: right;
+    margin-right: 1%;
+    margin-top: 1%;
 }
 
+#showHideBtn:hover {
+    background-color: rgb(171, 225, 249);
+}
+
+#alertMessage{
+    float: right;
+    height: 50px;
+    width: 50px;
+    display: none;
+    margin-right: 2px;
+    margin-top: 1%;
+}
+
+.willPlaceOn > li{
+    transition: 1s;
+    background-color:yellow!important;
+}
+
+.willRemoveRow > li{
+    transition: 1s;
+    background-color: yellow!important;
+}
+
+.willRemoveRow > li > img {
+    transition: 1s;
+    transform: scale(0.8);
+}
+
+#historique{
+    height:200;
+    overflow:auto;
+    position:fixed;
+}

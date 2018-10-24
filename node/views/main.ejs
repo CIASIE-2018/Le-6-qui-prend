@@ -1,27 +1,40 @@
 <!DOCTYPE html>
-
 <html>
 
 <head>
-
     <meta charset="utf-8" />
     <title>Le 6 qui prend</title>
     <link rel="stylesheet" type="text/css" href="style.css">
-    <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
-        -->
 </head>
 
-
-
 <body>
-    <h1>Commande</h1>
-    <button id="ready">Ready</button>
+    <button id="showHideBtn">Chat</button>
+    <img src="src/newMessage.svg" id="alertMessage">
+    <div class="chats">
+        <div class="toggle_general_chat current_chat">Chat général</div>
+        <div class="toggle_room_chat">Chat du salon</div>
+        <div id="general_chat">
+            <div class="general_content"></div>
+            <div class="control_chat">
+                <input class="general_input" type="text" placeholder="Votre message..." />
+                <button class="general_send">Envoyer</button>
+            </div>
+        </div>
+        <div id="room_chat">
+            <div class="room_content"></div>
+            <div class="control_chat">
+                <input class="room_input" type="text" placeholder="Votre message..." />
+                <button class="room_send">Envoyer</button>
+            </div>
+        </div>
+    </div>
 
-    <h1>Main</h1>
-    <div class="hand"></div>
-    <button id="validerChoix">Confirmer mon choix</button>
-    <h1>Tableau de jeu</h1>
+    <button id="ready">Prêt</button>
+    <button id="training">Jouer contre l'ia</button>
+
+    <div id="historique">
+    </div>
+
     <div class="board">
         <ul class="ligne1">
             <li class="l1col1"></li>
@@ -55,32 +68,16 @@
             <li class="l4col5"></li>
             <li class="l4col6"></li>
         </ul>
-    </div>
-    <div class="chats">
-        <div class="toggle_general_chat current_chat">Chat général</div>
-        <div class="toggle_room_chat">Chat de salon</div>
-        <div id="general_chat">
-            <div class="general_content"></div>
-            <div class="control_chat">
-                <input class="general_input" type="text" />
-                <button class="general_send">envoyer</button>
-            </div>
-        </div>
-        <div id="room_chat">
-            <div class="room_content"></div>
-            <div class="control_chat">
-                <input class="room_input" type="text" />
-                <button class="room_send">envoyer</button>
-            </div>
-        </div>
-    </div>
+        <button id="chooseForMe"> Choisis une carte pour moi !</button>
+        <button id="validerChoix">Confirmer mon choix</button>
     </div>
 
-    <!-- On ajoute jquery-->
+    <div class="graveyard"></div>
+
+    <div class="hand"></div>
+
     <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
-    <!-- On ajoute socket.io-->
     <script src="/socket.io/socket.io.js"></script>
-
     <script src="/script/main.js"></script>
 
 </body>

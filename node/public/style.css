@@ -33,6 +33,24 @@ div.hand{
     border-radius: 5px 5px 5px 5px;
 }
 
+
+
+#chooseForMe{
+    display: none;
+    /* on cache ce bouton tant que l'utilisateur n'est pas prêt */
+    transition: background-color 0.5s ease;
+    position: absolute;
+    bottom: 50%;
+    right: 10%;
+    background-color: #5EB6DD;
+    color: white;
+    padding: 16px;
+    font-size: 16px;
+    border: none;
+    outline: none;
+    border-radius: 5px 5px 5px 5px;
+}
+
 #validerChoix{
     display: none; /* on cache ce bouton tant que l'utilisateur n'est pas prêt */
     transition: background-color 0.5s ease;
@@ -49,11 +67,13 @@ div.hand{
     border-radius: 5px 5px 5px 5px;
 }
 
-#validerChoix:hover{
+#validerChoix:hover,
+#chooseForMe:hover{
     background-color: rgb(171, 225, 249);
 }
 
-#validerChoix:disabled{
+#validerChoix:disabled,
+#chooseForMe:disabled {
     background-color: #818078;
 }
 

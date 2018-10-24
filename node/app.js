@@ -105,12 +105,13 @@ io.sockets.on('connection', function (socket, player) {
               socket.graveyard += malusPlayers[key];
             });
           }
-         
+          let playerInRoom =0;
           //on récupère les joueurs connectés à la pièce
           Object.keys(io.sockets.sockets).forEach(function(socketId) {
             let socket = io.sockets.connected[socketId];
+            
             if (socket.room == currentRoom){
-
+              playerInRoom += 1;
               //on reset la carte choisie
               socket.cardChosen = -1;
 
@@ -118,7 +119,8 @@ io.sockets.on('connection', function (socket, player) {
                 hand: socket.hand,
                 board: boards[socket.room],
                 graveyard: socket.graveyard,
-                history : boardHistory[socket.room] 
+                history : boardHistory[socket.room],
+                playerInRoom : playerInRoom
               });
 
               //Si la partie est finie aka si la main est vide

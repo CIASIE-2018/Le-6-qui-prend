@@ -25,6 +25,9 @@ let deckModule = require("./deck.js");
         return hand;
     };
     
+
+
+
 module.exports = {
     generateHand,
     calculateMalus

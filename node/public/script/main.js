@@ -4,6 +4,7 @@ let choixValider = false;
 let room;
 let socket;
 let player;
+let chooseForMeFunction;
 
 if (window.location.pathname == "/") {
     room = prompt('Entrez le nom du salon à créer/rejoindre');
@@ -42,6 +43,113 @@ if (window.location.pathname == "/") {
     //on attend le signal init du serveur qui envoie la main et le board
     socket.on('newTurn', function (newTurn) {
         
+    $('body').off('click', "#chooseForMe");
+        $('body').on('click',"#chooseForMe",function () {
+            
+            // Liste de toutes les possibilités
+            let possibilities = [];
+            newTurn.hand.forEach((card, cardIndex) => {
+
+                newTurn.board.forEach((row, index) => {
+                
+                    let tmpDifference = card.value - row[row.length - 1].value;
+
+                    let tmpMaxCardsValue = row[row.length - 1].value;
+
+                    let tmpNumberOfCardsOnLine = row.length;
+
+                    let indexCard = cardIndex;
+                    
+                    possibilities.push({
+                        difference: tmpDifference,
+                        maxValue: tmpMaxCardsValue,
+                        nbCardsLine: tmpNumberOfCardsOnLine,
+                        card: indexCard,
+                        malus: card.malus
+                    })            
+                });
+            });
+
+
+            
+
+
+            const scoreDifference = (difference, nbCartes) => { // 100 indexed
+                let diff = (difference / 10);
+
+                if(difference < 5 - nbCartes){
+
+                    return 100 - diff;
+                }
+                if(difference < 4){
+                    return 70 - diff;
+                }
+
+                if(difference > 3 && difference <= 25){
+                    return 40  - diff;
+                }
+                if(difference > 25 && difference <= 40 ){
+                    return 20 - diff;
+                }
+                return 10 - diff;
+            };
+
+            const scoreNbCards = (nbCartes) => { // Index 100
+
+                if(nbCartes + newTurn.playerInRoom <6){
+                    return 100;
+                }
+                if (nbCartes = 1){
+                    return 60;
+                }
+                if(nbCartes = 2){
+                    return 40
+                }
+                if(nbCartes = 3){
+                    return 20;
+                }
+                return 5;
+            }
+
+            // Si aucune Carte ne peut être placé
+            const BestCardToReplaceARow = () => {
+                return newTurn.hand.length-1;
+            }
+            possibilities = possibilities
+                .filter(function (possibility) {
+                    return possibility.difference > 0 && possibility.nbCardsLine < 5;
+                });
+            
+            if(possibilities.length == 0){
+                possibilities = {indexCard: BestCardToReplaceARow()};
+              
+                $("handPlayer_" + possibilities.indexCard).click();
+            }
+            else{
+                const scores = possibilities
+                    .map(function (possibility) {
+                        return {
+                            indexCard: possibility.card,
+                            score: 1000 +
+                            ((possibility.malus * 4 * 0.5) -
+                            (possibility.maxValue * 0.6) +
+                            (scoreNbCards(possibility.nbCardsLine) * 1.2) +
+                            (scoreDifference(possibility.difference, possibility.nbCardsLine) * 1.1))
+                        };
+                    })
+                    .sort(function (a, b) {
+                    return b.score - a.score;
+                });
+           
+
+                $("handPlayer_" + scores[0].indexCard).click();
+            }
+            
+            
+           
+
+
+        });
         //On remet le bouton "valider choix" a enabled
         $("#validerChoix").prop("disabled", false);
 
@@ -49,7 +157,7 @@ if (window.location.pathname == "/") {
 
         //si il y a un historique (si pas le premier tour)
         if (newTurn.history){
-            console.log(newTurn.history);
+            
             newTurn.history.forEach((history,index) => {
                 setTimeout(function(){
                     for (let row = 0; row < 4; row++) {
@@ -133,6 +241,8 @@ if (window.location.pathname == "/") {
         }
     });
 
+    
+
 
     //quand click sur ready on indique au serveur qu'on est prêt
     $('#ready').click(function () {
@@ -140,6 +250,7 @@ if (window.location.pathname == "/") {
         $('#ready').hide();
         $('#titleReady').hide();
         $('#validerChoix').show();
+        $('#chooseForMe').show();
     });
 
     //TCHAT

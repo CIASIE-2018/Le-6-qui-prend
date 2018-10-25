@@ -4,6 +4,10 @@ let onMouseEnter;
 let onMouseLeave;
 let training = 0;
 
+let socket = io.connect("localhost:8080");
+console.log(room);
+socket.room = room;
+
 //on attend les messages dans les 2 chats
 socket.on('general_chat', function(message) {
     let tchat = $('.chats');
@@ -189,7 +193,7 @@ socket.on('newTurn', function(newTurn) {
                             } else {
                                 let img = document.createElement("img");
                                 img.alt = '';
-                                img.src = 'src/' + newTurn.history[index][row][col].value + '.png';
+                                img.src = '../src/' + newTurn.history[index][row][col].value + '.png';
                                 $('.l' + (row + 1) + 'col' + (col + 1)).html(img);
                             }
                         }
@@ -206,7 +210,7 @@ socket.on('newTurn', function(newTurn) {
                 } else {
                     let img = document.createElement("img");
                     img.alt = '';
-                    img.src = 'src/' + newTurn.board[row][col].value + '.png';
+                    img.src = '../src/' + newTurn.board[row][col].value + '.png';
                     $('.l' + (row + 1) + 'col' + (col + 1)).html(img);
                 }
             }
@@ -221,7 +225,7 @@ socket.on('newTurn', function(newTurn) {
         let img = document.createElement("img");
         div.id = 'handPlayer_' + index;
         div.className = 'handPlayer';
-        img.src = 'src/' + card.value + '.png';
+        img.src = '../src/' + card.value + '.png';
         img.alt = '';
         div.append(img);
         $('.hand').append(div);

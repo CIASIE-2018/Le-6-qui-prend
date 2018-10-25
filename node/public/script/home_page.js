@@ -1,18 +1,21 @@
 let rooms_area = $('#rooms_area');
 let socket = io.connect('http://localhost:8080');
 
-console.log(player);
 socket.emit('nickname', player);
-console.log(socket);
-/*function displayRooms() {
-    con_area.hide();
-    reg_area.hide();
-    let rooms = array();
-    io.sockets.forEach(e => {
-        rooms.push(e.room);
+rooms = JSON.parse(rooms);
+
+$('#newroom').click(function() {
+    joinRoom($('#room_name').val(), true);
+})
+
+rooms.forEach(element => {
+    rooms_area.append("<li>" + element + "<button id=" + element + ">Rejoindre</buttun></li></a>");
+    $('#' + element).click(function() {
+        joinRoom(element, false);
     });
-    rooms.array.forEach(element => {
-        rooms_area.append('<p>' + element.name + ' --- ' + '</p>');
-    });
-    rooms_area.show();
-}*/
+});
+
+function joinRoom(room, create) {
+    socket.emit('join_room', room, create);
+    window.location.href = "/rooms/" + room;
+}

@@ -1,9 +1,11 @@
-const home = require('./home.js');
-const authentification = require('./authentification.js');
+const authentification_routing = require('./authentification.js');
+const home_routing = require('./home.js');
+const rooms_routing = require('./rooms.js');
 
 const setRoutes = function(app) {
-    home.setHomeRoute(app);
-    authentification.setAuthentificationRoutes(app);
+    authentification_routing.setAuthentificationRoutes(app);
+    home_routing.setHomeRoute(app);
+    rooms_routing.setRoomsRoutes(app);
 }
 
 module.exports = {

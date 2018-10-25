@@ -4,7 +4,6 @@ const bcrypt = require('bcrypt-nodejs');
 const db = mysql.createConnection(dbconf.databaseOptions);
 
 const tryRegister = function(req, res) {
-    console.log(req.body.pseudo + ' ---- ' + req.body.password);
     let sql = mysql.format('SELECT `pseudo` FROM `users` WHERE pseudo=?', req.body.pseudo);
     db.query(sql, function(err, result) {
         if (result.length === 0) {
@@ -18,14 +17,12 @@ const tryRegister = function(req, res) {
                         } else {
                             req.session.pseudo = req.body.pseudo;
                             res.redirect("/home");
-                            console.log('INSERTING DONE');
                         }
                     });
                 });
             });
         } else {
             res.redirect("/")
-            console.log('user already exists');
         }
     });
 }
@@ -33,21 +30,17 @@ const tryRegister = function(req, res) {
 const tryLogin = function(req, res) {
     let sql = mysql.format('SELECT * FROM `users` WHERE pseudo=?', req.body.pseudo);
     db.query(sql, function(err, result) {
-        console.log(result);
         if (result.length !== 0) {
             bcrypt.compare(req.body.password, result[0].password, function(err, res_hash) {
                 if (res_hash) {
                     req.session.pseudo = result[0].pseudo;
                     res.redirect("/home");
-                    console.log("match");
                 } else {
-                    console.log('doesnt match');
                     res.redirect("/");
                 }
             });
         } else {
             res.redirect("/");
-            console.log('user not in db');
         }
     });
 }

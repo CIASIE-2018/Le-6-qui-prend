@@ -1,20 +1,15 @@
 <!DOCTYPE html>
-
 <html>
 
 <head>
-
     <meta charset="utf-8" />
     <title>Le 6 qui prend</title>
-    <link rel="stylesheet" type="text/css" href="style.css">
-
+    <link rel="stylesheet" type="text/css" href="../style.css">
 </head>
-
-
 
 <body>
     <button id="showHideBtn">Chat</button>
-    <img src="src/newMessage.svg" id="alertMessage">
+    <img src="../src/newMessage.svg" id="alertMessage">
     <div class="chats">
         <div class="toggle_general_chat current_chat">Chat général</div>
         <div class="toggle_room_chat">Chat du salon</div>
@@ -33,7 +28,7 @@
             </div>
         </div>
     </div>
-    
+
     <button id="ready">Prêt</button>
     <button id="training">Jouer contre l'ia</button>
 
@@ -77,17 +72,16 @@
         <button id="validerChoix">Confirmer mon choix</button>
     </div>
 
-    <div class="graveyard">
-    </div>
+    <div class="graveyard"></div>
 
     <div class="hand"></div>
 
-    <!-- On ajoute jquery-->
+    <script>
+        let pseudo = '<%= pseudo %>';
+        let room = '<%= room %>';
+    </script>
     <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
-
-    <!-- On ajoute socket.io-->
     <script src="/socket.io/socket.io.js"></script>
-
     <script src="/script/main.js"></script>
 
 </body>

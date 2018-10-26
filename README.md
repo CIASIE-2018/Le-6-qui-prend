@@ -6,6 +6,8 @@ Groupe BERNARD Geoffroy BRIAND Lucas CORDIER Florian ROHRBACHER Léon
 ## Setup
   + [Installer nodeJs](https://nodejs.org/fr/) 
   + Cloner le repo
+  + Modifier le fichier "/node/conf/config.js" et l'adapter à vôtre installation MySQL
+  + Lancer le script "/node/tables.sql" pour initialiser vos tables
   + Se placer dans Le-6-qui-prend/node
   + Lancer la commande node app.js
   

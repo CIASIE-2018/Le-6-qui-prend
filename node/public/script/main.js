@@ -5,8 +5,7 @@ let onMouseLeave;
 let training = 0;
 
 let socket = io.connect("localhost:8080");
-console.log(room);
-socket.room = room;
+socket.emit('join_room', { pseudo: pseudo, room: room });
 
 //on attend les messages dans les 2 chats
 socket.on('general_chat', function(message) {

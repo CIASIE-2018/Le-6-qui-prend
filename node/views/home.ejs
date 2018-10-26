@@ -11,17 +11,16 @@
     <h1>Le 6 qui prend !</h1>
 
     <div class="create_room">
-        <!--<form action="/newroom" method="POST">-->
-        <input id="room_name" type="text" name="room_name" />
-        <button id="newroom" type="submit">Créer un salon</button>
-        <!--</form>-->
+        <form action="/newroom" method="POST">
+            <input id="room_name" type="text" name="room_name" />
+            <button id="newroom" type="submit">Créer un salon</button>
+        </form>
     </div>
 
     <ul class="rooms" id="rooms_area">
     </ul>
 
     <script>
-        let player = '<%= pseudo %>';
         let rooms = '<%- rooms %>';
     </script>
     <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>

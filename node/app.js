@@ -39,22 +39,19 @@ app.use(cookieParser('secret'));
 app.use(session({ secret: 'secret', resave: true, saveUninitialized: true }));
 router.setRoutes(app);
 
-io.sockets.on('connection', function(socket, player) {
-    //on demande le pseudo au player et on récupère sa room
-    socket.on('nickname', function(player) {
-        socket.pseudo = player.pseudo;
+io.sockets.on('connection', function(socket) {
+
+    socket.on('join_room', function(params) {
+        if (params.create) {
+            app.rooms.push(params.room);
+        }
+        socket.room = params.room;
+        socket.pseudo = params.pseudo;
         socket.cardChosen = -1;
 
         //on rejoint la salle et on envoie un message dans le salon (et la console)
         socket.join(socket.room);
         socket.broadcast.to(socket.room).emit('room_chat', socket.pseudo + " rejoint la salle.<br>");
-    });
-
-    socket.on('join_room', function(room, create) {
-        if (create) {
-            app.rooms.push(room);
-        }
-        socket.room = room;
     });
 
     //on attend de recevoir des messages
@@ -67,7 +64,6 @@ io.sockets.on('connection', function(socket, player) {
     });
 
     socket.on('cardChosen', function(cardChosen) {
-
         let currentRoom = socket.room;
 
         //si on choisi une carte pour la première fois ce tour ci, on incrémente le nb de cartes jouées

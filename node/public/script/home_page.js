@@ -15,6 +15,5 @@ rooms.forEach(element => {
 });
 
 function joinRoom(room) {
-    //socket.emit('join_room', { room: room, create: create });
     window.location.href = "/rooms/" + room;
 }

@@ -167,13 +167,21 @@ socket.on('newTurn', function(newTurn) {
                     return b.score - a.score;
                 });
 
-            $(".handPlayer").removeClass("cardChoice");
-            $("handPlayer_" + scores[0].indexCard).addClass("cardChoice ");
-            // cardChosen = this.id.match(/\d+/g).map(Number);
+            $(".hand > div").removeClass("cardChoice");
+            $("#handPlayer_" + scores[0].indexCard).addClass("cardChoice ");
+            cardChosen = scores[0].indexCard;
+
         }
+
+
+
+
+
     });
     //On remet le bouton "valider choix" a enabled
     $("#validerChoix").prop("disabled", false);
+
+
     if (10 - newTurn.hand.length != 0) {
         $('#historique').append("--- Tour " + (10 - newTurn.hand.length) + " --- <br>")
     }

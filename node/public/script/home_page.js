@@ -3,17 +3,13 @@ let socket = io.connect('http://localhost:8080');
 
 rooms = JSON.parse(rooms);
 
-$('#newroom').click(function() {
-    joinRoom($('#room_name').val(), true);
-})
-
 rooms.forEach(element => {
     rooms_area.append("<li>" + element + "<button id=" + element + ">Rejoindre</button></li>");
     $('#' + element).click(function() {
-        joinRoom(element, false);
+        window.location.href = "/rooms/" + element;
     });
 });
 
-function joinRoom(room) {
+/*function joinRoom(room) {
     window.location.href = "/rooms/" + room;
-}
+}*/

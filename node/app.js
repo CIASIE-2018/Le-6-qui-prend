@@ -18,7 +18,6 @@ let boardModule = require("./src/board.js");
 let playerModule = require("./src/player.js");
 const parser = require("body-parser");
 const router = require("./src/routes/router.js");
-// Chargement de socket.io
 let io = require("socket.io").listen(server);
 console.log("Serveur on");
 

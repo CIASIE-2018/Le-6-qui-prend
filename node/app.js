@@ -148,11 +148,13 @@ io.sockets.on("connection", function(socket) {
             nbSelectedCards[socket.room] += 1;
         }
         socket.cardChosen = cardChosen;
+        
         //ici on gère les cartes jouées par chaques IA
         ais[socket.room].forEach(function(ai) {
-            ai.cardChosen = 0;
+            ai.cardChosen = boardModule.chooseCard(ai.hand, boards[socket.room], 4);
+
             selectedCards[socket.room].push(ai.hand[ai.cardChosen]);
-            ai.hand.splice(ai.cardChosen);
+            ai.hand.splice(ai.cardChosen,1);
         });
         //on retire la carte jouée par le joueur
         selectedCards[socket.room].push(socket.hand[socket.cardChosen]);

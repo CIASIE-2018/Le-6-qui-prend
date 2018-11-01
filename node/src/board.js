@@ -36,7 +36,6 @@ const putCards = function (cards, board) {
 
     // Cette première boucle parcourt uniquement les cartes
     cards.forEach((card) => {
-
         cardValue = card.value;
         lastCardValue = 0;
         selectedRow = -1;
@@ -128,10 +127,94 @@ const getRowWithLowestMalusAndHighestValue = function (board) {
     return {malusRow: selectedRow, malusCards: malusCards};
 };
 
+function chooseCard(hand, board, playerInRoom){
+    // Liste de toutes les possibilités
+    let possibilities = [];
+    hand.forEach((card, cardIndex) => {
+        board.forEach((row, index) => {
+            let tmpDifference = card.value - row[row.length - 1].value;
+            let tmpMaxCardsValue = row[row.length - 1].value;
+            let tmpNumberOfCardsOnLine = row.length;
+            let indexCard = cardIndex;
+            possibilities.push({
+                difference: tmpDifference,
+                maxValue: tmpMaxCardsValue,
+                nbCardsLine: tmpNumberOfCardsOnLine,
+                card: indexCard,
+                malus: card.malus
+            })
+        });
+    });
+
+    const scoreDifference = (difference, nbCartes) => { // 100 indexed
+        let diff = (difference / 10);
+        if (difference < 5 - nbCartes) {
+            return 100 - diff;
+        }
+        if (difference < 4) {
+            return 70 - diff;
+        }
+        if (difference > 3 && difference <= 25) {
+            return 40 - diff;
+        }
+        if (difference > 25 && difference <= 40) {
+            return 20 - diff;
+        }
+        return 10 - diff;
+    };
+    const scoreNbCards = (nbCartes) => { // Index 100
+            if (nbCartes + playerInRoom < 6) {
+                return 100;
+            }
+            if (nbCartes = 1) {
+                return 60;
+            }
+            if (nbCartes = 2) {
+                return 40
+            }
+            if (nbCartes = 3) {
+                return 20;
+            }
+            return 5;
+        }
+        // Si aucune Carte ne peut être placé
+    const BestCardToReplaceARow = () => {
+        return hand.length - 1;
+    }
+    possibilities = possibilities
+        .filter(function(possibility) {
+            return possibility.difference > 0 && possibility.nbCardsLine < 5;
+        });
+
+    if (possibilities.length == 0) {
+        possibilities = { indexCard: BestCardToReplaceARow() };
+        // cardChosen = this.id.match(/\d+/g).map(Number);
+    } else {
+        const scores = possibilities
+            .map(function(possibility) {
+                return {
+                    indexCard: possibility.card,
+                    score: 1000 +
+                        ((possibility.malus * 4 * 0.5) -
+                            (possibility.maxValue * 0.6) +
+                            (scoreNbCards(possibility.nbCardsLine) * 1.2) +
+                            (scoreDifference(possibility.difference, possibility.nbCardsLine) * 1.1))
+                };
+            })
+            .sort(function(a, b) {
+                return b.score - a.score;
+            });
+
+        cardChosen = scores[0].indexCard;
+        return cardChosen;
+    }
+
+}
 
 
 module.exports = {
     generateBoard,
     init_board,
-    putCards
+    putCards,
+    chooseCard
 };

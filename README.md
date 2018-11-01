@@ -12,7 +12,7 @@ Groupe BERNARD Geoffroy BRIAND Lucas CORDIER Florian ROHRBACHER Léon
   + Lancer la commande node app.js
   
 ## Test
-  + Lancer au moins 2 clients à l'url [localhost:8080](http://localhost:8080)
+  + Lancer au moins 2 clients à l'url [localhost:8080](http://localhost:8080) (de préférence de navigateurs différents)
   + Indiquez le salon de jeu à rejoindre 
   + Indiquez votre pseudo
   + Pour commencer la partie, cliquez sur le bouton prêt sur tous les clients dans le salon

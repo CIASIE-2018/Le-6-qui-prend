@@ -35,6 +35,7 @@ io.sockets.on("connection", function(socket) {
             app.rooms.push(params.room);
         }
         socket.room = params.room;
+        selectedCards[socket.room] = [];
         socket.pseudo = params.pseudo;
         socket.cardChosen = -1;
         socket.join(socket.room);

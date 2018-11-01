@@ -29,8 +29,11 @@
         </form>
     </div>
 
-    <div class="rooms" id="rooms_area"></div>
+    <div id="error_area"></div>
 
+    <script>
+        let error = '<%- error %>';
+    </script>
     <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
     <script src="/script/auth_page.js"></script>

@@ -22,7 +22,8 @@ const tryRegister = function(req, res) {
                 });
             });
         } else {
-            res.redirect("/")
+            req.session.server_error = 'user_exists_error';
+            res.redirect("/");
         }
     });
 }

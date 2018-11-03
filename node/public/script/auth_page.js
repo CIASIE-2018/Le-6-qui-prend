@@ -28,11 +28,17 @@ function setHandlers() {
 function displayRegister() {
     con_area.hide();
     reg_area.show();
+
+    $('#display_register').css("background-color","#0174DF");
+    $('#display_connection').css("background-color","");
 }
 
 function displayConnexion() {
     reg_area.hide();
     con_area.show();
+
+    $('#display_connection').css("background-color","#0174DF");
+    $('#display_register').css("background-color","");
 }
 
 setHandlers();

@@ -33,14 +33,12 @@ div.hand{
     border-radius: 5px 5px 5px 5px;
 }
 
-
-
 #chooseForMe{
     display: none;
     /* on cache ce bouton tant que l'utilisateur n'est pas prêt */
     transition: background-color 0.5s ease;
     position: absolute;
-    bottom: 50%;
+    bottom: 30%;
     right: 10%;
     background-color: #5EB6DD;
     color: white;
@@ -317,4 +315,31 @@ div.board .ligne4 .l4col6{
     height:200;
     overflow:auto;
     position:fixed;
+}
+
+.logoHome{
+    width:30%;
+    margin-left: 20%;
+    padding-top:1%;
+    display: block;
+}
+
+.buttonHome{
+    transition: background-color 0.5s ease;
+    background-color: #5EB6DD;
+    color: white;
+    padding: 16px;
+    font-size: 16px;
+    border: none;
+    outline: none;
+    border-radius: 5px 5px 5px 5px;
+}
+
+.buttonHome:hover {
+    background-color: rgb(171, 225, 249);
+}
+
+.inputHome{
+    font-size: 16px;
+    height: 20px;
 }

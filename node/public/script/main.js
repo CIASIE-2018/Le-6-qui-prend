@@ -172,15 +172,9 @@ socket.on('newTurn', function(newTurn) {
             cardChosen = scores[0].indexCard;
 
         }
-
-
-
-
-
     });
     //On remet le bouton "valider choix" a enabled
     $("#validerChoix").prop("disabled", false);
-
 
     if (10 - newTurn.hand.length != 0) {
         $('#historique').append("--- Tour " + (10 - newTurn.hand.length) + " --- <br>")

@@ -8,24 +8,24 @@
 </head>
 
 <body>
-    <h1>Le 6 qui prend !</h1>
+    <img src="/src/logo.png" class="logoHome">
 
-    <button id="display_connection">Connexion</button>
-    <button id="display_register">Inscription</button>
+    <button class="buttonHome" id="display_connection">Connexion</button>
+    <button class="buttonHome" id="display_register">Inscription</button>
 
     <div class="register" id="reg_area">
         <form action="/register" method="POST">
-            <input type="text" name="pseudo" />
-            <input type="password" name="password" />
-            <button type="submit">Inscription</button>
+            <input class="inputHome" type="text" name="pseudo" />
+            <input class="inputHome" type="password" name="password" />
+            <button class="buttonHome" type="submit">Inscription</button>
         </form>
     </div>
 
     <div class="connexion" id="con_area">
         <form action="/connect" method="POST">
-            <input type="text" name="pseudo" />
-            <input type="password" name="password" />
-            <button type="submit">Connexion</button>
+            <input class="inputHome" type="text" name="pseudo" />
+            <input class="inputHome" type="password" name="password" />
+            <button class="buttonHome" type="submit">Connexion</button>
         </form>
     </div>
 

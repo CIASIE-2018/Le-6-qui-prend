@@ -6,11 +6,13 @@ Groupe BERNARD Geoffroy BRIAND Lucas CORDIER Florian ROHRBACHER Léon
 ## Setup
   + [Installer nodeJs](https://nodejs.org/fr/) 
   + Cloner le repo
+  + Modifier le fichier "/node/conf/config.js" et l'adapter à vôtre installation MySQL
+  + Lancer le script "/node/tables.sql" pour initialiser vos tables
   + Se placer dans Le-6-qui-prend/node
   + Lancer la commande node app.js
   
 ## Test
-  + Lancer au moins 2 clients à l'url [localhost:8080](http://localhost:8080)
+  + Lancer au moins 2 clients à l'url [localhost:8080](http://localhost:8080) (de préférence de navigateurs différents)
   + Indiquez le salon de jeu à rejoindre 
   + Indiquez votre pseudo
   + Pour commencer la partie, cliquez sur le bouton prêt sur tous les clients dans le salon

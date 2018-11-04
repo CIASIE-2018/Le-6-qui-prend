@@ -36,49 +36,54 @@ const putCards = function (cards, board) {
 
     // Cette première boucle parcourt uniquement les cartes
     cards.forEach((card) => {
-        cardValue = card.value;
-        lastCardValue = 0;
-        selectedRow = -1;
-        higherThanCard = 0;
-        
-        // Cette boucle parcourt les 4 lignes du board
-        board.forEach((row, index) => {
+        if (card){
+            //preventing odd behavior
+            if (card.value){
+                cardValue = card.value;
+                lastCardValue = 0;
+                selectedRow = -1;
+                higherThanCard = 0;
+                
+                // Cette boucle parcourt les 4 lignes du board
+                board.forEach((row, index) => {
 
-            // Ici on est censé récuperer la dernière carte de la ligne en cours
-            lastCardValue = row[row.length - 1].value;
+                    // Ici on est censé récuperer la dernière carte de la ligne en cours
+                    lastCardValue = row[row.length - 1].value;
 
-            //Test si notre carte a une valeure supérieure ou non à la carte d'avant
-            if (cardValue > lastCardValue) {
-                //Si la valeur est plus petite que celle précédente, alors cette place est la "mieux"
-                if (lastCardValue > higherThanCard) {
-                    selectedRow = index;
-                    higherThanCard = lastCardValue;
+                    //Test si notre carte a une valeure supérieure ou non à la carte d'avant
+                    if (cardValue > lastCardValue) {
+                        //Si la valeur est plus petite que celle précédente, alors cette place est la "mieux"
+                        if (lastCardValue > higherThanCard) {
+                            selectedRow = index;
+                            higherThanCard = lastCardValue;
+                        }
+                    }
+                });
+
+                if (selectedRow < 0 || selectedRow > 3 || selectedRow === -1) {
+                    
+                    let resultTMP = getRowWithLowestMalusAndHighestValue(board)
+                    selectedRow = resultTMP.malusRow;
+                    
+                    malusPointForPlayer[card.playedBy] = playerModule.calculateMalus(resultTMP.malusCards);
+                    
+                    
+                    board[selectedRow] = [];
+                    board[selectedRow].push(card);
+                } else {
+                    board[selectedRow].push(card);
                 }
+
+                //si c'est la 6ème, on gère les points
+                if (board[selectedRow].length >= 6) {
+                    board[selectedRow] = [];
+                    board[selectedRow][0] = card;
+                }
+                
+                //parsing and stringify object to clone it (otherwise it's always the same)
+                history.push(JSON.parse(JSON.stringify(board)));
             }
-        });
-
-        if (selectedRow < 0 || selectedRow > 3 || selectedRow === -1) {
-            
-            let resultTMP = getRowWithLowestMalusAndHighestValue(board)
-            selectedRow = resultTMP.malusRow;
-            
-            malusPointForPlayer[card.playedBy] = playerModule.calculateMalus(resultTMP.malusCards);
-            
-            
-            board[selectedRow] = [];
-            board[selectedRow].push(card);
-        } else {
-            board[selectedRow].push(card);
         }
-
-        //si c'est la 6ème, on gère les points
-        if (board[selectedRow].length >= 6) {
-            board[selectedRow] = [];
-            board[selectedRow][0] = card;
-        }
-        
-        //parsing and stringify object to clone it (otherwise it's always the same)
-        history.push(JSON.parse(JSON.stringify(board)));
     });
 
 

@@ -361,9 +361,47 @@ div.board .ligne4 .l4col6 {
     color: red;
 }
 
+#rooms_area {
+    list-style-type: none;
+    font-size: 24px;
+}
+
+.home_lists {
+    width: 40%;
+    margin: 5%;
+    background-color: rgb(19, 179, 248);
+    color: white;
+    padding: 16px;
+    font-size: 16px;
+    border: none;
+    outline: none;
+    border-radius: 5px 5px 5px 5px;
+}
+
+.home_lists h2 {
+    background-color: rgb(103, 209, 255);
+    color: white;
+    padding: 5px;
+    border: none;
+    outline: none;
+    border-radius: 5px 5px 5px 5px;
+}
+
+.home_lists li {
+    display: flex;
+    justify-content: space-between;
+    background-color: rgb(103, 209, 255);
+    color: white;
+    height: 25px;
+    padding: 5px;
+    margin: 5px;
+    border: none;
+    outline: none;
+    border-radius: 5px 5px 5px 5px;
+}
+
 .lists {
     margin: 5%;
-    width: 40%;
     background-color: rgb(19, 179, 248);
     color: white;
     padding: 16px;
@@ -380,11 +418,6 @@ div.board .ligne4 .l4col6 {
     border: none;
     outline: none;
     border-radius: 5px 5px 5px 5px;
-}
-
-#rooms_area {
-    list-style-type: none;
-    font-size: 24px;
 }
 
 .lists li {
@@ -424,4 +457,35 @@ div.board .ligne4 .l4col6 {
 #topPlayers li {
     display: flex;
     justify-content: space-between;
+}
+
+#scoreboardBtn {
+    transition: background-color 0.5s ease;
+    background-color: #5EB6DD;
+    color: white;
+    padding: 16px;
+    font-size: 16px;
+    border: none;
+    outline: none;
+    border-radius: 5px 5px 0px 5px;
+    right: 1%;
+    float: right;
+    margin-right: 1%;
+    margin-top: 1%;
+}
+
+#scoreboardBtn:hover {
+    background-color: rgb(171, 225, 249);
+}
+
+#room_scoreboard {
+    position: absolute;
+    width: 30%;
+    border-style: solid;
+    border-color: #5EB6DD;
+    background-color: #88b7d5;
+    display: none;
+    top: 70px;
+    left: 69%;
+    border-radius: 5px 0px 5px 5px;
 }

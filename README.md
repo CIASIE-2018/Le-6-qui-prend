@@ -12,10 +12,11 @@ Groupe BERNARD Geoffroy BRIAND Lucas CORDIER Florian ROHRBACHER Léon
   + Lancer la commande node app.js
   
 ## Test
-  + Lancer au moins 2 clients à l'url [localhost:8080](http://localhost:8080) (de préférence de navigateurs différents)
+  + Lancer au moins 2 clients de navigateurs différent à l'url [localhost:8080](http://localhost:8080)
   + Indiquez le salon de jeu à rejoindre 
   + Indiquez votre pseudo
-  + Pour commencer la partie, cliquez sur le bouton prêt sur tous les clients dans le salon
+  + Pour commencer la partie, cliquez sur le bouton "prêt" sur tous les clients dans le salon
+  + Vous pouvez également jouer seul contre l'ia, pour cela cliquez sur le bouton "jouer contre l'ia"
   + Pour jouer une carte, cliquez sur la carte à jouer puis cliquez sur le bouton Confirmer mon choix
 
 # Règles du jeu

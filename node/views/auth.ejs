@@ -10,26 +10,28 @@
 <body>
     <img src="/src/logo.png" class="logoHome">
 
-    <button class="buttonHome" id="display_connection">Connexion</button>
-    <button class="buttonHome" id="display_register">Inscription</button>
+    <div class="topPageForm">
+        <button class="buttonHome" id="display_connection">Connexion</button>
+        <button class="buttonHome" id="display_register">Inscription</button>
 
-    <div class="register" id="reg_area">
-        <form action="/register" method="POST">
-            <input class="inputHome" type="text" name="pseudo" />
-            <input class="inputHome" type="password" name="password" />
-            <button class="buttonHome" type="submit">Inscription</button>
-        </form>
+        <div class="register" id="reg_area">
+            <form action="/register" method="POST">
+                <input class="inputHome" type="text" name="pseudo" />
+                <input class="inputHome" type="password" name="password" />
+                <button class="buttonHome" type="submit">Inscription</button>
+            </form>
+        </div>
+
+        <div class="connexion" id="con_area">
+            <form action="/connect" method="POST">
+                <input class="inputHome" type="text" name="pseudo" />
+                <input class="inputHome" type="password" name="password" />
+                <button class="buttonHome" type="submit">Connexion</button>
+            </form>
+        </div>
+
+        <div id="error_area"></div>
     </div>
-
-    <div class="connexion" id="con_area">
-        <form action="/connect" method="POST">
-            <input class="inputHome" type="text" name="pseudo" />
-            <input class="inputHome" type="password" name="password" />
-            <button class="buttonHome" type="submit">Connexion</button>
-        </form>
-    </div>
-
-    <div id="error_area"></div>
 
     <script>
         let error = '<%- error %>';

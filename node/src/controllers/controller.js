@@ -46,7 +46,17 @@ const tryLogin = function(req, res) {
     });
 }
 
+const getTopPlayers = function(res) {
+    console.log("gettopplayers");
+    let sql = 'SELECT `pseudo`, `score` FROM `users` ORDER BY `score` desc limit 10';
+    db.query(sql, function(err, result) {
+        console.log("within query");
+        res.send(result);
+    });
+}
+
 module.exports = {
     tryRegister,
-    tryLogin
+    tryLogin,
+    getTopPlayers
 }

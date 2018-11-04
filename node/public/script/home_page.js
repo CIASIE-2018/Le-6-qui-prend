@@ -13,8 +13,25 @@ switch (error) {
 rooms = JSON.parse(rooms);
 
 rooms.forEach(element => {
-    rooms_area.append("<li>" + element + "<button id=" + element + ">Rejoindre</button></li>");
+    rooms_area.append("<li>" + element + "<button class='joinRoom' id=" + element + ">Rejoindre</button></li>");
     $('#' + element).click(function() {
         window.location.href = "/rooms/" + element;
     });
+});
+
+$.ajax({
+    url: "/topplayers",
+    datatype: 'json',
+    method: 'post',
+    success: function(data) {
+        console.log("within success");
+        console.log(data);
+        let i = 0;
+        data.forEach(e => {
+            console.log(e);
+            i++;
+            $('#top' + i).append("<span>" + e.pseudo + "</span>");
+            $('#top' + i).append("<span>" + e.score + "</span>");
+        });
+    }
 });

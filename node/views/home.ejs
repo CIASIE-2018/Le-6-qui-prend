@@ -9,18 +9,22 @@
 
 <body>
     <img src="/src/logo.png" class="logoHome">
-
-    <div class="create_room">
-        <form action="/newroom" method="POST">
-            <input class="inputHome" id="room_name" type="text" name="room_name" />
-            <button class="buttonHome" type="submit">Créer un salon</button>
-        </form>
+    <div class="topPageForm">
+        <div class="create_room">
+            <form action="/newroom" method="POST">
+                <input class="inputHome" id="room_name" type="text" name="room_name" />
+                <button class="buttonHome" type="submit">Créer un salon</button>
+            </form>
+        </div>
+        <div id="error_area"></div>
     </div>
 
-    <div id="error_area"></div>
 
-    <ul class="rooms" id="rooms_area">
-    </ul>
+    <div class="rooms">
+        <h2>Salons de jeu disponibles :</h2>
+        <ul id="rooms_area">
+        </ul>
+    </div>
 
     <script>
         let rooms = '<%- rooms %>';

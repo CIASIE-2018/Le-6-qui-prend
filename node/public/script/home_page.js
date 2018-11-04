@@ -13,7 +13,7 @@ switch (error) {
 rooms = JSON.parse(rooms);
 
 rooms.forEach(element => {
-    rooms_area.append("<li>" + element + "<button id=" + element + ">Rejoindre</button></li>");
+    rooms_area.append("<li>" + element + "<button class='joinRoom' id=" + element + ">Rejoindre</button></li>");
     $('#' + element).click(function() {
         window.location.href = "/rooms/" + element;
     });

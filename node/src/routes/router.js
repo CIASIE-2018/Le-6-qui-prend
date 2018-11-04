@@ -4,7 +4,7 @@ const rooms_routing = require('./rooms.js');
 
 const setRoutes = function(app) {
     authentification_routing.setAuthentificationRoutes(app);
-    home_routing.setHomeRoute(app);
+    home_routing.setHomeRoutes(app);
     rooms_routing.setRoomsRoutes(app);
 }
 

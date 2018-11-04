@@ -361,7 +361,7 @@ div.board .ligne4 .l4col6 {
     color: red;
 }
 
-.rooms {
+.lists {
     margin: 5%;
     width: 40%;
     background-color: rgb(19, 179, 248);
@@ -373,7 +373,7 @@ div.board .ligne4 .l4col6 {
     border-radius: 5px 5px 5px 5px;
 }
 
-.rooms h2 {
+.lists h2 {
     background-color: rgb(103, 209, 255);
     color: white;
     padding: 5px;
@@ -387,11 +387,12 @@ div.board .ligne4 .l4col6 {
     font-size: 24px;
 }
 
-.rooms li {
+.lists li {
     display: flex;
     justify-content: space-between;
     background-color: rgb(103, 209, 255);
     color: white;
+    height: 25px;
     padding: 5px;
     margin: 5px;
     border: none;
@@ -411,4 +412,16 @@ div.board .ligne4 .l4col6 {
 
 .joinRoom:hover {
     background-color: rgb(167, 224, 248);
+}
+
+.scoreboard {
+    position: absolute;
+    top: 0%;
+    left: 70%;
+    width: 50%;
+}
+
+#topPlayers li {
+    display: flex;
+    justify-content: space-between;
 }

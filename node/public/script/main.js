@@ -7,6 +7,24 @@ let training = 0;
 let socket = io.connect("localhost:8080");
 socket.emit('join_room', { pseudo: pseudo, room: room });
 
+function topPlayers() {
+    $.ajax({
+        url: "/topplayers/" + room,
+        method: 'post',
+        success: function(data) {
+            data.sort((a, b) => {
+                return a.score - b.score;
+            });
+            let i = 0;
+            data.forEach(p => {
+                i++;
+                $('#top' + i).empty();
+                $('#top' + i).append("<span>#" + i + "</span><span>" + p.pseudo + "</span><span>" + p.score + "</span>")
+            });
+        }
+    });
+}
+
 //on attend les messages dans les 2 chats
 socket.on('general_chat', function(message) {
     let tchat = $('.chats');
@@ -24,6 +42,7 @@ socket.on('room_chat', function(message) {
 });
 //on attend le signal init du serveur qui envoie la main et le board
 socket.on('newTurn', function(newTurn) {
+    topPlayers();
     //Quand on passe la souris sur une carte de la main
     $('body').off('mouseenter');
     $('body').on('mouseenter', '.handPlayer', function() {
@@ -339,4 +358,14 @@ $('.toggle_room_chat').click(function() {
     $(".toggle_general_chat").removeClass("current_chat");
     $('#general_chat').hide();
     $('#room_chat').show();
+});
+
+//Scoreboard
+$('#scoreboardBtn').click(function() {
+    let scoreboard = $('#room_scoreboard');
+    if (scoreboard.is(":visible")) {
+        scoreboard.hide(200);
+    } else {
+        scoreboard.show(200);
+    }
 });

@@ -18,8 +18,8 @@ let boardModule = require("./src/board.js");
 let playerModule = require("./src/player.js");
 const parser = require("body-parser");
 const router = require("./src/routes/router.js");
+const controller = require('./src/controllers/controller.js');
 let io = require("socket.io").listen(server);
-console.log("Serveur on");
 
 app.rooms = [];
 
@@ -31,9 +31,11 @@ router.setRoutes(app);
 
 io.sockets.on("connection", function(socket) {
     socket.on("join_room", function(params) {
-        if (params.create) {
-            app.rooms.push(params.room);
-        }
+        app.rooms.forEach(room => {
+            if (room.roomName === params.room) {
+                room.players.push({ pseudo: params.pseudo, score: 0 });
+            }
+        });
         socket.room = params.room;
         selectedCards[socket.room] = [];
         socket.pseudo = params.pseudo;
@@ -89,7 +91,16 @@ io.sockets.on("connection", function(socket) {
                     //si malus on affecte
                     if (malusPlayers) {
                         Object.keys(malusPlayers).forEach(function(key, index) {
-                            if (socket.id == key) socket.graveyard += malusPlayers[key];
+                            if (socket.id == key) {
+                                socket.graveyard += malusPlayers[key];
+                                app.rooms.forEach(room => {
+                                    room.players.forEach(p => {
+                                        if (p.pseudo === socket.pseudo) {
+                                            p.score = socket.graveyard;
+                                        }
+                                    });
+                                });
+                            }
                         });
                     }
                     //on reset la carte choisie
@@ -116,9 +127,11 @@ io.sockets.on("connection", function(socket) {
                         socket.hand = Array();
                         let winner = [];
                         let max = 1000;
+                        let game_results = [];
                         Object.keys(io.sockets.sockets).forEach(function(socketId) {
                             if (socket.room == currentRoom) {
                                 let socket = io.sockets.connected[socketId];
+                                game_results.push({ pseudo: socket.pseudo, score: socket.graveyard });
                                 if (socket.graveyard < max) {
                                     winner = [socket.pseudo];
                                     max = socket.graveyard;
@@ -127,6 +140,10 @@ io.sockets.on("connection", function(socket) {
                                 }
                             }
                         });
+                        game_results.sort(function(a, b) {
+                            return a.score - b.score;
+                        });
+                        controller.updateScore(game_results);
                         //on prévient le client que la partie est finie (avec un petit décalage)
                         setTimeout(function() {
                             socket.emit("end", {
@@ -149,7 +166,7 @@ io.sockets.on("connection", function(socket) {
             nbSelectedCards[socket.room] += 1;
         }
         socket.cardChosen = cardChosen;
-        
+
         //ici on gère les cartes jouées par chaques IA
         ais[socket.room].forEach(function(ai) {
             ai.cardChosen = boardModule.chooseCard(ai.hand, boards[socket.room], 4);
@@ -160,7 +177,7 @@ io.sockets.on("connection", function(socket) {
             }
 
             selectedCards[socket.room].push(ai.hand[ai.cardChosen]);
-            ai.hand.splice(ai.cardChosen,1);
+            ai.hand.splice(ai.cardChosen, 1);
         });
         //on retire la carte jouée par le joueur
         selectedCards[socket.room].push(socket.hand[socket.cardChosen]);
@@ -184,6 +201,7 @@ io.sockets.on("connection", function(socket) {
                 ai.cardChosen = -1;
             }
         });
+
         socket.emit("newTurn", {
             hand: socket.hand,
             board: boards[socket.room],

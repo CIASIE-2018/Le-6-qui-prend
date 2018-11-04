@@ -47,16 +47,25 @@ const tryLogin = function(req, res) {
 }
 
 const getTopPlayers = function(res) {
-    console.log("gettopplayers");
     let sql = 'SELECT `pseudo`, `score` FROM `users` ORDER BY `score` desc limit 10';
     db.query(sql, function(err, result) {
-        console.log("within query");
         res.send(result);
+    });
+}
+
+const updateScore = function(game_res) {
+    game_res.forEach(e => {
+        db.query(mysql.format("SELECT * FROM `users` WHERE `pseudo`=?", [e.pseudo]), function(err, results) {
+            let newScore = e.score + results[0].score;
+            db.query(mysql.format('UPDATE `users` SET `score`=? WHERE `pseudo`=?', [newScore, e.pseudo]));
+        });
+
     });
 }
 
 module.exports = {
     tryRegister,
     tryLogin,
-    getTopPlayers
+    getTopPlayers,
+    updateScore
 }
